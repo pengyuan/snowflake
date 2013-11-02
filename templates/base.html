@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load template_tags %}
+<head>
+    <title>{% block title %}Pythonic{% endblock %}</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="{% block description %}促进python及其pythonic哲学的传播{% endblock %}" />
+    <meta name="keywords" content="{% block keywords %}pythonic,python,python社区,敏捷{% endblock %}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css"/>
+	<link rel="shortcut icon" href="/static/img/favicon.ico"  type="image/x-icon" />
+	<script type="text/javascript" src="/static/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.textarearesizer.compressed.js"></script>
+	{% block head %}{% endblock %}
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<div class="navbar-inner">
+        	<div class="container">
+        		<div class="row-fluid">
+	          		<div id="logo" class="navbar-header"><a href="/">Pythonic</a></div>
+					    <!-- <ul class="nav navbar-nav">
+					      	<li class="active"><a href="/"><i class="icon-home icon-white"></i></a></li>
+					      	<li><a href="/wiki/">文档</a></li>
+					      	<li><a href="/pypi/">PyPI</a></li>
+							<li><a href="/people/">居民</a></li> 
+					    </ul> -->
+					    <form class="navbar-form navbar-search span4" action="http://www.google.com.hk/search" method="get" target="blank">
+							<div class="input-append form-group">
+								<input name="sitesearch" value="pythonic.org" type="hidden"> 
+								<input name="hl" value="zh-cn" type="hidden"> 
+								<input name="ie" value="utf-8" type="hidden"> 
+								<input name="q" type="text" class="search-query form-control span12" value="" placeholder="搜索话题、节点、居民" autocomplete="off" speech="speech" x-webkit-speech="x-webkit-speech" spellcheck="false">
+							</div>
+						</form>
+					    <ul class="nav navbar-nav navbar-right">
+					    	{% if user.is_authenticated and user.is_active %}
+					    	<li><a href="/notice" title="消息">消息{% num_message user %}</a></li>
+							<li class="dropdown">
+	                      		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">{{user.get_profile.name}} <b class="caret"></b></a>
+	                      		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/people/{{user.get_profile.slug}}">我的主页</a></li>
+	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/accounts/settings">我的账号</a></li>
+	                        		<li role="presentation" class="divider"></li>
+	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/accounts/logout">登出</a></li>
+	                      		</ul>
+	                    	</li>
+					    	{% else %}
+					    	<li><a href="/accounts/login">登录</a></li>
+					    	<li><a href="/accounts/register">注册</a></li>
+					      	{% endif %} 
+					    </ul>
+			    </div>
+          	</div>
+        </div>
+	</div>
+	{% block signup %}
+	{% endblock %}
+    <div class="container">
+    	<div class="row-fluid">
+	    	<div id="main" class="span8">
+	    		{% block main %}
+			    {% endblock %}	
+	    	</div>
+			<div id="side" class="span4">
+				{% block side %}
+			    {% endblock %}
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<footer class="footer">
+			<p class="links">
+				<span class="pull-right">大道至简</span>
+				<a class="a-head" href="/about">关于</a>/<a href="/zen">The Zen of Python</a>/<a href="/feedback">建议反馈</a>/<a href="https://github.com/pengyuan/pythonic" target="blank">GitHub</a>
+			</p>
+			<p class="copyright">
+			<font class="muted">&copy; 2013 Pythonic.org, all rights reserved</font><br/><a href="http://www.miitbeian.gov.cn" target="blank"><img src="/static/img/biaoshi.gif">湘ICP备13006280号</a>
+			</p>
+		</footer>
+	</div>
+	{% block js %}{% endblock %}
+</body>
+</html>

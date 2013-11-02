@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>请激活您的账号，完成注册</title>
+	</head>
+	<body>
+		<div id="wrapper">
+    		<div class="title">{% block title %}{% endblock %}</div>
+    		<div class="content">
+		          <p>亲爱的{{ user.get_profile.name }}：<br/><br/>
+	      欢迎加入Pythonic！<br/><br/>
+		  请点击下面的链接完成注册:<br/><br/>
+		  <a href="{{ active_url}}" target="_blank">{{ active_url }}</a><br/><br/>
+		  如果以上链接无法点击，请将其复制到浏览器地址栏进入Pythonic。<br/><br/>
+		  --Pythonic社区。<br/>（此邮件由系统自动发出，请勿回复。）
+		  </div>
+		    </div>
+	</body>
+</html>

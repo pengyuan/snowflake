@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% block title %}
+加入Pythonic
+{% endblock %}
+{% block main %}
+<div class="box register-form">
+	<h1 class="form_title">账号激活</h1><br/>
+    <p style="font-size: 14px;line-height:30px;">账号激活邮件已经发送到你的邮箱<i><b>{{ email }}</b></i>中，<br>
+        请登录邮箱 <strong class="red"><a target="_blank" href="http://{{ email_domain }}">http://{{ email_domain }}</a></strong> 完成账号激活操作。</p><br/><br/><br/><br/>
+    <p class="muted">如果长时间没有收到激活邮件,请先检查是否被扔进了<i><b>垃圾箱</b></i></p>
+    <form class="muted" action="" method="POST">{% csrf_token %}或者 <input type="submit" name="submit" value="重新发送" class="btn btn-info btn-xs" style="line-height:16px;height:22px;margin-top:-2px;"> 一封激活邮件</form>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+	
+{% block main %}
+<div id="topic-wrap" class="box">
+	{% for item in topics %}
+	<div class="topic-item">
+	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+	        <tbody>
+	       	<tr>
+	            <td width="40" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+	            <td width="12"></td>
+	            
+	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
+	            <div class="sep3"></div>
+	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}"><label class="label label-inverse" style="font-size:12px;padding:0px 2px;">{{ item.node }}</label></a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{ item.last_reply.get_profile.slug }}" class="people">{{ item.last_reply.get_profile.name }}</a></span>
+	            </td>
+	            <td width="50" align="right" valign="middle">
+	                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>
+	            </td>
+	        </tr>
+	    	</tbody>
+	    </table>
+	</div>
+	{% endfor %}
+	<table width="100%" class="pager">
+		<tr>
+			<td width="20%" align="left">{% if topics.has_previous %}<li class="previous"><a href="?page={{ topics.previous_page_number }}">上一页</a></li>{% endif %}</td>
+			<td width="60%" align="center"><span class="muted">第{{ topics.number }}页，共{{ topics.paginator.num_pages }}页</span></td>
+			<td width="20%" align="right">{% if topics.has_next %}<li class="next"><a href="?page={{ topics.next_page_number }}">下一页</a></li>{% endif %}</td>
+		</tr>
+	</table>
+
+</div>
+<div id="node-wrap" class="box">
+    <span class="node-title">节点导航</span>
+    <ul>
+    	{% for item in all_nodes %}
+        <li>
+            <label class="bold">{{item.parent}}</label>
+            <span class="nodes">
+            	{% for node in item.nodes %}
+                    <a href="/node/{{node.slug}}" title="{{ node.name}}">{{ node.name}}</a>
+                {% endfor %}
+            </span>
+        
+        </li>
+       	{% endfor %}
+    </ul>
+</div>
+{% endblock %}	
+
+{% block side %}
+<div class="box">
+	<h2>热门话题</h2>
+	{% for item in hot_topics %}
+	<div class="cell">
+   		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+       		<tbody><tr>
+            <td width="24" valign="middle" align="center">
+                <a href="/people/{{item.author.get_profile.slug}}" title="{{ item.author.get_profile.name}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" style="max-width: 24px; max-height: 24px;" alt="{{ item.author.get_profile.name}}"></a>
+            </td>
+            <td width="10"></td>
+            <td width="auto" valign="middle">
+                <span class="hot_topic_title">
+                	<a href="/topic/{{item.id}}" title="{{item.title}}">{{item.title}}</a>
+                </span>
+            </td>
+        </tr>
+    	</tbody></table>
+    </div>
+	{% endfor %}
+	<div class="clearfix"></div>
+</div>
+<div class="box">
+	<h2>热门节点</h2>
+	<div class="inner">
+	{% for item in hot_nodes %}
+        <a href="/node/{{item.slug}}" title="{{item.name}}" class><span class="label">{{item.name}}</span></a>
+    {% endfor %}
+    </div>
+	<div class="clearfix"></div>
+</div>
+{% endblock %}

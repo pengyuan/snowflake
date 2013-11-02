@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+我的消息
+{% endblock %}
+
+{% block main %}
+<ul class="nav nav-tabs nav-tabs-google">
+	<li><a href="/notice">提醒 <span class="badge badge-important">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
+	<li class="active"><a href="/message">我的私信 <span class="badge badge-important">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
+</ul>
+<hr class="dash"/>
+<h2 style="margin-bottom:30px;">我的私信<a href="/message_create" class="small-btn btn btn-info pull-right">新私信</a></h2>
+{% if msg_list %}
+<ul class="msg_list">
+	{% for item in msg_list %}
+	{% if item.number != 0%}<li class="highlight">{% else %}<li>{% endif %}
+		<a href="/message/{{item.message.talk_to.get_profile.slug}}">
+			<div class="id_avatar">
+				<img src="/media/avatar/{{item.message.talk_to.get_profile.avatar}}">
+			</div>
+			<div class="msg_main">
+				<div class="msg_title">
+					{% if item.message.is_sender %}
+						发至 <span>{{item.message.talk_to.get_profile.name}}</span>:
+					{% else %}
+						{{item.message.talk_to.get_profile.name}}:
+					{% endif %}
+				</div>
+				<div class="msg_detail">
+					{{item.message.content}}   
+				</div>
+			</div>
+			<div class="msg_meta">
+				<span class="msg_time">{{item.message.time|time_since}}</span><br/>
+			</div>
+			<div class="msg_num">
+				<span class="label label-danger">{% if item.number != 0%}{{item.number}}{% endif %}</span>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+您还没有收到私信。您可以先发送私信给别人。<br/><br/>
+{% endif %}
+<br/><br/><br/>  
+{% endblock %}

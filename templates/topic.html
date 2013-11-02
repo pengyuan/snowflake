@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% load markup %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block main %}
+<div class="topic-body">
+	<div class="box">
+	    <div>
+		    <ol class="breadcrumb">
+				<li><a href="/">首页</a></li>
+				<li>/</li>
+				<li class="active"><a href="/node/{{node.slug}}">{{topic.node.name}}</a></li>
+			</ol>
+			<a href="/people/{{topic.author.get_profile.slug}}"  class="pull-right"><img src="/media/avatar/{{ topic.author.get_profile.avatar }}" alt="{{topic.author.get_profile.name}}" border="0" align="default"/></a>
+		</div>
+	    <h1>{{topic.title}}</h1>
+	    <div class="t-meta">
+	    	<span class="t-author"><a href="/people/{{topic.author.get_profile.slug}}" class="muted">{{topic.author.get_profile.name}}</a></span> 创建于 <span class="t-time">{{topic.created_on|time_since}}</span>{% if topic.num_views %} · <span class="t-view">{{topic.num_views}}次点击</span>{% endif %}
+	    </div>
+		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
+	</div>
+</div>
+<p>
+	<h4>{{topic.num_replies}}个回复</h4>
+</p>
+<ul id="reply-list" class="reply-list">
+	{% for item in reply_list %}
+	<li class="reply">
+		<div class="reply-body">
+			<div class="reply-meta">
+				<a href="/people/{{item.author.get_profile.slug}}" class="avatar">
+					<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{item.author.get_profile.avatar}}" width="36" height="36"/>
+				</a>
+				<div class="reply-meta-data">
+					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a> &nbsp;<font title="{{item.created_on}}">{{item.created_on|time_since}}</font></span>
+					<span class="signature">{{item.author.get_profile.signature}}</span>
+				</div>	
+				<span class="order pull-right"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>		
+			</div>
+			<div id="{{item.id}}" class="reply-content">
+				{% if item.has_parent %}<blockquote>{{item.parent.content|markdown2html}}<a href="/people/{{item.parent.author.get_profile.slug}}">{{item.parent.author.get_profile.name}}</a>&nbsp;&nbsp;<a href="">展开</a></blockquote>{% endif %}
+				{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
+            </div>
+            
+			<div class="reply-reply">{% if user.is_authenticated %}
+				<a href="#reply" onclick="reply('{{item.id}}','{{forloop.counter}}')"><i class="icon-comment"></i> 回复</a>
+               	<a href="#reply" onclick="reply('{{item.id}}','{{forloop.counter}}')"><i class="icon-heart"></i> 感谢</a>{% endif %}
+      		</div>
+      		
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{% if user.is_authenticated %}
+<div class="topic-new-reply">
+	<span id="reply" style="display: block; margin: 10px 0;">我的回复</span>
+	<div id="reply-fill"></div>
+	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal"> {% csrf_token %}
+		{% for field in form %}
+		<div class="control-group">
+	    	<div class="controls" style="margin-left: 0;">
+				{{ field }}
+	    	</div>
+	    	<label>{{ field.errors }}</label>
+	  	</div>
+     	{% endfor %}
+	    <div class="control-group">
+	    	<div class="controls" style="margin-left: 0;float:right;">
+	      		<input type="submit" value="回复" class="btn btn-success">
+	    	</div>
+	  	</div>
+	  	<input type="hidden" value="" name="parent_id" id="parent_id">
+	</form>
+</div>
+{% else %}	
+<p class="required">您需要<a href="/accounts/login">登录</a>来回复。没有账号，马上<a href="/accounts/register">注册</a>一个。</p>
+{% endif %}
+{% endblock %}
+
+{% block side %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function reply(id,count) {
+	content = $("#"+id).html();
+	$("#reply-fill").html("<div id='reply-close' class='alert alert-info'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"<span class='pull-right'>#"+count+"楼</span></div>");
+	$("#parent_id").val(id);
+	$('#reply-close').bind('closed', function () {
+		$("#parent_id").val('');
+	});
+}
+$(document).ready(function() {
+$('textarea.resizable:not(.processed)').TextAreaResizer();
+});
+</script>
+{% endblock %}

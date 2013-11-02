@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+更改头像
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/imgareaselect/css/imgareaselect-default.css" type="text/css" />
+{% endblock %}
+
+{% block main %}
+<h2>更改头像</h2>
+<div id="uploadAvatar">
+    <div class="row-fluid" style="display: inline-block;padding-bottom: 10px;margin-bottom: 30px; border-bottom: 1px dashed #eee;">
+	    <div class="span12">
+		    <form id="uploadAvatarCropForm" action="/accounts/crop_avatar" method="post" target="uploadAvatarIframe" style="display: none;">
+	        {% csrf_token %}
+	        <input id="uploadAvatarValueX1" type="text" name="x1"/>
+	        <input id="uploadAvatarValueY1" type="text" name="y1"/>
+	        <input id="uploadAvatarValueX2" type="text" name="x2"/>
+	        <input id="uploadAvatarValueY2" type="text" name="y2"/>
+	    	</form>
+		    <div id="uploadAvatarUploadArea">
+		        <form class="form" id="uploadAvatarForm" action="/accounts/upload_avatar" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
+		            {% csrf_token %}
+		            <h4>上传你喜欢的照片/图像</h4>
+		            <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
+		            <p class="muted">你可以上传的图片类型为 jpg / jpeg / gif / png / bmp<br/>图片大小不超过3M</p>
+		        </form>
+		    </div>
+	    </div>
+    </div>
+    <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
+	<div class="row-fluid">
+		<div class="span6"><h4>上传的图片</h4></div>
+		<div class="span6"><h4>这是你的小头像（标识）</h4></div>
+	</div>
+	<div class="row-fluid" style="display:inline-block;margin-bottom: 20px;">
+	    <div class="span6" id="uploadAvatarSelectArea" style="width: 300px; height: 300px; border: 1px solid #ddd;"></div>
+	    <div class="span6" id="uploadAvatarPreviewArea">
+	        <div id="uploadAvatarPreviewArea50" style="width: 50px; height: 50px; border: 1px solid #ddd; overflow: hidden; margin-bottom: 20px;"></div>
+	        <h4>这是你的大头像（个人主页）</h4>
+	        <div id="uploadAvatarPreviewArea120" style="width: 100px; height: 100px; border: 1px solid #ddd; overflow: hidden;"></div>
+	        <br/>
+	        <p class="muted">*拖拽或缩放左侧大图中的虚线方格</p>
+	    </div>
+    </div>
+    <div id="uploadAvatarBtns" class="row-fluid">
+        <button class="btn btn-success" id="uploadAvatarCropSubmit" disabled="disabled">保存新头像</button>
+        <a class="link" href="/accounts/" style="font-size: 14px;margin-left:10px;">×取消</a>
+    </div>
+    <div id="uploadAvatarCropResult" class="alert alert-error" style="margin-top: 20px;display: none;"></div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="/static/imgareaselect/jquery.imgareaselect.min.js"></script>
+    <script type="text/javascript" src="/static/js/upload_avatar.js"></script>
+{% endblock %}

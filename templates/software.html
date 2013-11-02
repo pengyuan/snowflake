@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% load markup %}
+
+{% block main %}
+<h2>您可能感兴趣的软件</h2>
+<h2>软件高分榜</h2>
+<ul class="list-col">
+	{% for item in software_list%}   
+	<li>
+	    <div class="cover">
+	      	<a href="/software/{{item.id}}" title="">
+	        	<!-- <img src="" alt="寻欢作乐" width="106px" height="158px"> -->
+	        	{{item.name}}
+	      	</a>
+	    </div>
+		<div class="info">
+ 			<div class="alabel">{{item.label}}</div>
+   			<div class="homepage">{{item.homepage}}</div>
+   			<div class="more-meta">{{item.license}}</div>
+   			<div class="price">{{item.language}}</div>
+   			<div class="more-meta">{{item.os}}</div>
+     		<p>{{item.description}}</p>
+   		</div>
+	</li>
+	{% endfor %}
+</ul>
+<h2>所有软件</h2>
+<ul class="list-col ">
+	{% for item in language_list%}        
+		<li><a href="/software/{{item.0}}">{{item.0}}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

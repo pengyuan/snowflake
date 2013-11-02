@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{software.name}} (π社区)
+{% endblock%}
+
+{% block main %}
+<h1>{{software.name}}</h1>
+<div class="row-fluid">
+	<div class="meta span6">
+	<dl class="dl-horizontal">
+	  <dt>标签</dt>
+	  <dd>{{software.label}}</dd>
+	    <dt>主页</dt>
+	  <dd><a href="{{software.homepage}}" title="访问{{software.name}}主页" target="_blank">{{software.homepage}}</a></dd>
+	    <dt>发行协议</dt>
+	  <dd>{{software.license}}</dd>
+	    <dt>语言</dt>
+	  <dd>{{software.language}}</dd>
+	    <dt>操作系统</dt>
+	  <dd>{{software.os}}</dd>
+	</dl>
+	{% if software.github %}
+	<div class="github-widget" data-repo="{{software.github}}"></div>
+	{% endif %}
+	</div>
+	<div class="rating_wrap span6">
+	    <p class="rating_self clearfix" typeof="v:Rating">
+			<span class="bigstar45"></span>
+			<strong class="rating_num " property="v:average">9.1</strong>
+	    </p>
+	    <p class="rating_self font_normal clearbox">(
+	    	<span class=""><a href="collections"><span property="v:votes">206</span>人评价</a></span>)
+	    </p>
+		<span class="stars5 starstop" title="力荐"></span> 
+		<div class="power" style="width:59px"></div>67.0%<br>
+		<span class="stars4 starstop" title="推荐"></span>
+		<div class="power" style="width:24px"></div>27.2%<br>
+		<span class="stars3 starstop" title="还行"></span>
+		<div class="power" style="width:4px"></div>5.3%<br>
+		<span class="stars2 starstop" title="较差"></span>
+		<div class="power" style="width:0px"></div>0.5%<br>
+		<span class="stars1 starstop" title="很差"></span>
+		<div class="power" style="width:0px"></div>0.0%<br>
+	</div>
+</div>
+
+<h4><span class="label label-inverse">概要介绍</span></h4>
+
+<div id="part">{% autoescape off %}{{software.description|truncatechars:300}}{% endautoescape %}</div>
+<div id="full" style="display:none;">{% autoescape off %}{{software.description}}{% endautoescape %}</div>
+
+<div id="more">(<a href="javascript:void(null)" onclick="showFull()">展开更多</a>)</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function showFull(){
+	var full = $('#full');
+	if(full.css('display') == 'block'){
+		return;
+	}
+	$("#part").hide();
+	full.show();
+	$("#more").html("");
+ }
+</script>
+<script type="text/javascript" src="/static/js/jquery.githubRepoWidget.min.js"></script>
+{% endblock %}

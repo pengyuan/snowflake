@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% load markup %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block main %}
+<ol class="breadcrumb">
+	<li><a href="/">首页</a></li>
+	<li>/</li>
+	<li class="active"><a href="/node/{{node.slug}}" class="muted">{{node.name}}</a></li>
+	<!-- <a class="btn btn-info pull-right" href="/topic/new/" style="height: 20px;">新话题</a> -->
+</ol>
+<div id="topic-wrap" class="box">
+	{% if topics %}
+	{% for item in topics %}
+	<div class="topic-item">
+	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+	        <tbody>
+	       	<tr>
+	            <td width="48" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+	            <td width="12"></td>
+	            
+	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
+	            <div class="sep5"></div>
+	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a></span>
+	            </td>
+	            <td width="50" align="right" valign="middle">
+	                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>
+	            </td>
+	        </tr>
+	    	</tbody>
+	    </table>
+	</div>
+	{% endfor %}
+	{% else %}
+	<div class="well">当前节点还没有话题。</div>
+	{% endif %}
+</div>
+{% if user.is_authenticated %}
+<div class="box">
+	<form id="your-profile" action="/node/{{node.slug}}/create" method="post" class="form-vertical"> {% csrf_token %}
+		{% for field in form %}
+		<div class="control-group">
+	    	<label class="control-label">{{ field.label_tag }}</label>
+	    	<div class="controls">
+	      		{{ field }}
+	    	</div>
+	    	<label>{{ field.errors }}</label>
+	  	</div>
+     	{% endfor %}
+		</table> 
+	    <div class="control-group">
+	    	<div class="controls" style="margin-left: 0;float:right;">
+	      		<input type="submit" value="创建" class="btn btn-success">
+	    	</div>
+	  	</div>
+	</form>
+</div>
+{% else %}
+<div class="box"><p class="required">您需要<a href="/accounts/login">登录</a>来发表新话题。没有账号？马上<a href="/accounts/register">注册</a>。</p></div>
+{% endif %} 
+{% endblock %}	
+
+{% block side %}
+<div class="box">
+	<div class="well">
+		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+		{% if description %}
+			<p style="font-size: 14px;">{{description}}</p>
+			{% if user.is_authenticated %}
+			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
+			{% endif %}
+		{% else %}
+			{% if user.is_authenticated %}
+			<p>为节点<b>{{node.name}}</b><a href="/node/{{node.slug}}/edit">添加描述</a></p>
+			{% else %}
+			<p>尚没有节点描述。</p>
+			{% endif %}
+		{% endif %}
+		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$('textarea.resizable:not(.processed)').TextAreaResizer();
+</script>
+{% endblock %}

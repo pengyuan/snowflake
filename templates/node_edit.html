@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% load markup %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block main %}
+<ol class="breadcrumb">
+	<li><a href="/">首页</a></li>
+	<li>/</li>
+	<li class="active"><a href="/node/{{node.slug}}" class="muted">{{node.name}}</a></li>
+</ol>
+<h2>添加节点“{{node.name}}”的描述</h2>
+<form action="/node/{{node.slug}}/edit" method="post" class="form-vertical" style="display:inline-block;width:100%;"> {% csrf_token %}
+	{% for field in form %}
+	<div class="control-group">
+		<label class="control-label">{{ field.label_tag }}</label>
+    	<div class="controls" style="margin-left: 0;">
+      		{{ field }}
+    	</div>
+    	<label>{{ field.errors }}</label>
+  	</div>
+   	{% endfor %}
+    <div class="control-group">
+    	<div class="controls" style="margin-left: 0;float:right;">
+      		<input type="submit" value="提交" class="btn btn-success">
+    	</div>
+  	</div>
+</form>
+{% if description %}
+<h2>选择已添加的描述</h2>
+<div class="row-fluid">
+<ul style="list-style:none;display:inline;width:100%" class="span12">
+{% for item in description %}
+	<li>
+		<div class="well">
+			<form action="/node/{{node.slug}}/choose/" method="post">{% csrf_token %}
+				<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+				<p style="font-size: 14px;">{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}</p>
+				<p class="muted" style="margin-top: 20px;color: #bbb;">由 <a href="/people/{{item.author.get_profile.slug}}" class="muted">{{item.author.get_profile.name}}</a> 添加于{{item.time|date:"Y年m月d日 H时i分"}}
+				{% if item.active %}
+					<a class="btn btn-default pull-right disabled" style="height:16px;font-size:12px;line-height:16px;">正在采用</a>
+				{% else %}
+						<input type="submit" value="选择" class="btn btn-info pull-right" style="font-size:12px;">
+						<input type="hidden" name="description_id" value="{{item.id}}"/>
+				{% endif %}
+				</p>
+			</form>
+		</div>
+	</li>
+{% endfor %}
+</ul></div>
+{% endif %}
+{% endblock %}	
+
+{% block side %}
+
+{% endblock %}

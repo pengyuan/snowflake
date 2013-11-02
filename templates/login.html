@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% block title %}
+登录Pythonic
+{% endblock %}
+{% block main %}
+	<div class="box register-form">
+		<h1 class="form_title">登录Pythonic</h1><br/>
+		<form action="/accounts/login" method="post" class="form-horizontal">{% csrf_token %}
+			<div class="control-group">
+		    	<label class="control-label"></label>
+		    	<div class="controls">
+				{% if messages %}
+    				{% for message in messages %}
+    				<span class="{{ message.tags }}">{{ message }}</span>
+    				{% endfor %}
+				{% endif %}
+		    	</div>
+		  	</div>
+			{% for field in form %}
+			<div class="control-group">
+		    	<label class="control-label">{{ field.label_tag }}</label>
+		    	<div class="controls">
+      				{% if field.name != "password" %}
+     					{{ field }}
+     				{% else %}
+     					{{ field }}<a href="/accounts/password_reset" style="font-size:12px;">忘记密码?</a>
+     				{% endif %}
+		      		<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+		    	</div>
+		  	</div>
+		  	{% endfor %}
+		  	<div class="control-group">
+		    	<label class="control-label"></label>
+		    	<div class="controls">
+					<label class="checkbox" style="float:left;">
+					  <input type="checkbox" name="auto">下次自动登录
+					</label>
+		    	</div>
+		  	</div>  	
+		    <div class="control-group">
+		    	<div class="controls">
+		      		<input type="submit" value="登录" class="btn btn-success">
+		    	</div>
+		  	</div>
+		</form>
+	</div>
+{% endblock %}
+
+
+{% block side %}
+<div style="margin-top: 110px;"></div>
+<p style="font-size: 14px;">还没有账号？<a href="/accounts/register" class="btn btn-info" style="height:16px;line-height: 16px;font-size: 12px;">立即注册</a></p>
+{% endblock %}

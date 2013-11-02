@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+我的消息
+{% endblock %}
+
+{% block main %}
+<button class="btn btn-link"><a href="/message">&lt;返回私信列表</a></button>
+<h4>我与{{talk_to.get_profile.name}}的私信</h4>
+<button id="ajax_message" class="btn btn-default more">更多</button>
+<form><input type="hidden" id="num_message" value="{{msg_list|length}}"><input type="hidden" id="to_message" value="{{talk_to.id}}"></form>
+{% if msg_list and talk_to %}
+<ul class="msg_list">
+	{% for item in msg_list reversed %}
+		{% if item.is_sender %}
+		<div class="bubble">
+			<a href="/people/{{user.get_profile.slug}}"><img class="pull-right" src="/media/avatar/{{user.get_profile.avatar}}"></a>
+			<div class="bubble-box right pull-right">
+		    	<p class="wrap">{{item.content}}</p>
+			</div>
+		</div>
+		{% else %}
+		<div class="bubble">
+			<a href="/people/{{item.talk_to.get_profile.slug}}"><img class="pull-left" src="/media/avatar/{{item.talk_to.get_profile.avatar}}"></a>
+			<div class="bubble-box left pull-left">
+	    		<p class="wrap">{{item.content}}</p>
+			</div>
+		</div>
+		{% endif %}
+	{% endfor %}
+</ul>
+{% else %}
+<p class="text-center well">没有相关私信记录。</p>
+{% endif %}
+<div class="box">
+	<form action="/message_reply" method="post" class="form-vertical">{% csrf_token %}
+		<div class="control-group">
+	    	<label class="control-label"></label>
+	    	<div class="controls">
+			{% if messages %}
+   				{% for message in messages %}
+   				<span class="{{ message.tags }}">{{ message }}</span>
+   				{% endfor %}
+			{% endif %}
+	    	</div>
+	  	</div>
+		{% for field in form %}
+			<div class="control-group">
+		    	<label class="control-label">{{ field.label_tag }}</label>
+		    	<div class="controls">
+	      			{{ field }}
+		    	</div>
+		    	<label>{% for error in field.errors %}{{ error|escape }}{% endfor %}</label>
+		  	</div>
+	  	{% endfor %} 
+	    <div class="control-group">
+	    	<div class="controls">
+	      		<input type="submit" value="回复" class="btn btn-success pull-right">
+	      		<input type="hidden" name="talk_to" value="{{talk_to.id}}">
+	    	</div>
+	  	</div>
+	</form>
+</div>
+<br/><br/><br/>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function words_deal(content_id,max_count) {
+	var curLength=$(content_id).val().length;
+	if(curLength>max_count) {
+		var num=$(content_id).val().substr(0,max_count);
+		$(content_id).val(num);
+		if($(".count_char").length==0)
+		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
+		//$(".count_char").fadeTo(5000,1).hide(0);
+	}
+}
+$("#ajax_message").click(function(){
+	//self.attr('disabled','disabled');
+	query = {}
+	query['num_message'] = $('#num_message').val();
+	query['to_message'] = $('#to_message').val();
+	$.ajax({
+	    url:'/ajax_message',
+	    type:'GET',
+	    data: query,
+	    dataType:'json',
+	    success:function(result){
+	    	var msg_list = result.msgs;   //得到数组，每个数组元素是一个JSON Object
+	        var num_message = result.end;
+	        $("#num_message").val(num_message);
+	        var arr = $.map(msg_list,function(val,key) {
+				if(val['is_sender']){
+					var str = '<div class="bubble">'+
+	    				'<a href="/people/'+ val['belong_to'] +'"/><img class="pull-right" src="/media/avatar/'+ val['belong_to_avatar'] +'"></a>'+
+	    				'<div class="bubble-box right pull-right">'+
+	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
+	    				'</div>'+
+	    			'</div>';					
+				}
+				else{
+					var str = '<div class="bubble">'+
+	    				'<a href="/people/'+ val['talk_to'] +'"/><img class="pull-left" src="/media/avatar/'+ val['talk_to_avatar'] +'"></a>'+
+	    				'<div class="bubble-box left pull-left">'+
+	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
+	    				'</div>'+
+	    			'</div>';					
+				}
+	            return $(str);
+	        });
+	        for(i=0;i<arr.length;i++){
+	        	//alert(arr[i]);
+	            $(".msg_list").prepend(arr[i]);             
+	        }               
+	        $(arr).each(function(i, li) {
+	            li.fadeIn(1000);                
+	        })
+	        //$("#loading_pic").css("display","none");
+	    }
+	});
+});
+</script>
+{% endblock %}

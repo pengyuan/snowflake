@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{user.get_profile.name}}的账号
+{% endblock %}
+
+{% block main %}
+<h2>{{user.get_profile.name}}的账号</h2>
+<h4>设置我的账号信息</h4>
+<div class="box">
+	<form id="your-profile" action="/accounts/settings" method="POST" class="form-horizontal"> {% csrf_token %}
+		{% for field in form %}
+			{% if field.name != 'province' %}
+				{% if field.name != 'city' %}
+				<div class="control-group">
+			    	<label class="control-label">{{ field.label_tag }}</label>
+			    	<div class="controls">
+				    	{% if field.name == 'slug'%}
+				    		<font style="font-size:15px;color: #777;vertical-align:center;">pythonic.org/people/<b>{{ field.value }}</b></font>
+				    		<input type="hidden" id="id_slug" name="slug" value="{{field.value}}"/>
+				    	{% else %}
+				    		{% if field.name != "avatar" %}
+				      			{{ field }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				      		{% else %}
+				      			<img src="/media/avatar/{{ user.get_profile.avatar }}" />
+				      			{% if messages %}
+			   						{% for message in messages %}
+			   							<span class="muted">{{ message }}</span> <a href="/accounts/change_avatar">更改</a>
+			   						{% endfor %}
+			   					{% else %}
+			   						<a href="/accounts/change_avatar">更改</a>
+								{% endif %}
+				      		{% endif %}
+				    	{% endif %}	
+			    	</div>
+			  	</div>
+				{% else %}
+					<div class="control-group">
+				    	<label class="control-label">常居地</label>
+				    	<div class="controls">
+				    		{{ form.province }} &nbsp;{{ form.city }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				    		<input id="province" type="hidden" value="{{form.province.value}}"/>
+				    		<input id="city" type="hidden" value="{{form.city.value}}"/>
+				    	</div>
+					</div>					      	
+				{% endif %}
+			{% endif %}
+     	{% endfor %}
+		<div class="control-group">
+	    	<label class="control-label"></label>
+	    	<div class="controls">
+			{% if messages %}
+   				{% for message in messages %}
+   				<span class="{{ message.tags }}">{{ message }}</span>
+   				{% endfor %}
+			{% endif %}
+	    	</div>
+	  	</div> 	
+	    <div class="control-group">
+	    	<div class="controls">
+	      		<input type="submit" value="更新" class="btn btn-success">
+	    	</div>
+	  	</div>
+	</form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/city_selector.js"></script>
+<script type="text/javascript">
+	window.onload = function(){
+	    init();
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+我的消息
+{% endblock %}
+
+{% block main %}
+<ul class="nav nav-tabs nav-tabs-google">
+	<li class="active"><a href="/notice">提醒 <span class="badge badge-important">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
+	<li><a href="/message">我的私信 <span class="badge badge-important">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
+</ul>
+<hr class="dash"/>
+<h2>收到的回复{% if num_notice %}<a href="/notice_mark" class="small-btn btn btn-info pull-right">标记为已读</a>{% endif %}</h2>
+{% if notice_list %}
+<ul class="notice_list">
+    {% for item in notice_list %} 
+    {% if not item.is_readed %}<li class="highlight">{% else %}<li>{% endif %}
+    	<a href="/people/{{item.sender.get_profile.slug}}">{{item.sender.get_profile.name}}</a> 在话题 <a href="/topic/{{item.topic.id}}" target="blank">{{item.topic.title}}</a> 中回复了我：<font class="pull-right muted">{{item.time|time_since}}</font>
+        <p style="font-size:14px;">{% if item.is_topic %}{{item.content}}{% else %}<a href="/topic/{{item.reply.topic.id}}">@{{item.reply.author.get_profile.name}}</a>&nbsp;&nbsp;{{item.content}}{% endif %}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-center well">没有新回复。</p>
+{% endif %}
+<br/><br/><br/>  
+{% endblock %}

@@ -1,0 +1,12 @@
+django==1.5.4
+Pillow==2.1.0
+markdown2==2.1.0
+
+#django-celery-email==1.0.4
+#whoosh==2.6.0
+#django-celery
+#django-pagination
+#django_compressor
+#django-simple-avatar
+#Fabric
+#virtualenv

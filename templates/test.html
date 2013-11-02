@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>模态对话框示例</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css"/>
+	<link rel="shortcut icon" href="/static/img/favicon.ico"  type="image/x-icon" />
+	<script type="text/javascript" src="/static/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+</head>
+
+<body>
+  <div class="modal hide" id="myModal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  >&times;</button>
+        <h3>对话框标题</h3>
+      </div>
+      <div class="modal-body">
+        <p>你好...</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#"  data-dismiss="modal" class="btn">关闭</a>
+        <a href="#" class="btn btn-primary">保存</a>
+      </div>
+  </div>
+
+  <button type="button" class="btn" data-toggle="modal" data-target="#myModal" >打开对话框</button>
+</body>
+</html>

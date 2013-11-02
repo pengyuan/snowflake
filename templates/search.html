@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+搜索
+{% endblock %}
+
+{% block main %}<br/>
+<form action="/search" method="get">
+    <input type="text" id="id_q" name="q" value="{{ query|default_if_none:"" }}" />
+    <input type="submit" value="搜索"/>
+</form>
+{% if hits %}
+<ul>
+    {% for hit in hits %}
+    <li><a href="{{ hit.url }}">{{ hit.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
