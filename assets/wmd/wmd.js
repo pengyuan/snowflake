@@ -53,7 +53,7 @@ Attacklab.wmdBase = function(){
 	var pastePollInterval = 100;
 	
 	// The link and title for the help button
-	var helpLink = "/faq/markdown/";
+	var helpLink = "http://wowubuntu.com/markdown/basic.html";
 	var helpHoverTitle = "markdown使用帮助";
 	var helpTarget = "_blank";
 	

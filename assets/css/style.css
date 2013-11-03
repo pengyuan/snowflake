@@ -288,7 +288,6 @@ a.count:visited {
 }
 .topic-body .t-meta .t-time{
 	color: #aaa;
-	padding-left: 10px;
 }
 .topic-body .t-meta .t-view{
 	color: #aaa;
@@ -312,73 +311,95 @@ a.count:visited {
 	margin: 0;
 	padding: 0px 2px;
 }
-.reply-list .reply {
-	position: relative;
+.reply {
 	margin: 0px;
-	padding: 18px 0 0 0;
 	border-bottom: 1px dashed #eee;
 }
-.reply-content {
-	display:block;
-	font-size:14px;
-	padding:12px 0 0 0;
-}
-.reply-meta {
-	width: 100%;
+.reply-body {
 	display: block;
 	position: relative;
+	margin: 18px 0 0 0;	
 }
-.reply-meta a.author {
+.user-avatar {
+	padding: 4px 10px 0 0;
 	display: block;
-	float: left;
 	width: 36px;
 	height: 36px;
 }
+.reply-meta {
+	display: block;
+	padding-left: 50px;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+}
 .reply-meta .reply-meta-data{
 	display: block;
-	width:auto;
-	position: absolute;
-	top: -4px;
-	left: 50px;
+	font-size: 12px;
+	color: #bbb;
+	height: 40px;
 }
 .reply-meta-data .author {
-	font-size: 12px;
-	color: #aaa;
+	font-size: 13px;
+	color: #333;
+	font-weight: bold;vertical-align:text-top;
 }
 .reply-meta-data .time {
 	display: block;
 	font-size: 12px;
-	color: #aaa;
+	color: #aaa;vertical-align:text-top;
 }
 .reply-meta-data .signature {
-	display: block;
 	font-size: 12px;
-	color: #999;
+	height: 18px;
+	line-height: 18px;
+	color: #555;
+	font-weight: bold;
+	padding-left: 10px;
 }
-.reply-meta .order {
+.reply-body .order {
 	position: absolute;
 	right: 0;
 	top: 0;
 	color: #ccc;
 }
-.reply-meta .order a{
+.reply-body .order a{
 	color: #ccc;
+}
+.reply-content {
+	display:block;
+	padding-top: 10px;
+	line-height: 25px;
+	font-size: 14px;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
 }
 .reply-reply {
 	display: block;
 	list-style-type: none;
 	height: 20px;
 	line-height: 20px;
-	padding-bottom: 10px;
+	padding: 0 0 10px 50px;
 }
-.reply-reply a{
+.reply-reply span{
 	color: #aaa;
-	float: right;
-	margin: 0px 10px;
+	float: left;
+	margin: 0px 15px 0 0;
 	display: none;
 }
-.reply:hover .reply-reply a{
+.reply-reply span a{
+	color: #aaa;
+}
+.reply:hover .reply-reply span{
 	display: block;
+}
+.reply:hover .reply-reply span a:hover{
+	color: #225d99;
+}
+
+.bg-color-white{
+	margin-top: 5px;
+	background: #faf3d6;
+	border-color: #f4e5a8;	
 }
 /*register.html CSS*/
 .error{
@@ -389,13 +410,13 @@ a.count:visited {
 .register-form {
 	margin-top: 10px;
 }
-.register-form .control-label{
+.register-form .control-label {
 	float: left;
 	width: 60px;
 	padding-top: 5px;
 	text-align: right;
 }
-.register-form .controls{
+.register-form .controls {
 	*display: inline-block;
 	*padding-left: 20px;
 	margin-left: 80px;
@@ -403,7 +424,7 @@ a.count:visited {
 }
 
 /*login.html CSS*/
-.remember{
+.remember {
 	cursor: pointer;
 	font-size: 16px;
 	display: inline;
@@ -745,3 +766,5 @@ button::-moz-focus-inner{
 	margin: 0 3px;
 	background: #f5cbad none repeat scroll 0 0;
 }
+
+

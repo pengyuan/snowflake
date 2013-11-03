@@ -22,8 +22,8 @@ def home(request, user_slug):
         user_profile = UserProfile.objects.get(slug=user_slug)
     except UserProfile.DoesNotExist:
         raise Http404
-    topic_list = Topic.objects.filter(author=user_profile.user).order_by('-created_on')
-    reply_list = Reply.objects.filter(author=user_profile.user).order_by('-created_on')
+    topic_list = Topic.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
+    reply_list = Reply.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
     if request.user.is_authenticated(): 
         num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
         context['num_private_message'] = num_private_message

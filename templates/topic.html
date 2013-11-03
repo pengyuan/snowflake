@@ -13,7 +13,7 @@
 		    <ol class="breadcrumb">
 				<li><a href="/">首页</a></li>
 				<li>/</li>
-				<li class="active"><a href="/node/{{node.slug}}">{{topic.node.name}}</a></li>
+				<li class="active"><a href="/node/{{topic.node.slug}}">{{topic.node.name}}</a></li>
 			</ol>
 			<a href="/people/{{topic.author.get_profile.slug}}"  class="pull-right"><img src="/media/avatar/{{ topic.author.get_profile.avatar }}" alt="{{topic.author.get_profile.name}}" border="0" align="default"/></a>
 		</div>
@@ -24,40 +24,46 @@
 		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
 	</div>
 </div>
+{% if topic.num_replies %}
 <p>
 	<h4>{{topic.num_replies}}个回复</h4>
 </p>
+{% else %}
+<p class="text-center well">当前话题还没有回复。</p>
+{% endif %}
 <ul id="reply-list" class="reply-list">
 	{% for item in reply_list %}
 	<li class="reply">
 		<div class="reply-body">
-			<div class="reply-meta">
-				<a href="/people/{{item.author.get_profile.slug}}" class="avatar">
+			<div class="pull-left user-avatar">
+				<a href="/people/{{item.author.get_profile.slug}}">
 					<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{item.author.get_profile.avatar}}" width="36" height="36"/>
 				</a>
-				<div class="reply-meta-data">
-					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a> &nbsp;<font title="{{item.created_on}}">{{item.created_on|time_since}}</font></span>
-					<span class="signature">{{item.author.get_profile.signature}}</span>
-				</div>	
-				<span class="order pull-right"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>		
 			</div>
-			<div id="{{item.id}}" class="reply-content">
-				{% if item.has_parent %}<blockquote>{{item.parent.content|markdown2html}}<a href="/people/{{item.parent.author.get_profile.slug}}">{{item.parent.author.get_profile.name}}</a>&nbsp;&nbsp;<a href="">展开</a></blockquote>{% endif %}
-				{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
-            </div>
-            
-			<div class="reply-reply">{% if user.is_authenticated %}
-				<a href="#reply" onclick="reply('{{item.id}}','{{forloop.counter}}')"><i class="icon-comment"></i> 回复</a>
-               	<a href="#reply" onclick="reply('{{item.id}}','{{forloop.counter}}')"><i class="icon-heart"></i> 感谢</a>{% endif %}
-      		</div>
-      		
+			<div class="reply-meta" id="{{item.id}}">
+				<div class="reply-meta-data">
+					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>&nbsp;&nbsp;{{item.author.get_profile.signature}}</span>
+					<span title="{{item.created_on}}" class="time">{{item.created_on|time_since}}</span>
+				</div>	
+				<div class="reply-content">
+					{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>{% endif %}
+					{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
+            	</div>		
+			</div>
+			<span class="order pull-right"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>
+			<div class="reply-reply">
+				{% if user.is_authenticated %}
+					<span><i class="icon-comment"></i> <a href="#reply" onclick="reply('{{item.id}}')">回复</a></span>
+	               	<!-- <span><i class="icon-heart"></i> <a href="javascript:;" onclick="thank('{{item.id}}')">感谢</a></span> -->
+               	{% endif %}
+   			</div>			
 		</div>
 	</li>
 	{% endfor %}
 </ul>
 {% if user.is_authenticated %}
-<div class="topic-new-reply">
-	<span id="reply" style="display: block; margin: 10px 0;">我的回复</span>
+<div class="box" style="margin-top:30px;">
+	<span id="reply" class="muted">回复</span>
 	<div id="reply-fill"></div>
 	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal"> {% csrf_token %}
 		{% for field in form %}
@@ -85,17 +91,89 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-function reply(id,count) {
+<!-- <script> 
+(function(){ 
+	
+	var o = $(".reference");
+	for(i=0;i<o.length;i++){
+		var s = o[i].innerHTML;
+		//alert(s);
+		var p = document.createElement("span"); 
+		var n = document.createElement("a"); 
+		
+		p.innerHTML = s.substring(0,10); 
+		
+		n.innerHTML = s.length > 10 ? "展开" : ""; 
+		n.href = "###"; 
+		alert(p.innerHTML);
+
+		alert('aaaa');
+		o[i].innerHTML = ""; 
+		o[i].appendChild(p); 
+		o[i].appendChild(n); 
+		//alert('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');	 
+		o[i].onclick = function(){ 
+			if (n.innerHTML == "展开"){ 
+				n.innerHTML = "收起"; 
+				p.innerHTML = s; 
+			}else{ 
+			n.innerHTML = "展开"; 
+			p.innerHTML = s.substring(0,10); 
+		}
+	}
+}
+
+})();
+</script> -->
+<script type="text/javascript"> 
+function reply(id) {
 	content = $("#"+id).html();
-	$("#reply-fill").html("<div id='reply-close' class='alert alert-info'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"<span class='pull-right'>#"+count+"楼</span></div>");
+	$("#reply-fill").html("<div id='reply-close' class='alert bg-color-white'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"</div>");
 	$("#parent_id").val(id);
 	$('#reply-close').bind('closed', function () {
 		$("#parent_id").val('');
 	});
 }
+function thank(id) {
+	content = $("#"+id).html();
+	$("#reply-fill").html("<div id='reply-close' class='alert bg-color-white'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"</div>");
+	$("#parent_id").val(id);
+	$('#reply-close').bind('closed', function () {
+		$("#parent_id").val('');
+	});
+	var query={};
+	query["reply_id"] = node_id;
+	$.ajax({
+		url: "/ajax_focus",
+		type: "GET",
+		data: query,
+		dataType: "json",
+		success: function(result){
+			var res = result['result'];
+			if(res==true){
+				//$("#focus-button").removeAttr('disabled');
+				//$("#focus-button").html("<i class='icon-eye-close icon-white'></i> 取消关注");
+				//$("#focus-button").attr("class","btn btn-warning btn-xs");
+				$("#focus-button").html("<i class='icon-ok icon-white'></i> 已关注 &nbsp;&nbsp;<a href='/cancel_focus/{{node.id}}' style='color:white;'>取消</a>");
+				$("#focus-button").unbind("click");
+				//html = "";
+				//$("#focus_users").html("");
+				//for(i=0;i<users.length;i++){
+					//alert(users[i].name);
+					//html = "<li><a href='/people/"+users[i].id+"/' title='"+users[i].name+"'><img src='"+users[i].avatar+"' alt='"+users[i].name+"'></a></li>";
+					//$("#focus_users").append(html);
+				//}
+				//$("#focus_users").html(html);
+			}
+			else{
+				$("#focus-button").removeAttr('disabled');
+				alert("服务器异常");
+			}
+		}
+	});	
+}
 $(document).ready(function() {
-$('textarea.resizable:not(.processed)').TextAreaResizer();
+	$('textarea.resizable:not(.processed)').TextAreaResizer();
 });
 </script>
 {% endblock %}

@@ -178,16 +178,16 @@ small {
 	zoom: 1
 }
 
-/* 保证块/段落之间的空白隔行 */
-.typo p, .typo pre, .typo ul, .typo ol, .typo dl, .typo form, .typo hr, .typo table,
-.typo-p, .typo-pre, .typo-ul, .typo-ol, .typo-dl, .typo-form, .typo-hr, .typo-table {
-	margin-bottom: 1em;
-}
-
 h1, h2, h3, h4, h5, h6{
 	font-weight: 500;
 	font-weight: 800\9;
 	color:#333;
+}
+
+/* 保证块/段落之间的空白隔行 */
+.typo p, .typo pre, .typo ul, .typo ol, .typo dl, .typo form, .typo hr, .typo table,
+.typo-p, .typo-pre, .typo-ul, .typo-ol, .typo-dl, .typo-form, .typo-hr, .typo-table {
+	margin-bottom: 1em;
 }
 
 /* 标题应该更贴紧内容，并与其他块区分，margin 值要相应做优化 */

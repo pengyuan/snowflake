@@ -8,7 +8,7 @@
 {% block main %}
 <h1>{{people.get_profile.name}}<span class="pull-right">{% if people.id == user.id %}<a href="/accounts/settings" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-cog icon-white"></i> 个人资料设置</a>{% else %}<a href="/message/{{people.get_profile.slug}}" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-envelope icon-white"></i> 私信{% if num_private_message %}{{ num_private_message }}{% endif %}</a>{% endif %}</span></h1>
 {% if people.get_profile.signature %}
-<p class="muted">{{people.get_profile.signature}}<br/></p>
+<p style="font-size:14px;color: #555;">{{people.get_profile.signature}}<br/></p>
 {% endif %}
 <div class="row-fluid">
 	<div class="span2">
@@ -17,19 +17,19 @@
 	<div class="span10" style="padding-left:20px;">
 		<table width="100%">
 			<tbody>
-				<tr style="height:25px;line-height:25px;"><td><font class="muted">杭州 男</font></td></tr>
+				<tr style="height:25px;line-height:25px;"><td><font style="color:#555;font-size:14px;">{{people.get_profile.province}}&nbsp;&nbsp;男</font></td></tr>
+				{% if people.get_profile.website %}
 				<tr style="height:25px;line-height:25px;">
 					<td>
-						<a href="http://www.ericpeng.com" target="blank">www.ericpeng.com</a>
+						<a href="http://{{people.get_profile.website}}" target="blank" style="font-size:14px;">{{people.get_profile.website}}</a>
 					</td>
 				</tr>
+				{% endif %}
 				{% if people.get_profile.weibo or people.get_profile.douban or people.get_profile.github or people.get_profile.twitter %}
 				<tr style="height:25px;line-height:25px;">
 					<td>
-						<span class="label label-primary">{% if people.get_profile.weibo %}<a href="people.get_profile.weibo"><img src="/static/img/weibo.png" width="16" height="16"/></a>{% endif %}</span>
-						<span class="label label-primary">{% if people.get_profile.douban %}<a href="people.get_profile.douban"><img src="/static/img/douban.png" width="16" height="16"/></a>{% endif %}</span>
-						<span class="label label-primary">{% if people.get_profile.github %}<a href="people.get_profile.github"><img src="/static/img/github.png" width="16" height="16"/></a>{% endif %}</span>
-						<span class="label label-primary">{% if people.get_profile.twitter %}<a href="people.get_profile.twitter"><img src="/static/img/twitter.png" width="16" height="16"/></a>{% endif %}</span>
+						{% if people.get_profile.weibo %}<a href="http://{{people.get_profile.weibo}}" target="blank"><img src="/static/img/weibo.png" width="16" height="16"/></a>{% endif %}
+						{% if people.get_profile.github %}<a href="http://{{people.get_profile.github}}" target="blank"><img src="/static/img/github.png" width="16" height="16"/></a>{% endif %}
 					</td>
 				</tr>
 				{% endif %}
@@ -40,7 +40,7 @@
 								{% if people.get_profile.introduction %}
 									{{ people.get_profile.introduction }}
 								{% else %}
-									<p class="muted">还没有个人简介</p>
+									<p style="color:#555;font-size:14px;">还没有个人简介</p>
 								{% endif %}
 							</div>
 						</div>
@@ -48,7 +48,7 @@
 				</tr>
 				<tr style="height:25px;line-height:25px;">
 					<td>
-						<p class="muted pull-right">第<b>{{people.id}}</b>位居民，{{people.date_joined|date:"Y年m月d日 H时i分"}}</p>
+						<p class="pull-right" style="color:#ccc;">第<b>{{people.id}}</b>位居民，{{people.date_joined|date:"Y年m月d日 H:i"}}加入</p>
 					</td>
 				</tr>
 			</tbody>
@@ -64,7 +64,7 @@
 	<p>
 		<ul style="list-style:none; font-size: 14px; margin:10px 0 0 5px;">
 		{% for item in topic_list %}
-			<li style="line-height:25px; height:25px; padding: 5px 0px;border-bottom: 1px dashed #eee; "><a href="/topic/{{item.id}}">{{item.title}}</a><font class="muted" style="padding-left:20px;font-size:12px;">{% if item.num_replies %}{{ item.num_replies }}回复{% endif %}</font><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span> </li>
+			<li style="line-height:25px; height:25px;margin-bottom:10px;"><a href="/topic/{{item.id}}">{{item.title}}</a><font class="muted" style="padding-left:20px;font-size:12px;">{% if item.num_replies %}{{ item.num_replies }}回复{% endif %}</font><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span> </li>
 		{% endfor %}
 		</ul>
 	</p>
@@ -78,8 +78,11 @@
 {% if reply_list %}
 <ul style="list-style:none; font-size: 14px; margin:10px 0 0 5px;">
 	{% for item in reply_list %}
-		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;"><a href="/topic/{{item.id}}">{{item.topic.title}}</a><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
-		<p style="font-size:12px;padding:10px 0px;">{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>&nbsp;&nbsp;{% endif %}{{item.content}}</p>
+		<li class="well" style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;margin-bottom:10px;"><a href="/topic/{{item.id}}">{{item.topic.title}}</a><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+				<div class="reply-content">
+					{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>{% endif %}
+					{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
+            	</div>	
 		</li>
 	{% endfor %}
 </ul>
@@ -91,50 +94,4 @@
 {% endblock %}
 
 {% block side %}
-{% endblock %}
-
-{% block js %}
-<script type="text/javascript">
-$(document).ready(function() {
-	$("#focus-button").bind("click",function() {
-		if($("#focus-button").attr('disabled')=='disabled'){
-			return;
-		}
-		$("#focus-button").attr('disabled', 'disabled');
-		var node_id = $("#people_id").val();
-		if(node_id == '')
-			return;
-		var query={};
-		query["people_id"] = node_id;
-		$.ajax({
-			url: "/ajax_focus",
-			type: "GET",
-			data: query,
-			dataType: "json",
-			success: function(result){
-				var res = result['result'];
-				if(res==true){
-					//$("#focus-button").removeAttr('disabled');
-					//$("#focus-button").html("<i class='icon-eye-close icon-white'></i> 取消关注");
-					//$("#focus-button").attr("class","btn btn-warning btn-xs");
-					$("#focus-button").html("<i class='icon-ok icon-white'></i> 已关注 &nbsp;&nbsp;<a href='/cancel_focus/{{node.id}}' style='color:white;'>取消</a>");
-					$("#focus-button").unbind("click");
-					//html = "";
-					//$("#focus_users").html("");
-					//for(i=0;i<users.length;i++){
-						//alert(users[i].name);
-						//html = "<li><a href='/people/"+users[i].id+"/' title='"+users[i].name+"'><img src='"+users[i].avatar+"' alt='"+users[i].name+"'></a></li>";
-						//$("#focus_users").append(html);
-					//}
-					//$("#focus_users").html(html);
-				}
-				else{
-					$("#focus-button").removeAttr('disabled');
-					alert("服务器异常");
-				}
-			}
-		});
-	});
-});
-</script>
 {% endblock %}
