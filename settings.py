@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'apps.topic',
     'apps.pypi',
     'apps.people',
+    'pagedown',
 )
 
 # A sample logging configuration. The only tangible logging

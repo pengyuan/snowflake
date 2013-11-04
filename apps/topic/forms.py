@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from apps.pagedown.widgets import PagedownWidget
 from apps.topic.models import Topic, Reply, Node
 from apps.topic.widgets import MarkDownInput
 from django import forms
@@ -7,14 +8,16 @@ from django import forms
 class TopicForm(forms.ModelForm):
     title = forms.CharField(label=u'标题',widget=forms.TextInput(attrs={'class':'span12'}))
     #content = forms.CharField(label=u'内容',widget=forms.Textarea(attrs={'class':'span12'}))
-    content = forms.CharField(label=u'内容',widget=MarkDownInput(attrs={'class':'span12 resizable','style':'opacity: 1; height: 179px;'}))
+    #content = forms.CharField(label=u'内容',widget=MarkDownInput(attrs={'class':'span12 resizable','style':'opacity: 1; height: 179px;'}))
+    content = forms.CharField(widget=PagedownWidget())   
     class Meta:
         model = Topic
         fields = ('title','content')#$("#count_char").hide(5000);
         
 class ReplyForm(forms.ModelForm):
     #content = forms.CharField(label=u'回复',widget=forms.Textarea(attrs={'class':'span12 resizable'}))
-    content = forms.CharField(label=u'内容',widget=MarkDownInput(attrs={'class':'span12 resizable','style':'opacity: 1; height: 179px;'}))
+    #content = forms.CharField(label=u'内容',widget=MarkDownInput(attrs={'class':'span12 resizable','style':'opacity: 1; height: 179px;'}))
+    content = forms.CharField(widget=PagedownWidget()) 
     class Meta:
         model = Reply
         fields = ('content',)

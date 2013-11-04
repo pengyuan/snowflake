@@ -49,8 +49,8 @@ class Description(models.Model):
 #话题：标题，内容，所属节点，作者，查看次数，回复次数，创建时间，最后更新时间
 class Topic(models.Model):
     title = models.CharField(max_length=100)
-    #content = models.TextField()  
-    content = MarkDownField()
+    content = models.TextField()  
+    #content = MarkDownField()
     #content_html = MarkDownField(editable=False,blank=True)
     node = models.ForeignKey(Node)
     author = models.ForeignKey(User,related_name='+')
@@ -68,8 +68,8 @@ class Topic(models.Model):
 
 #回复：内容，所属话题，作者，创建时间
 class Reply(models.Model):
-    #content = models.TextField()
-    content = MarkDownField()
+    content = models.TextField()
+    #content = MarkDownField()
     #content_html = MarkDownField(editable=False,blank=True)
     author = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
