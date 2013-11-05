@@ -40,3 +40,18 @@ def num_message(user):
 @stringfilter
 def markdown2html(value):
     return mark_safe(markdown2.markdown(value,safe_mode=True))
+
+@register.filter
+def count_thanks(thanks):
+    for item in thanks.all():
+        print item
+
+@register.filter
+def thanks_list(thanks):
+    thanks = thanks.all()[:3]
+    html = ''
+    for item in thanks:
+        html += '<a href="/people/'+item.get_profile().slug+'">'+item.get_profile().name+'</a>、'
+    html = html[:-1] + u' 赞同'
+    return html
+thanks_list.is_safe = True 

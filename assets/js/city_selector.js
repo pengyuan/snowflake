@@ -64,7 +64,10 @@ function init() {
             if($.trim(city.value)==$.trim(loca3[l]))
             	options[l].selected = true;
         }
-    }
+    }	
+	if(province_obj.value=='香港'|province_obj.value=='澳门'){
+		city_obj.style.display = "none";
+	}
 }
 
 function select() {

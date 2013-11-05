@@ -647,7 +647,7 @@ a:focus {
 }
 
 p {
-  margin: 0 0 10px;
+  margin: 0 0 2px;
 }
 
 .lead {
@@ -866,7 +866,7 @@ hr {
   border-bottom: 1px solid #ffffff;
 }
 hr.dash{
-  margin: 20px 0;
+  margin: 10px 0;
   border: 0;
   border-top: 1px dashed #eeeeee;
   border-bottom: 1px dashed #ffffff;	
@@ -4105,15 +4105,15 @@ input[type="submit"].btn.btn-mini {
   border-color: #ffffff #ffffff #ffffff;
 }
 .nav-tabs-google > li > a:active {
-  color: #dd4b39;
+  color: #3a87ad;
 }
 .nav-tabs-google li:hover {
   color: #333;
-  border-bottom: 3px solid #dd4b39;
+  border-bottom: 3px solid #3a87ad;
 }
 .nav-tabs-google li.active {
   font-weight: bold;
-  border-bottom: 3px solid #dd4b39;
+  border-bottom: 3px solid #3a87ad;
 }
 .nav-tabs-google > .active > a,
 .nav-tabs-google > .active > a:hover {

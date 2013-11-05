@@ -1521,8 +1521,10 @@
                 helpButton.isHelp = true;
                 helpButton.style.right = "0px";
                 helpButton.title = getString("help");
-                helpButton.onclick = helpOptions.handler;
-
+                //helpButton.onclick = helpOptions.handler;
+                helpButton.onclick = function(){ 
+                	window.open("http://stackoverflow.com/editing-help", "_blank");
+        		}
                 setupButton(helpButton, true);
                 buttonRow.appendChild(helpButton);
                 buttons.help = helpButton;

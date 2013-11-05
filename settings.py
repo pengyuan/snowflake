@@ -15,6 +15,8 @@ for item in list(sys.path):
     if item not in prev_sys_path:
         new_sys_path.append(item)
         sys.path.remove(item)
+        
+
 sys.path[:0] = new_sys_path
 
 DEBUG = True
@@ -145,7 +147,7 @@ INSTALLED_APPS = (
     'apps.topic',
     'apps.pypi',
     'apps.people',
-    'pagedown',
+    'apps.pagedown',
 )
 
 # A sample logging configuration. The only tangible logging

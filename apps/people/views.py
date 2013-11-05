@@ -75,6 +75,7 @@ def message(request):
         context['num_notice'] = num_notice
         context['num_message'] = num_message
         context['msg_list'] = sorted(msg_list, key=lambda x:x['message'].time, reverse=True)
+        
         return render(request,'message.html',context)
 
 @login_required
@@ -119,20 +120,24 @@ def message_create(request):
 @login_required
 def message_history(request,talk_to):
     context = {}
+    print talk_to
     try:
         talk_to_profile = UserProfile.objects.get(slug=talk_to)
     except UserProfile.DoesNotExist:
         raise Http404
+    print talk_to_profile.slug
     if request.method =='GET':
-        Message.objects.filter(is_sender=False,talk_to=talk_to_profile.user,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
+        #Message.objects.filter(is_sender=False,talk_to=talk_to_profile.user,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
         msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to_profile.user,is_deleted=False).order_by('-time')[:5]
+        #my_queryset.reverse()[:5]
         context['form'] = MessageReply()
         context['msg_list'] = msg_list
-        try:
-            talk_to = User.objects.get(pk=talk_to)
-        except:
-            talk_to = None
-        context['talk_to'] = talk_to
+        print msg_list
+#         try:
+#             talk_to = User.objects.get(pk=talk_to)
+#         except:
+#             talk_to = None
+        context['talk_to'] = talk_to_profile.user
         return render(request,'message_history.html',context)
 
 @login_required
@@ -149,9 +154,9 @@ def ajax_message(request):
             msg = {}
             msg['id'] = item.id
             msg['is_sender'] = item.is_sender
-            msg['belong_to'] = item.belong_to.id
+            msg['belong_to'] = item.belong_to.get_profile().slug
             msg['belong_to_avatar'] = item.belong_to.get_profile().avatar
-            msg['talk_to'] = item.talk_to.id
+            msg['talk_to'] = item.talk_to.get_profile().slug
             msg['talk_to_avatar'] = item.talk_to.get_profile().avatar
             msg['content'] = item.content
             msg['time'] = 'aaa'
@@ -185,7 +190,7 @@ def message_reply(request):
                 time = datetime.datetime.now()
                 Message.objects.create(is_sender=True,talk_to=talk_to,belong_to=request.user,content=content,time=time,is_readed=True)
                 Message.objects.create(is_sender=False,talk_to=request.user,belong_to=talk_to,content=content,time=time)
-            return HttpResponseRedirect('/message/'+str(talk_to.slug)+'/')
+            return HttpResponseRedirect('/message/'+talk_to.get_profile().slug+'/')
         else:
             Message.objects.filter(is_sender=False,talk_to=talk_to,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
             msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to,is_deleted=False).order_by('time')[:20]

@@ -105,15 +105,17 @@ where = [
 ("台湾","台北|高雄|台中|台南|屏东|南投|云林|新竹|彰化|苗栗|嘉义|花莲|桃园|宜兰|基隆|台东|金门|马祖|澎湖"),
 ("其它","北美洲|南美洲|亚洲|非洲|欧洲|大洋洲")]
 
-# def build_cities():
-#     cities = []
-#     for item in where:
-#         cities_str = item[1].split("|")
-#         cities_province = []
-#         for item_city in cities_str:
-#             cities_tuple = (item_city,item_city)
-#             cities_province.append(cities_tuple)
-#         cities_provinces = (item[0],cities_province)
-#         cities.append(cities_provinces)
-#     return cities
-    
+def build_cities():
+    cities = []
+    for item in where:
+        cities_str = item[1].split("|")
+        cities_province = []
+        for item_city in cities_str:
+            cities_tuple = (item_city,item_city)
+            cities_province.append(cities_tuple)
+        cities_provinces = (item[0],cities_province)
+        cities.append(cities_provinces)
+    print cities
+    return cities
+
+build_cities()

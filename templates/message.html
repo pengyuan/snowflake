@@ -7,8 +7,8 @@
 
 {% block main %}
 <ul class="nav nav-tabs nav-tabs-google">
-	<li><a href="/notice">提醒 <span class="badge badge-important">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
-	<li class="active"><a href="/message">我的私信 <span class="badge badge-important">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
+	<li><a href="/notice">提醒 <span class="badge badge-info">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
+	<li class="active"><a href="/message">我的私信 <span class="badge badge-info">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
 </ul>
 <hr class="dash"/>
 <h2 style="margin-bottom:30px;">我的私信<a href="/message_create" class="small-btn btn btn-info pull-right">新私信</a></h2>

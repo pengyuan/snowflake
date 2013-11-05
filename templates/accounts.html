@@ -25,7 +25,7 @@
 				      			<img src="/media/avatar/{{ user.get_profile.avatar }}" />
 				      			{% if messages %}
 			   						{% for message in messages %}
-			   							<span class="muted">{{ message }}</span> <a href="/accounts/change_avatar">更改</a>
+			   							{% if message.tags == 'info' %}<span class="{{ message.tags }}">{{ message }}</span>{% endif %} <a href="/accounts/change_avatar">更改</a>
 			   						{% endfor %}
 			   					{% else %}
 			   						<a href="/accounts/change_avatar">更改</a>
@@ -51,7 +51,7 @@
 	    	<div class="controls">
 			{% if messages %}
    				{% for message in messages %}
-   				<span class="{{ message.tags }}">{{ message }}</span>
+   					{% if message.tags == 'success' %}<span class="{{ message.tags }}">{{ message }}</span>{% endif %}
    				{% endfor %}
 			{% endif %}
 	    	</div>

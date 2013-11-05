@@ -37,7 +37,7 @@ class Node(models.Model):
     
 #节点描述：内容，作者，节点，时间，是否正在使用
 class Description(models.Model):
-    content = MarkDownField()
+    content = models.TextField()
     author = models.ForeignKey(User)
     node = models.ForeignKey(Node)
     time = models.DateTimeField(auto_now_add=True)
@@ -50,8 +50,6 @@ class Description(models.Model):
 class Topic(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()  
-    #content = MarkDownField()
-    #content_html = MarkDownField(editable=False,blank=True)
     node = models.ForeignKey(Node)
     author = models.ForeignKey(User,related_name='+')
     num_views = models.IntegerField(default=0)
@@ -69,13 +67,12 @@ class Topic(models.Model):
 #回复：内容，所属话题，作者，创建时间
 class Reply(models.Model):
     content = models.TextField()
-    #content = MarkDownField()
-    #content_html = MarkDownField(editable=False,blank=True)
     author = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
     has_parent = models.BooleanField(default=False)
     parent = models.ForeignKey('self',null=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    thanks = models.ManyToManyField(User,related_name='+')
 
     def __unicode__(self):
         return self.content

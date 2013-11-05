@@ -45,3 +45,4 @@ nosetests.xml
 
 # Locals
 local_settings.py
+fabfile.py

@@ -121,6 +121,10 @@ img.avatar:hover {
 .sep3 {
 	height: 3px;
 }
+.sep20 {
+	display: block;
+	height: 20px;
+}
 .small {
 	font-size: 11px;
 	color: #aaa;
@@ -274,6 +278,10 @@ a.count:visited {
 }
 
 /*topic.html CSS*/
+.topic-body{
+	display:block;
+	margin-bottom: 30px;	
+}
 .topic-body .t-meta{
 	color: #aaa;
 	display: block;
@@ -318,7 +326,8 @@ a.count:visited {
 .reply-body {
 	display: block;
 	position: relative;
-	margin: 18px 0 0 0;	
+	margin: 0;	
+	padding: 15px 0 0 0;
 }
 .user-avatar {
 	padding: 4px 10px 0 0;
@@ -332,21 +341,34 @@ a.count:visited {
 	text-overflow: ellipsis;
 	word-wrap: break-word;
 }
-.reply-meta .reply-meta-data{
+.reply-meta-data{
 	display: block;
 	font-size: 12px;
 	color: #bbb;
-	height: 40px;
+	height: auto;
+}
+.reply-meta-data span {
+	display: block;
 }
 .reply-meta-data .author {
 	font-size: 13px;
-	color: #333;
-	font-weight: bold;vertical-align:text-top;
+	color: #999;
+	font-weight: bold;
+	vertical-align:text-top;
 }
-.reply-meta-data .time {
-	display: block;
+.reply-meta-data .thank-list {
+	color: #aaa;
+}
+.reply-meta-data .thank-list a{
+	color: #aaa;
+}
+.reply-meta-data .thank-list a:hover{
+	color: #225d99;
+}
+.reply-menu .time {
 	font-size: 12px;
-	color: #aaa;vertical-align:text-top;
+	color: #aaa;
+	vertical-align:text-top;
 }
 .reply-meta-data .signature {
 	font-size: 12px;
@@ -359,7 +381,7 @@ a.count:visited {
 .reply-body .order {
 	position: absolute;
 	right: 0;
-	top: 0;
+	top: 15px;
 	color: #ccc;
 }
 .reply-body .order a{
@@ -367,32 +389,33 @@ a.count:visited {
 }
 .reply-content {
 	display:block;
-	padding-top: 10px;
+	padding-top: 6px;
 	line-height: 25px;
 	font-size: 14px;
 	text-overflow: ellipsis;
 	word-wrap: break-word;
 }
-.reply-reply {
+.reply-menu {
 	display: block;
 	list-style-type: none;
 	height: 20px;
 	line-height: 20px;
-	padding: 0 0 10px 50px;
+	padding: 8px 0 12px 50px;
 }
-.reply-reply span{
+.reply-menu span {
 	color: #aaa;
-	float: left;
-	margin: 0px 15px 0 0;
+}
+.reply-menu span.hidden{
+	margin: 0px 0 0 15px;	
 	display: none;
 }
-.reply-reply span a{
+.reply-menu span a{
 	color: #aaa;
 }
-.reply:hover .reply-reply span{
+.reply:hover .reply-menu span.hidden{
 	display: block;
 }
-.reply:hover .reply-reply span a:hover{
+.reply:hover .reply-menu span.hidden a:hover{
 	color: #225d99;
 }
 
@@ -599,6 +622,7 @@ a.count:visited {
 .match-li:hover {
 	background: #efefff;
 }
+
 /*history.html CSS*/
 .bubble {
 	display: inline-block;
@@ -612,9 +636,11 @@ a.count:visited {
 .bubble-box{
 	display: block;
     background:#EEE;
-    width:300px;
+    width:auto;
+    max-width: 370px;
+    min-width: 260px;
     position: relative;
-    padding:10px 10px 10px 10px;
+    padding: 10px 15px 10px 15px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px; 
@@ -630,7 +656,9 @@ a.count:visited {
     /* 修正IE6 */
     _position:relative;
     _z-index:10;
-    width:290px;
+    width:auto;
+    min-width: 250px;
+    max-width: 360px;
     overflow: auto;
     word-wrap: break-word;
     word-break:break-all;
@@ -671,31 +699,42 @@ a.count:visited {
 	margin-left: 20px;
 	background: #EEE;
 }
-button.more {
+.more {
+	display: block;
+	font-size: 13px;
+	margin: 20px 0;
+	padding: 5px 1px;
+	height: 22px;
+	text-align: center;
+	cursor: pointer;
 	width:100%;
 	margin-bottom:20px;
 	outline: none;
-	background-color: #f1f1f2;
-	background-image: -moz-linear-gradient(top,#f8f8f9,#e6e6e8);
-	background-image: -ms-linear-gradient(top,#f8f8f9,#e6e6e8);
-	background-image: -webkit-gradient(linear,0 0,0 100%,from(#f8f8f9),to(#e6e6e8));
-	background-image: -webkit-linear-gradient(top,#f8f8f9,#e6e6e8);
-	background-image: -o-linear-gradient(top,#f8f8f9,#e6e6e8);
-	background-image: linear-gradient(top,#f8f8f9,#e6e6e8);
-	background-repeat: repeat-x;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f9', endColorstr='#e6e6e8', GradientType=0);
-	text-shadow: 0 1px 0 #fff;
-	border: 1px solid #bbb;
-	color: #666!important;
-	box-shadow: 0 1px 0 #fff inset,0 1px 0 rgba(0,0,0,.1);
+}
+.more:hover{
+	color: #aaa;
 }
 button::-moz-focus-inner{
 	border-color:transparent!important;
-}  
+}
+.spinner-gray {
+	display: inline-block;
+	margin: 0 5px;
+	width: 14px;
+	height: 15px;
+	vertical-align: -3px;
+	background-size: 14px 15px;
+	background-repeat: no-repeat;
+	background-image: url("../img/loading.gif");
+}
+
+
 /*avatar.html CSS*/
 #uploadAvatar{
 	margin-bottom: 40px;
 }
+
+
 /*subject.html CSS*/
 .rating_wrap {
 	font-size: 10px;

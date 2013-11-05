@@ -16,7 +16,7 @@ class UserProfile(models.Model):
     photo = models.CharField(max_length=50,default='default-large.png')
     avatar = models.CharField(max_length=50,default='default-normal.png')
     province = models.CharField(max_length=10,null=False)
-    city = models.CharField(max_length=10,null=False)
+    city = models.CharField(max_length=10,blank=True,null=True)
     signature = models.CharField(max_length=40,blank=True)
     introduction = models.CharField(max_length=200,blank=True)
     deleted = models.BooleanField(default=False)

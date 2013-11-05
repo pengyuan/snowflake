@@ -60,7 +60,7 @@ class RegisterForm(forms.Form):
     name = forms.CharField(label='名号',required=True,max_length=20,min_length=2,help_text=mark_safe("建议使用姓名或常用网络ID（可使用中文）"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     slug = forms.CharField(label='网址',required=True,max_length=20,min_length=3,help_text=mark_safe("由小写字母、数字和'_'组成，字母为首"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
-    city = forms.CharField(label='城市',required=True,widget=forms.Select(attrs={'class':'select span2'}))    
+    city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))    
 
     
     def clean_slug(self):
@@ -97,14 +97,15 @@ class ProfileForm(forms.ModelForm):
     weibo = forms.CharField(label=u'微博',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
     github = forms.CharField(label=u'GitHub',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))    
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
-    city = forms.CharField(label='城市',required=True,widget=forms.Select(attrs={'class':'select span2'}))
+    city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))
     signature = forms.CharField(label=u'签名',max_length=40,required=False,widget=forms.TextInput(attrs={'class':'span8','autocomplete':'off'}))
     introduction = forms.CharField(label=u'个人简介',max_length=200,required=False,widget=forms.Textarea(attrs={'class':'span8','style':'height:100px;'}))
     
     class Meta:
         model = UserProfile
         fields = ('name','slug','avatar','website','weibo','github','province','city','signature','introduction')      
-        
+       
+    #自定义规则早于表单自带规则    
     def clean_slug(self):
         slug = self.cleaned_data['slug'].strip()
         regex=ur"^[a-z]\w+$" #由数字、26个英文字母或者下划线组成的字符串 ^\w+$
@@ -114,15 +115,23 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError(u"由小写字母、数字和'_'组成，字母为首")
         
     def clean_province(self):
-        province = self.cleaned_data['province'].strip()
+        cleaned_data = super(ProfileForm, self).clean()
+        province = cleaned_data.get("province")
         if province:
             return province
         else:
             raise forms.ValidationError(u"请填写常居地")
-        
+         
     def clean_city(self):
-        city = self.cleaned_data['city'].strip()
-        if city:
-            return city
+        cleaned_data = super(ProfileForm, self).clean()
+        province = cleaned_data.get("province")
+        city = cleaned_data.get("city")
+        if province:
+            if province==u'香港' or province==u'澳门':
+                return None
+            elif city:
+                return city
+            else:
+                raise forms.ValidationError(u"请填写常居地")  
         else:
             raise forms.ValidationError(u"请填写常居地")

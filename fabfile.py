@@ -1,419 +1,158 @@
-import os
-import sys
-from functools import wraps
-from getpass import getpass, getuser
-from glob import glob
-from contextlib import contextmanager
-
-from fabric.api import env, cd, prefix, sudo as _sudo, run as _run, hide
-from fabric.contrib.files import exists, upload_template
-from fabric.colors import yellow, green, blue, red
-
-
-################
-# Config setup #
-################
-
-conf = {}
-if sys.argv[0].split(os.sep)[-1] == "fab":
-    # Ensure we import settings from the current dir
-    try:
-        conf = __import__("settings", globals(), locals(), [], 0).FABRIC
-        try:
-            conf["HOSTS"][0]
-        except (KeyError, ValueError):
-            raise ImportError
-    except (ImportError, AttributeError):
-        print "Aborting, no hosts defined."
-        exit()
-
-env.db_pass = conf.get("DB_PASS", None)
-env.admin_pass = conf.get("ADMIN_PASS", None)
-env.user = conf.get("SSH_USER", getuser())
-env.password = conf.get("SSH_PASS", None)
-env.key_filename = conf.get("SSH_KEY_PATH", None)
-env.hosts = conf.get("HOSTS", [])
-
-env.proj_name = conf.get("PROJECT_NAME", os.getcwd().split(os.sep)[-1])
-env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s" % env.user)
-env.venv_path = "%s/%s" % (env.venv_home, env.proj_name)
-env.proj_dirname = "project"
-env.proj_path = "%s/%s" % (env.venv_path, env.proj_dirname)
-env.manage = "%s/bin/python %s/project/manage.py" % (env.venv_path,
-                                                     env.venv_path)
-env.live_host = conf.get("LIVE_HOSTNAME", env.hosts[0] if env.hosts else None)
-env.repo_url = conf.get("REPO_URL", None)
-env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
-env.gunicorn_port = conf.get("GUNICORN_PORT", 8000)
-env.locale = conf.get("LOCALE", "en_US.UTF-8")
-
-
-##################
-# Template setup #
-##################
-
-# Each template gets uploaded at deploy time, only if their
-# contents has changed, in which case, the reload command is
-# also run.
-
-templates = {
-    "nginx": {
-        "local_path": "deploy/nginx.conf",
-        "remote_path": "/etc/nginx/sites-enabled/%(proj_name)s.conf",
-        "reload_command": "service nginx restart",
-    },
-    "supervisor": {
-        "local_path": "deploy/supervisor.conf",
-        "remote_path": "/etc/supervisor/conf.d/%(proj_name)s.conf",
-        "reload_command": "supervisorctl reload",
-    },
-    "cron": {
-        "local_path": "deploy/crontab",
-        "remote_path": "/etc/cron.d/%(proj_name)s",
-        "owner": "root",
-        "mode": "600",
-    },
-    "gunicorn": {
-        "local_path": "deploy/gunicorn.conf.py",
-        "remote_path": "%(proj_path)s/gunicorn.conf.py",
-    },
-    "settings": {
-        "local_path": "deploy/live_settings.py",
-        "remote_path": "%(proj_path)s/local_settings.py",
-    },
-}
-
-
-######################################
-# Context for virtualenv and project #
-######################################
-
-@contextmanager
-def virtualenv():
-    """
-    Run commands within the project's virtualenv.
-    """
-    with cd(env.venv_path):
-        with prefix("source %s/bin/activate" % env.venv_path):
-            yield
-
-
-@contextmanager
-def project():
-    """
-    Run commands within the project's directory.
-    """
-    with virtualenv():
-        with cd(env.proj_dirname):
-            yield
-
-
-###########################################
-# Utils and wrappers for various commands #
-###########################################
-
-def _print(output):
-    print
-    print output
-    print
-
-
-def print_command(command):
-    _print(blue("$ ", bold=True) +
-           yellow(command, bold=True) +
-           red(" ->", bold=True))
-
-
-def run(command, show=True):
-    """
-    Run a shell comand on the remote server.
-    """
-    if show:
-        print_command(command)
-    with hide("running"):
-        return _run(command)
-
-
-def sudo(command, show=True):
-    """
-    Run a command as sudo.
-    """
-    if show:
-        print_command(command)
-    with hide("running"):
-        return _sudo(command)
-
-
-def log_call(func):
-    @wraps(func)
-    def logged(*args, **kawrgs):
-        header = "-" * len(func.__name__)
-        _print(green("\n".join([header, func.__name__, header]), bold=True))
-        return func(*args, **kawrgs)
-    return logged
-
-
-def get_templates():
-    """
-    Return each of the templates with env vars injected.
-    """
-    injected = {}
-    for name, data in templates.items():
-        injected[name] = dict([(k, v % env) for k, v in data.items()])
-    return injected
-
-
-def upload_template_and_reload(name):
-    """
-    Upload a template only if it has changed, and if so, reload a
-    related service.
-    """
-    template = get_templates()[name]
-    local_path = template["local_path"]
-    remote_path = template["remote_path"]
-    reload_command = template.get("reload_command")
-    owner = template.get("owner")
-    mode = template.get("mode")
-    remote_data = ""
-    if exists(remote_path):
-        with hide("stdout"):
-            remote_data = sudo("cat %s" % remote_path, show=False)
-    with open(local_path, "r") as f:
-        local_data = f.read()
-        if "%(db_pass)s" in local_data:
-            env.db_pass = db_pass()
-        local_data %= env
-    clean = lambda s: s.replace("\n", "").replace("\r", "").strip()
-    if clean(remote_data) == clean(local_data):
-        return
-    upload_template(local_path, remote_path, env, use_sudo=True, backup=False)
-    if owner:
-        sudo("chown %s %s" % (owner, remote_path))
-    if mode:
-        sudo("chmod %s %s" % (mode, remote_path))
-    if reload_command:
-        sudo(reload_command)
-
-
-def db_pass():
-    """
-    Prompt for the database password if unknown.
-    """
-    if not env.db_pass:
-        env.db_pass = getpass("Enter the database password: ")
-    return env.db_pass
-
-
-def apt(packages):
-    """
-    Install one or more system packages via apt.
-    """
-    return sudo("apt-get install -y -q " + packages)
-
-
-def pip(packages):
-    """
-    Install one or more Python packages within the virtual environment.
-    """
-    with virtualenv():
-        return sudo("pip install %s" % packages)
-
-
-def psql(sql, show=True):
-    """
-    Run SQL against the project's database.
-    """
-    out = run('sudo -u root sudo -u postgres psql -c "%s"' % sql, show=False)
-    if show:
-        print_command(sql)
-    return out
-
-
-def python(code, show=True):
-    """
-    Run Python code in the virtual environment, with the Django
-    project loaded.
-    """
-    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'settings\';"
-    with project():
-        return run('python -c "%s%s"' % (setup, code), show=False)
-        if show:
-            print_command(code)
-
-
-def manage(command):
-    """
-    Run a Django management command.
-    """
-    return run("%s %s" % (env.manage, command))
-
-
-#########################
-# Install and configure #
-#########################
-
-@log_call
-def install():
-    """
-    Install the base system-level and Python requirements for the
-    entire server.
-    """
-    locale = "LC_ALL=%s" % env.locale
-    with hide("stdout"):
-        if locale not in sudo("cat /etc/default/locale"):
-            sudo("update-locale %s" % locale)
-            run("exit")
-    sudo("apt-get update -y -q")
-    apt("nginx libjpeg-dev python-dev python-setuptools git-core "
-        "postgresql libpq-dev memcached supervisor")
-    sudo("easy_install pip")
-    sudo("pip install virtualenv mercurial")
-
-
-@log_call
-def create():
-    """
-    Create a virtual environment, pull the project's repo from
-    version control, add system-level configs for the project,
-    and initialise the database with the live host.
-    """
-
-    # Create virtualenv
-    with cd(env.venv_home):
-        if exists(env.proj_name):
-            prompt = raw_input("\nVirtualenv exists: %s\nWould you like "
-                               "to replace it? (yes/no) " % env.proj_name)
-            if prompt.lower() != "yes":
-                print "\nAborting!"
-                return False
-            remove()
-        run("virtualenv %s --distribute" % env.proj_name)
-        vcs = "git" if env.repo_url.startswith("git") else "hg"
-        run("%s clone %s %s" % (vcs, env.repo_url, env.proj_path))
-
-    # Create DB and DB user.
-    pw = db_pass()
-    user_sql_args = (env.proj_name, pw.replace("'", "\'"))
-    user_sql = "CREATE USER %s WITH ENCRYPTED PASSWORD '%s';" % user_sql_args
-    psql(user_sql, show=False)
-    shadowed = "*" * len(pw)
-    print_command(user_sql.replace("'%s'" % pw, "'%s'" % shadowed))
-    psql("CREATE DATABASE %s WITH OWNER %s ENCODING = 'UTF8' "
-         "LC_CTYPE = '%s' LC_COLLATE = '%s' TEMPLATE template0;" %
-         (env.proj_name, env.proj_name, env.locale, env.locale))
-
-    # Set up SSL certificate.
-    conf_path = "/etc/nginx/conf"
-    if not exists(conf_path):
-        sudo("mkdir %s" % conf_path)
-    with cd(conf_path):
-        crt_file = env.proj_name + ".crt"
-        key_file = env.proj_name + ".key"
-        if not exists(crt_file) and not exists(key_file):
-            try:
-                crt_local, = glob(os.path.join("deploy", "*.crt"))
-                key_local, = glob(os.path.join("deploy", "*.key"))
-            except ValueError:
-                parts = (crt_file, key_file, env.live_host)
-                sudo("openssl req -new -x509 -nodes -out %s -keyout %s "
-                     "-subj '/CN=%s' -days 3650" % parts)
-            else:
-                upload_template(crt_file, crt_local, use_sudo=True)
-                upload_template(key_file, key_local, use_sudo=True)
-
-    # Set up project.
-    upload_template_and_reload("settings")
-    with project():
-        if env.reqs_path:
-            pip("-r %s/%s" % (env.proj_path, env.reqs_path))
-        pip("gunicorn setproctitle south psycopg2 "
-            "django-compressor python-memcached")
-        manage("createdb --noinput")
-        python("from django.conf import settings;"
-               "from django.contrib.sites.models import Site;"
-               "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
-               "site.domain = '" + env.live_host + "';"
-               "site.save();")
-        if env.admin_pass:
-            pw = env.admin_pass
-            user_py = ("from django.contrib.auth.models import User;"
-                       "u, _ = User.objects.get_or_create(username='admin');"
-                       "u.is_staff = u.is_superuser = True;"
-                       "u.set_password('%s');"
-                       "u.save();" % pw)
-            python(user_py, show=False)
-            shadowed = "*" * len(pw)
-            print_command(user_py.replace("'%s'" % pw, "'%s'" % shadowed))
-
-    return True
-
-
-@log_call
-def remove():
-    """
-    Blow away the current project.
-    """
-    if exists(env.venv_path):
-        sudo("rm -rf %s" % env.venv_path)
-    for template in get_templates().values():
-        remote_path = template["remote_path"]
-        if exists(remote_path):
-            sudo("rm %s" % remote_path)
-    psql("DROP DATABASE %s;" % env.proj_name)
-    psql("DROP USER %s;" % env.proj_name)
-
-
-##############
-# Deployment #
-##############
-
-@log_call
-def restart():
-    """
-    Restart gunicorn worker processes for the project.
-    """
-    pid_path = "%s/gunicorn.pid" % env.proj_path
-    if exists(pid_path):
-        sudo("kill -HUP `cat %s`" % pid_path)
-    else:
-        sudo("supervisorctl start %s:gunicorn" % env.proj_name)
-
-
-@log_call
-def deploy():
-    """
-    Check out the latest version of the project from version
-    control, install new requirements, sync and migrate the database,
-    collect any new static assets, and restart gunicorn's work
-    processes for the project.
-    """
-    if not exists(env.venv_path):
-        prompt = raw_input("\nVirtualenv doesn't exist: %s\nWould you like "
-                           "to create it? (yes/no) " % env.proj_name)
-        if prompt.lower() != "yes":
-            print "\nAborting!"
-            return False
-        create()
-    for name in get_templates():
-        upload_template_and_reload(name)
-    with project():
-        git = env.repo_url.startswith("git")
-        run("git pull -f" if git else "hg pull && hg up -C")
-        if env.reqs_path:
-            pip("-r %s/%s" % (env.proj_path, env.reqs_path))
-        manage("syncdb --noinput")
-        manage("migrate --noinput")
-        manage("collectstatic -v 0 --noinput")
-    restart()
-    return True
-
-
-@log_call
-def all():
-    """
-    Install everything required on a new system, from the base
-    software, up to the deployed project.
-    """
-    install()
-    if create():
-        deploy()
+# import os
+# import sys
+# from datetime import datetime
+# 
+# from fabric.api import *
+# from fabric.colors import *
+# 
+# 
+# def set_env():
+#     env.FABFILE_NAME = 'production'
+#     env.PROJECT_NAME = 'jojogo'
+#     env.PROJECT_PATH_REMOTE = '/src/jojogo'
+#     env.PROJECT_PATH_LOCAL = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+#     env.SOURCE_VIRTUALENVWRAPPER = 'source /usr/local/bin/virtualenvwrapper.sh'
+#     env.VIRTUALENV_NAME = env.PROJECT_NAME
+#     env.VIRTUALENV_WORKON = '%s && workon %s' % (env.SOURCE_VIRTUALENVWRAPPER, env.VIRTUALENV_NAME)
+# 
+#     env.host_string = 'REMOTE SERVER IP'
+#     env.user = 'REMOTE SERVER SSH LOGIN USERNAME'
+#     env.key_filename = 'ABSOLUTE PATH OF KEY PAIR FILE'
+# 
+# 
+# 
+# @task
+# def checkout():
+#     '''
+#     Checkout project from Subversion
+#     '''
+# 
+#     set_env()
+# 
+#     sudo('apt-get update')
+#     sudo('apt-get install git mercurial subversion')
+#     run('svn co --username USERNAME https://SVN_REPO_URL/')
+# 
+# 
+# @task
+# def setup():
+#     '''
+#     Install all services & apps
+#     '''
+# 
+#     def install_postgresql_and_postgis():
+#         sudo('apt-get install binutils gdal-bin libproj-dev postgresql-9.1-postgis postgresql-server-dev-9.1 python-psycopg2')
+# 
+#     def install_nginx():
+#         run('wget http://nginx.org/keys/nginx_signing.key')
+#         sudo('apt-key add nginx_signing.key')
+#         put('config/etc/apt/sources.list.d/nginx.list', '/etc/apt/sources.list.d/nginx.list', use_sudo=True)
+#         sudo('apt-get update')
+#         sudo('apt-get install nginx')
+# 
+#         # 上傳配置文件
+#         put('config/nginx/nginx.conf', '/etc/nginx.conf', use_sudo=True)
+#         put('config/nginx/conf.d/guangdj.conf', '/etc/nginx/conf.d/guangdj.conf', use_sudo=True)
+# 
+#         # 刪除範例的配置文件
+#         sudo('rm /etc/nginx/conf.d/default.conf')
+#         sudo('rm /etc/nginx/conf.d/example_ssl.conf')
+# 
+#         sudo('service nginx restart')
+# 
+#     def install_pip():
+#         sudo('curl http://python-distribute.org/distribute_setup.py | python')
+#         sudo('curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python')
+# 
+#     def install_virtualenvwrapper():
+#         sudo('pip install virtualenvwrapper')
+# 
+#     def install_pil():
+#         sudo('apt-get install apt-get build-dep python-imaging')
+# 
+#     def install_uwsgi():
+#         sudo('apt-get install build-essential python-dev libxml2-dev')
+# 
+#         log_dir = '~/log/uwsgi'
+# 
+#         run('mkdir -p %s' % log_dir)
+#         run('touch %s/guangdj.log' % log_dir)
+# 
+#     set_env()
+# 
+#     install_postgresql_and_postgis()
+#     install_nginx()
+#     install_pip()
+#     install_virtualenvwrapper()
+#     install_pil()
+#     install_uwsgi()
+# 
+#     with prefix(env.SOURCE_VIRTUALENVWRAPPER):
+#         '''
+#         必須 source virtualenvwrapper.sh
+#         否則會出現 /bin/sh: workon: command not found
+#         '''
+# 
+#         run('mkvirtualenv --no-site-packages %s' % env.VIRTUALENV_NAME)
+# 
+#         with prefix(env.VIRTUALENV_WORKON):
+#             with cd(env.PROJECT_PATH_REMOTE):
+#                 run('pip install -r requirements.txt')
+#                 run('yolk -l')
+#                 run('mkdir -p static_root')
+#                 run('python manage.py collectstatic --clear --noinput')
+# 
+# 
+# @task
+# def syncdb():
+#     '''
+#     Update & migrate Django database
+#     '''
+# 
+#     set_env()
+# 
+#     with prefix(env.VIRTUALENV_WORKON):
+#         run('python manage.py syncdb')
+# 
+# 
+# @task
+# def nginx():
+#     '''
+#     Reload nginx
+#     '''
+# 
+#     set_env()
+# 
+#     sudo('service nginx restart')
+# 
+# 
+# @task
+# def celery():
+#     '''
+#     Reload Celery
+#     '''
+# 
+#     set_env()
+# 
+#     with prefix(env.VIRTUALENV_WORKON):
+#         try:
+#             sudo("ps auxww | grep 'celery' | awk '{print $2}' | xargs kill -9")
+#         except:
+#             print(green('雖然有錯誤訊息，但是 celeryd 還是有被 kill'))
+# 
+#         sudo('python manage.py celeryd_detach')
+# 
+# 
+# @task
+# def uwsgi():
+#     '''
+#     Reload uWSGI
+#     '''
+# 
+#     set_env()
+# 
+#     with prefix(env.VIRTUALENV_WORKON):
+#         run('svn up')
+#         run('python manage.py collectstatic --clear --noinput')
+#         run('killall -9 uwsgi')
+#         run('uwsgi --ini config/uwsgi_conf.ini')

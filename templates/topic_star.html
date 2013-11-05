@@ -25,7 +25,7 @@
 	</div>
 </div>
 {% if topic.num_replies %}
-<font class="muted">全部回复</font> / <a href="/topic/{{topic.id}}/star">最多赞同</a>
+<a href="/topic/{{topic.id}}">全部回复</a> / <font class="muted">最多赞同</font>
 <h4 class="pull-right muted">{{topic.num_replies}}个回复</h4>
 <hr class="dash"/>
 {% else %}
@@ -50,16 +50,10 @@
 					{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
             	</div>		
 			</div>
-			<span class="order pull-right" id="thanks_{{item.id}}_count">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
+			<span class="order pull-right">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
 			<div class="reply-menu">
 				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|time_since}}</span>
-				<span class="hidden pull-left"><a href="#{{forloop.counter}}">{{forloop.counter}}楼</a></span>
-				{% if user.is_authenticated %}
-					<span class="hidden pull-left"><i class="icon-comment"></i> <a href="#reply" onclick="reply('{{item.id}}')">回复</a></span>
-	               	{% if user.id != item.author.id %}<span class="hidden pull-left"><i class="icon-heart"></i> <a href="javascript:;" onclick="thank('{{item.id}}','{{user.id}}')" id="thanks_{{item.id}}_check">{% if user in item.thanks.all %}取消赞同{% else %}赞同{% endif %}</a></span>{% endif %}
-	            {% endif %}
-	            
-   			</div>			
+   			</div>					
 		</div>
 	</li>
 	{% endfor %}
@@ -72,34 +66,6 @@
 		<td width="20%" align="right">{% if reply_list.has_next %}<li class="next"><a href="?page={{ reply_list.next_page_number }}">下一页</a></li>{% endif %}</td>
 	</tr>
 </table>
-{% endif %}
-{% if user.is_authenticated %}
-<div class="box" style="margin-top:30px;">
-	<span id="reply" class="muted">
-		<!-- <a href="/people/{{item.author.get_profile.slug}}">
-			<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{user.get_profile.avatar}}" width="36" height="36"/>
-		</a> -->回复
-	</span>
-	<div id="reply-fill"></div>
-	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal"> {% csrf_token %}
-		{% for field in form %}
-		<div class="control-group">
-	    	<div class="controls" style="margin-left: 0;">
-				{{ field }}
-	    	</div>
-	    	<label>{{ field.errors }}</label>
-	  	</div>
-     	{% endfor %}
-	    <div class="control-group">
-	    	<div class="controls" style="margin-left: 0;float:right;">
-	      		<input type="submit" value="回复" class="btn btn-success">
-	    	</div>
-	  	</div>
-	  	<input type="hidden" value="" name="parent_id" id="parent_id">
-	</form>
-</div>
-{% else %}	
-<p class="required">您需要<a href="/accounts/login">登录</a>来回复。没有账号，马上<a href="/accounts/register">注册</a>一个。</p>
 {% endif %}
 {% endblock %}
 
@@ -170,10 +136,10 @@ function thank(reply_id,user_id) {
 				$("#thanks_"+thanks_id+"_count").html('');
 			}
 			if(check==true){
-				$("#thanks_"+thanks_id+"_check").html('取消赞同');
+				$("#thanks_"+thanks_id+"_check").html('取消感谢');
 			}
 			else{
-				$("#thanks_"+thanks_id+"_check").html('赞同');
+				$("#thanks_"+thanks_id+"_check").html('感谢');
 			}
 		}
 	});	

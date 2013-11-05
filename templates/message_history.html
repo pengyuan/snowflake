@@ -8,7 +8,7 @@
 {% block main %}
 <button class="btn btn-link"><a href="/message">&lt;返回私信列表</a></button>
 <h4>我与{{talk_to.get_profile.name}}的私信</h4>
-<button id="ajax_message" class="btn btn-default more">更多</button>
+<span id="ajax_message" class="more">+ 更多</span>
 <form><input type="hidden" id="num_message" value="{{msg_list|length}}"><input type="hidden" id="to_message" value="{{talk_to.id}}"></form>
 {% if msg_list and talk_to %}
 <ul class="msg_list">
@@ -79,6 +79,7 @@ function words_deal(content_id,max_count) {
 }
 $("#ajax_message").click(function(){
 	//self.attr('disabled','disabled');
+	$("#ajax_message").html('<i class="spinner-gray"></i> 正在加载');
 	query = {}
 	query['num_message'] = $('#num_message').val();
 	query['to_message'] = $('#to_message').val();
@@ -89,12 +90,18 @@ $("#ajax_message").click(function(){
 	    dataType:'json',
 	    success:function(result){
 	    	var msg_list = result.msgs;   //得到数组，每个数组元素是一个JSON Object
+	    	if(msg_list.length>0){
+	    		check = true;
+	    	}
+	    	else{
+	    		check = false;
+	    	}
 	        var num_message = result.end;
 	        $("#num_message").val(num_message);
 	        var arr = $.map(msg_list,function(val,key) {
 				if(val['is_sender']){
 					var str = '<div class="bubble">'+
-	    				'<a href="/people/'+ val['belong_to'] +'"/><img class="pull-right" src="/media/avatar/'+ val['belong_to_avatar'] +'"></a>'+
+	    				'<a href="/people/'+ val['belong_to'] +'"><img class="pull-right" src="/media/avatar/'+ val['belong_to_avatar'] +'"/></a>'+
 	    				'<div class="bubble-box right pull-right">'+
 	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
 	    				'</div>'+
@@ -102,7 +109,7 @@ $("#ajax_message").click(function(){
 				}
 				else{
 					var str = '<div class="bubble">'+
-	    				'<a href="/people/'+ val['talk_to'] +'"/><img class="pull-left" src="/media/avatar/'+ val['talk_to_avatar'] +'"></a>'+
+	    				'<a href="/people/'+ val['talk_to'] +'"><img class="pull-left" src="/media/avatar/'+ val['talk_to_avatar'] +'"/></a>'+
 	    				'<div class="bubble-box left pull-left">'+
 	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
 	    				'</div>'+
@@ -111,15 +118,22 @@ $("#ajax_message").click(function(){
 	            return $(str);
 	        });
 	        for(i=0;i<arr.length;i++){
-	        	//alert(arr[i]);
 	            $(".msg_list").prepend(arr[i]);             
 	        }               
 	        $(arr).each(function(i, li) {
-	            li.fadeIn(1000);                
+	            li.fadeIn(2000);                
 	        })
-	        //$("#loading_pic").css("display","none");
+	        if(check){
+	        	$("#ajax_message").html('+ 更多');
+	        }
+	        else{
+	        	$("#ajax_message").removeAttr("class");
+	        	$("#ajax_message").html('<center style="color:#777;text-shadow: 0 1px 0 #fff;margin: 20px 0;">没有更多私信</center>');
+	        	$("#ajax_message").unbind("click");
+	        }
 	    }
 	});
+	
 });
 </script>
 {% endblock %}

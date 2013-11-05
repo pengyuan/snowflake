@@ -2,17 +2,50 @@
 # -*- coding: UTF-8 -*-
 from apps.topic.forms import TopicForm, ReplyForm, ApplyForm, NodeEditForm
 from apps.topic.models import Topic, Node, Reply, Description
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect, Http404
+from django.http.response import HttpResponse, HttpResponseServerError
 from django.shortcuts import render
+from django.utils import simplejson
 import datetime
 
 def topic(request,topic_id):
     context = {}
     topic = Topic.objects.get(id=topic_id)
+    reply_list = Reply.objects.filter(topic=topic_id)
+    paginator = Paginator(reply_list, 50)
+    page = request.GET.get('page')
+    try:
+        replys = paginator.page(page)
+    except PageNotAnInteger:
+        replys = paginator.page(1)
+    except EmptyPage:
+        replys = paginator.page(paginator.num_pages)    
+    
     context['topic'] = topic
-    context['reply_list'] = Reply.objects.filter(topic=topic_id)
+    context['reply_list'] = replys
     context['form'] = ReplyForm()
     return render(request,'topic.html',context)
+
+def topic_star(request,topic_id):
+    context = {}
+    topic = Topic.objects.get(id=topic_id)
+    reply_list = Reply.objects.filter(topic=topic_id,thanks__isnull=False)
+    reply_list = sorted(reply_list, key=lambda x: x.thanks.all().count(), reverse=True)
+    paginator = Paginator(reply_list, 50)
+    page = request.GET.get('page')
+    try:
+        replys = paginator.page(page)
+    except PageNotAnInteger:
+        replys = paginator.page(1)
+    except EmptyPage:
+        replys = paginator.page(paginator.num_pages)    
+    
+    context['topic'] = topic
+    context['reply_list'] = replys
+    return render(request,'topic_star.html',context)
 
 def node(request, node_slug):
     context = {}
@@ -133,4 +166,41 @@ def reply_create(request, topic_id):
                 reply.parent = Reply.objects.get(pk=parent_id)
             reply.created_on = datetime.datetime.now()
             reply.save()
-    return HttpResponseRedirect('/topic/'+topic_id)
+    reply_list = Reply.objects.filter(topic=topic_id)
+    paginator = Paginator(reply_list, 50)
+    page = paginator.num_pages
+    return HttpResponseRedirect('/topic/'+topic_id+'?page='+str(page)+'#reply')
+
+@login_required
+def ajax_thanks(request):
+    success = False
+    to_return = {'msg':u'No POST data sent.' }
+    if request.method == "GET":
+        get = request.GET.copy()
+        if get.has_key('reply_id') and get.has_key('user_id'):
+            reply_id = get['reply_id'].strip()
+            user_id = get['user_id'].strip()
+            try:
+                reply = Reply.objects.get(id=reply_id)
+            except Reply.DoesNotExist:
+                raise Http404
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                raise Http404  
+            if not user in reply.thanks.all():
+                reply.thanks.add(user)
+                to_return['check'] = True
+            else:
+                reply.thanks.remove(user)
+                to_return['check'] = False
+            to_return['result'] = reply.thanks.all().count()
+            to_return['thanks_id'] = reply_id  
+            success = True
+        else:
+            to_return['msg'] = u"Require keywords"
+    serialized = simplejson.dumps(to_return)
+    if success == True:
+        return HttpResponse(serialized, mimetype="application/json")
+    else:
+        return HttpResponseServerError(serialized, mimetype="application/json")
