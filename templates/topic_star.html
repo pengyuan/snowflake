@@ -24,13 +24,10 @@
 		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
 	</div>
 </div>
-{% if topic.num_replies %}
 <a href="/topic/{{topic.id}}">全部回复</a> / <font class="muted">最多赞同</font>
 <h4 class="pull-right muted">{{topic.num_replies}}个回复</h4>
 <hr class="dash"/>
-{% else %}
-<p class="text-center well">当前话题还没有回复。</p>
-{% endif %}
+{% if reply_list %}
 <ul id="reply-list" class="reply-list">
 	{% for item in reply_list %}
 	<li class="reply">
@@ -58,7 +55,10 @@
 	</li>
 	{% endfor %}
 </ul>
-{% if reply_list.paginator.num_pages > 1%}
+{% else %}
+<p class="text-center well">当前话题没有回复收到赞同。</p>
+{% endif %}
+{% if reply_list.paginator.num_pages > 1 %}
 <table width="100%" class="pager">
 	<tr>
 		<td width="20%" align="left">{% if reply_list.has_previous %}<li class="previous"><a href="?page={{ reply_list.previous_page_number }}">上一页</a></li>{% endif %}</td>
@@ -70,6 +70,24 @@
 {% endblock %}
 
 {% block side %}
+<div class="box">
+	<div class="well">
+		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+		{% if description %}
+			<p style="font-size: 14px;">{{description}}</p>
+			{% if user.is_authenticated %}
+			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
+			{% endif %}
+		{% else %}
+			{% if user.is_authenticated %}
+			<p><center><i class="icon-plus"></i> <a href="/node/{{node.slug}}/edit">添加描述</a></center></p>
+			{% else %}
+			<p>尚没有节点描述。</p>
+			{% endif %}
+		{% endif %}
+		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
+	</div>
+</div>
 {% endblock %}
 
 {% block js %}

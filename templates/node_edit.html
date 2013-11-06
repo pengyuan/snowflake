@@ -12,8 +12,13 @@
 	<li>/</li>
 	<li class="active"><a href="/node/{{node.slug}}" class="muted">{{node.name}}</a></li>
 </ol>
-<h2>添加节点“{{node.name}}”的描述</h2>
-<form action="/node/{{node.slug}}/edit" method="post" class="form-vertical" style="display:inline-block;width:100%;"> {% csrf_token %}
+<h2>为节点“{{node.name}}”添加描述</h2>
+{% if not description %}
+<div class="well">
+<p><b>Tips：</b> 对节点进行描述，然后添加相关资料链接。（将节点相关的最优质资源以链接形式汇集）</p>
+</div>
+{% endif %}
+<form action="/node/{{node.slug}}/edit" method="post" class="form-vertical" style="display:inline-block;width:100%;" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
 	{% for field in form %}
 	<div class="control-group">
 		<label class="control-label">{{ field.label_tag }}</label>
@@ -56,5 +61,31 @@
 {% endblock %}	
 
 {% block side %}
+{% endblock %}
 
+{% block js %}
+<script type="text/javascript">
+function beforeSubmit(form){
+	if(form.content.value==''){
+		form.content.focus();
+		return false;		
+	}
+	else{
+		return true;
+	}
+}
+function words_deal(content_id,max_count) {
+	var curLength=$(content_id).val().length;
+	if(curLength>max_count-4) {
+		var num=$(content_id).val().substr(0,max_count-3);
+		$(content_id).val(num);
+		$(content_id+'_wmd_preview').html('');
+		if($(".count_char").length==0)
+		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
+	}
+	else{
+		$(".count_char").remove();
+	}
+}
+</script>
 {% endblock %}

@@ -34,7 +34,7 @@
 <p class="text-center well">没有相关私信记录。</p>
 {% endif %}
 <div class="box">
-	<form action="/message_reply" method="post" class="form-vertical">{% csrf_token %}
+	<form action="/message_reply" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);">{% csrf_token %}
 		<div class="control-group">
 	    	<label class="control-label"></label>
 	    	<div class="controls">
@@ -67,10 +67,19 @@
 
 {% block js %}
 <script type="text/javascript">
+function beforeSubmit(form){
+	if(form.content.value==''){
+		form.content.focus();
+		return false;		
+	}
+	else{
+		return true;
+	}
+}
 function words_deal(content_id,max_count) {
 	var curLength=$(content_id).val().length;
 	if(curLength>max_count) {
-		var num=$(content_id).val().substr(0,max_count);
+		var num=$(content_id).val().substr(0,max_count-4);
 		$(content_id).val(num);
 		if($(".count_char").length==0)
 		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");

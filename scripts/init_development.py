@@ -182,8 +182,8 @@ node = Node.objects.filter(name='招聘')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'Linux Deepin新增华中科技大学镜像服务(联创)',content=u'Linux Deepin在10月14日新增了华中科技大学的镜像服务。现在，我们又获得了由华中科技大学联创团队维护的另一镜像服务。该镜像站点由华中科技大学启明学院和联创团队提供，并由华中科技大学网络与计算中心提供网络支持，包括了Linux Deepin在内的多个开源软件镜像服务。在此，对他们提供的支持和帮助表示感谢。',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = second_user
+new_topic.last_reply = second_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -193,8 +193,8 @@ node = Node.objects.filter(name='机器学习')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'数据实时性要求较高的项目该如何利用缓存?',content=u'如题,  例如OA, 银行, 电力方面的项目.  如何使用缓存呢?  有效时间设置短一些? 目前我将一些公用的以及不经常改变的东西放到缓存中了, 一些实时性要求较高的东西没有用缓存, 但是又解决的经常查数据库很不爽. SQL语句很大(暂时不说优化SQL语句的事情).还请有经验的朋友分享一下. 感谢!',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = third_user
+new_topic.last_reply = third_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -215,8 +215,8 @@ node = Node.objects.filter(name='设计')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'持续交付和持续部署的区别',content=u'我在上周三写的这条微博。它在微博上激起了活跃的讨论，周四的时候已经被转发了87次，获得了25个赞。',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = third_user
+new_topic.last_reply = third_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -226,8 +226,8 @@ node = Node.objects.filter(name='瞎扯谈')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'第三季度近半数移动钓鱼网站针对网络银行',content=u'网络银行是因为移动技术而变得更加方便的众多服务之一。如今，用户可以随时随地的购买产品、服务、支付账单和管理自己的财务。不过，现实中也存在着会攻击移动银行的威胁，必须加以解决和防护。这些威胁包括：移动钓鱼 – 恶意移动网站会伪装成正常的登入网页，像是银行或社群网络。这些网页是设计来诱骗用户输入他们的登入数据。到目前为止，这一季里有近一半的移动钓鱼网站是针对金融服务网站。',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = second_user
+new_topic.last_reply = second_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -248,8 +248,8 @@ node = Node.objects.filter(name='创造')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'埃洛普: 我们或许高估了 Windows Phone',content=u'埃洛普在与印度网站The Hindu的访谈中承认诺基亚自从转型至Windows Phone平台之后便遭遇到了利润上的枯竭.埃洛普如此说道:" 当你从头开始做某项任务时,过度投资总是必须的.然而若我们回过头来看,会发现Windows Phone设备的销量是呈上升趋势的.这也是微软为此感到激动的原因,因为它的轨迹朝着正确的方向发展.作为诺基亚,我们也对此进行了研究,得出了我们投 资的数量以及可以承受的过度投资,这些都是清醒的."而对于将他所执掌的部门卖给微软的决策,埃洛普表示这是为了股东的利益而考虑的.此举 将能刺激诺基亚的股价,这方面的利益要比整个交易所获得的还要多.与此同时埃洛普表示诺基亚的Lumia以及Asha品牌是否将出现在未来诺基亚设备是属 于微软的决定,因为在收购案中诺基亚已经将这些商标卖给了对方.',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = third_user
+new_topic.last_reply = third_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -259,8 +259,8 @@ node = Node.objects.filter(name='分享')[0]
 node.num_topics += 1
 node.save()
 new_topic = Topic(title=u'分享一个笑话',content=u'一个疯子把五个无辜的人绑在电车轨道上。一辆失控的电车朝他们驶来，并且片刻后就要碾压到他们。幸运的是，你可以拉一个拉杆，让电车开到另一条轨道上。但是还有一个问题，那个疯子在那另一条轨道上也绑了一个人。考虑以上状况，你应该拉拉杆吗？',node=node)
-new_topic.author = new_user
-new_topic.last_reply = new_user
+new_topic.author = third_user
+new_topic.last_reply = third_user
 new_topic.num_views = 0
 new_topic.num_replies = 0
 new_topic.updated_on = datetime.datetime.now()
@@ -288,11 +288,11 @@ second_reply.topic.save()
 second_reply.save()
 #初始化回复2（回复的回复）
 third_reply = Reply(content=u'你好！')
-third_reply.author = third_user
+third_reply.author = new_user
 third_reply.topic = new_topic
 third_reply.topic.num_replies += 1
 third_reply.topic.updated_on = datetime.datetime.now()
-third_reply.topic.last_reply = third_user
+third_reply.topic.last_reply = new_user
 third_reply.topic.save()
 third_reply.has_parent = True
 third_reply.parent = second_reply

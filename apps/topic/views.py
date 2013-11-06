@@ -23,8 +23,14 @@ def topic(request,topic_id):
         replys = paginator.page(1)
     except EmptyPage:
         replys = paginator.page(paginator.num_pages)    
-    
+    description = Description.objects.filter(node=topic.node,active=True)
+    if description:
+        description = description[0]
+    else:
+        description = None
+    context['description'] = description
     context['topic'] = topic
+    context['node'] = topic.node
     context['reply_list'] = replys
     context['form'] = ReplyForm()
     return render(request,'topic.html',context)
@@ -42,8 +48,14 @@ def topic_star(request,topic_id):
         replys = paginator.page(1)
     except EmptyPage:
         replys = paginator.page(paginator.num_pages)    
-    
+    description = Description.objects.filter(node=topic.node,active=True)
+    if description:
+        description = description[0]
+    else:
+        description = None
+    context['description'] = description
     context['topic'] = topic
+    context['node'] = topic.node
     context['reply_list'] = replys
     return render(request,'topic_star.html',context)
 
@@ -61,6 +73,7 @@ def node(request, node_slug):
         description = None
     context['description'] = description
     context['topics'] = Topic.objects.filter(node=node).order_by('-updated_on')
+    context['relative_nodes'] = Node.objects.filter(category=node.category).order_by('num_topics')
     context['form'] = TopicForm()
     return render(request,'node.html',context)
 

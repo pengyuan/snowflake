@@ -31,6 +31,8 @@
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 
 .wmd-button-row 

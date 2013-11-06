@@ -81,7 +81,7 @@
 		</a> -->回复
 	</span>
 	<div id="reply-fill"></div>
-	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal"> {% csrf_token %}
+	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
 		{% for field in form %}
 		<div class="control-group">
 	    	<div class="controls" style="margin-left: 0;">
@@ -99,11 +99,29 @@
 	</form>
 </div>
 {% else %}	
-<p class="required">您需要<a href="/accounts/login">登录</a>来回复。没有账号，马上<a href="/accounts/register">注册</a>一个。</p>
+<div class="required">您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来回复。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。</div>
 {% endif %}
 {% endblock %}
 
 {% block side %}
+<div class="box">
+	<div class="well">
+		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+		{% if description %}
+			<p style="font-size: 14px;">{{description}}</p>
+			{% if user.is_authenticated %}
+			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
+			{% endif %}
+		{% else %}
+			{% if user.is_authenticated %}
+			<p><center><i class="icon-plus"></i> <a href="/node/{{node.slug}}/edit">添加描述</a></center></p>
+			{% else %}
+			<p>尚没有节点描述。</p>
+			{% endif %}
+		{% endif %}
+		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
+	</div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -141,7 +159,16 @@
 
 })();
 </script> -->
-<script type="text/javascript"> 
+<script type="text/javascript">
+function beforeSubmit(form){
+	if(form.content.value==''){
+		form.content.focus();
+		return false;		
+	}
+	else{
+		return true;
+	}
+}
 function reply(id) {
 	content = $("#"+id).html();
 	$("#reply-fill").html("<div id='reply-close' class='alert bg-color-white'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"</div>");
@@ -181,5 +208,20 @@ function thank(reply_id,user_id) {
 $(document).ready(function() {
 	$('textarea.resizable:not(.processed)').TextAreaResizer();
 });
+</script>
+<script type="text/javascript">
+function words_deal(content_id,max_count) {
+	var curLength=$(content_id).val().length;
+	if(curLength>max_count-4) {
+		var num=$(content_id).val().substr(0,max_count-3);
+		$(content_id).val(num);
+		$(content_id+'_wmd_preview').html('');
+		if($(".count_char").length==0)
+		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
+	}
+	else{
+		$(".count_char").remove();
+	}
+}
 </script>
 {% endblock %}

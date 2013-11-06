@@ -57,7 +57,7 @@ def get_cities(province):
 class RegisterForm(forms.Form):
     email = forms.EmailField(label=u'邮箱',required=True,max_length=30,help_text=mark_safe("邮箱将用于接收激活邮件，登录和找回密码"),widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
     password = forms.CharField(label=u'密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput(attrs={'class':'span5','autocomplete':'off'}))   
-    name = forms.CharField(label='名号',required=True,max_length=20,min_length=2,help_text=mark_safe("建议使用姓名或常用网络ID（可使用中文）"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
+    name = forms.CharField(label='名号',required=True,max_length=20,min_length=2,help_text=mark_safe("推荐使用姓名或常用网络ID（可使用中文）"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     slug = forms.CharField(label='网址',required=True,max_length=20,min_length=3,help_text=mark_safe("由小写字母、数字和'_'组成，字母为首"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
     city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))    

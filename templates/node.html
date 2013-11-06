@@ -41,7 +41,7 @@
 </div>
 {% if user.is_authenticated %}
 <div class="box">
-	<form id="your-profile" action="/node/{{node.slug}}/create" method="post" class="form-vertical"> {% csrf_token %}
+	<form id="your-profile" action="/node/{{node.slug}}/create" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
 		{% for field in form %}
 		<div class="control-group">
 	    	<label class="control-label">{{ field.label_tag }}</label>
@@ -60,7 +60,7 @@
 	</form>
 </div>
 {% else %}
-<div class="box"><p class="required">您需要<a href="/accounts/login">登录</a>来发表新话题。没有账号？马上<a href="/accounts/register">注册</a>。</p></div>
+<div class="required">您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来发表新话题。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。</div>
 {% endif %} 
 {% endblock %}	
 
@@ -69,13 +69,13 @@
 	<div class="well">
 		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
 		{% if description %}
-			<p style="font-size: 14px;">{{description}}</p>
+			<p style="font-size: 14px;">{{description|markdown2html}}</p>
 			{% if user.is_authenticated %}
 			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
 			{% endif %}
 		{% else %}
 			{% if user.is_authenticated %}
-			<p>为节点<b>{{node.name}}</b><a href="/node/{{node.slug}}/edit">添加描述</a></p>
+			<p><center><i class="icon-plus"></i> <a href="/node/{{node.slug}}/edit">添加描述</a></center></p>
 			{% else %}
 			<p>尚没有节点描述。</p>
 			{% endif %}
@@ -83,10 +83,47 @@
 		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
 	</div>
 </div>
+<div class="box">
+	<h2>相关节点</h2>
+	<div class="inner">
+	{% for item in relative_nodes %}
+	<a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label label-info">{{item.name}}</span></a>
+    {% endfor %}
+	</div>
+	<div class="clearfix"></div>
+</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+function beforeSubmit(form){
+	if(form.title.value==''){
+		form.title.focus();
+		return false;
+	}
+	else if(form.content.value==''){
+		form.content.focus();
+		return false;		
+	}
+	else{
+		return true;
+	}
+}
 $('textarea.resizable:not(.processed)').TextAreaResizer();
+</script>
+<script type="text/javascript">
+function words_deal(content_id,max_count) {
+	var curLength=$(content_id).val().length;
+	if(curLength>max_count-4) {
+		var num=$(content_id).val().substr(0,max_count-3);
+		$(content_id).val(num);
+		$(content_id+'_wmd_preview').html('');
+		if($(".count_char").length==0)
+		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
+	}
+	else{
+		$(".count_char").remove();
+	}
+}
 </script>
 {% endblock %}

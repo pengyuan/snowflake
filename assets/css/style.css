@@ -253,6 +253,7 @@ a.count:visited {
 
 /*node.html CSS*/
 .required{
+	margin: 50px 0px;
 	font-size: 14px;	
 }
 #focus_users{
