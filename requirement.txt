@@ -1,8 +1,9 @@
 django==1.5.4
 Pillow==2.1.0
 markdown2==2.1.0
-django-simple-captcha
+MySQL-python==1.2.4
 
+#django-simple-captcha
 #DjangoVerifyCode
 #django-celery-email==1.0.4
 #whoosh==2.6.0
