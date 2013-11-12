@@ -23,12 +23,11 @@ import sys
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "pythonic.settings"
-p1 = os.path.dirname(__file__).replace('\\', '/')
-p2 = os.path.join(p1,'apps').replace('\\', '/')
+p1 = os.path.abspath(os.path.dirname(__file__))
+p2 = os.path.abspath(os.path.join(p1,'apps'))
 sys.path.append(p1)
 sys.path.append(p2)
 #sys.path.append('D:/Python/Python26/Lib/site-packages/django') 
-
 #sys.path.append(ROOT_PATH)
 
 #重定向输出，如果有错误信息打印，或者调用print打印信息，将输出到apache的error.log日志文件中。

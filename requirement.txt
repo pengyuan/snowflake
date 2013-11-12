@@ -13,3 +13,5 @@ MySQL-python==1.2.4
 #django-simple-avatar
 #Fabric
 #virtualenv
+
+#pelican==3.3.0
