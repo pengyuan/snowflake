@@ -51,6 +51,7 @@
 {% endblock %}	
 
 {% block side %}
+{% if hot_topics %}
 <div class="box">
 	<h2>热门话题</h2>
 	{% for item in hot_topics %}
@@ -72,6 +73,8 @@
 	{% endfor %}
 	<div class="clearfix"></div>
 </div>
+{% endif %}
+{% if hot_nodes %}
 <div class="box">
 	<h2>热门节点</h2>
 	<div class="inner">
@@ -81,4 +84,5 @@
     </div>
 	<div class="clearfix"></div>
 </div>
+{% endif %}
 {% endblock %}

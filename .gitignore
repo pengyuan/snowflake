@@ -45,4 +45,5 @@ nosetests.xml
 
 # Locals
 local_settings.py
+init_production.py
 fabfile.py

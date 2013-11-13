@@ -404,10 +404,10 @@ a.count:visited {
 	padding: 8px 0 12px 50px;
 }
 .reply-menu span {
+	margin: 0px 15px 0 0;	
 	color: #aaa;
 }
 .reply-menu span.hidden{
-	margin: 0px 0 0 15px;	
 	display: none;
 }
 .reply-menu span a{

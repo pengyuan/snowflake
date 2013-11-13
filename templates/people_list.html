@@ -7,24 +7,26 @@ Pythonic社区居民
 
 {% block main %}
 <br/>
-<h1>Pythonic社区居民</h1>
+<h1>Pythonic社区居民</h1><br/>
 <ul style="list-style:none;">
 	{% for people in people_list %}
-	<li>
-		<a href="/people/{{people.get_profile.slug}}"><img src="/media/avatar/{{ people.get_profile.avatar }}" class="avatar" border="0" alt="{{ people.get_profile.name}}"></a>			
-		<h3><a href="/people/{{people.get_profile.slug}}">{{ people.get_profile.name}}</a></h3>
-		<div style="font-size:90%">
-			<div>{{user.get_profile.signature}}</div>
+	<li style="float:left;margin-right:40px;margin-bottom: 20px;width:156px;height:48px;border:1px solid #eee; padding:0px 4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;">
+		<a style="float:left;padding-top:3px;" href="/people/{{people.get_profile.slug}}"><img src="/media/avatar/{{ people.get_profile.avatar }}" height="40" width="40" border="0" alt="{{ people.get_profile.name}}"></a>			
+		<div style="float:left;padding-left:4px;">
+			<h3 style="margin-top:0px;padding-top:0;font-weight:bold;font-size: 13px;"><a href="/people/{{people.get_profile.slug}}">{{ people.get_profile.name}}</a></h3>
+			<div style="font-size:90%;padding-left:5px;color:#aaa;text-overflow: ellipsis;">
+				<div>{{people.get_profile.signature}}</div>
+			</div>
 		</div>
 	</li>
 	{% endfor %}
 </ul>
-{% if reply_list.paginator.num_pages > 1 %}
-<table width="100%" class="pager">
+{% if people_list.paginator.num_pages > 1 %}
+<table width="93%" class="pager">
 	<tr>
-		<td width="20%" align="left">{% if topics.has_previous %}<li class="previous"><a href="?page={{ topics.previous_page_number }}">上一页</a></li>{% endif %}</td>
-		<td width="60%" align="center"><span class="muted">第{{ topics.number }}页，共{{ topics.paginator.num_pages }}页</span></td>
-		<td width="20%" align="right">{% if topics.has_next %}<li class="next"><a href="?page={{ topics.next_page_number }}">下一页</a></li>{% endif %}</td>
+		<td width="20%" align="left">{% if people_list.has_previous %}<li class="previous"><a href="?page={{ people_list.previous_page_number }}">上一页</a></li>{% endif %}</td>
+		<td width="60%" align="center"><span class="muted">第{{ people_list.number }}页，共{{ people_list.paginator.num_pages }}页</span></td>
+		<td width="20%" align="right">{% if people_list.has_next %}<li class="next"><a href="?page={{ people_list.next_page_number }}">下一页</a></li>{% endif %}</td>
 	</tr>
 </table>
 {% endif %}

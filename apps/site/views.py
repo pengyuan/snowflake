@@ -40,9 +40,9 @@ def index(request):
     context['all_nodes'] = all_nodes
     time_now = datetime.datetime.now()
     from_date = time_now - datetime.timedelta(days=7)
-    hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now]).order_by('num_replies')[:10]
+    hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now]).order_by('-num_replies')[:10]
     context['hot_topics'] = hot_topics
-    hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('updated_on')[:10]
+    hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
     context['hot_nodes'] = hot_nodes
     return render(request,'index.html',context)
 
@@ -129,7 +129,7 @@ def one(request):
 def people(request):
     context = {}
     peoples = User.objects.all().order_by('date_joined')
-    paginator = Paginator(peoples, 20)
+    paginator = Paginator(peoples, 30)
     page = request.GET.get('page')
     try:
         people_list = paginator.page(page)

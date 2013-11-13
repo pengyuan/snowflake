@@ -61,6 +61,18 @@ third_user.save()
 third_profile = UserProfile(user=third_user,name=u'Robbin',slug='robbin',province="浙江",city=u'杭州')
 third_profile.save()
 
+fourth_user = User.objects.create_user(username='c@gmail.com',email='c@gmail.com',password='123456')
+fourth_user.is_active = True
+fourth_user.save()
+fourth_profile = UserProfile(user=fourth_user,name=u'Jim',slug='jim',province="江西",city=u'九江')
+fourth_profile.save()
+ 
+fifth_user = User.objects.create_user(username='d@gmail.com',email='d@gmail.com',password='123456')
+fifth_user.is_active = True
+fifth_user.save()
+fifth_profile = UserProfile(user=fifth_user,name=u'Fish',slug='fish',province="广东",city=u'广州')
+fifth_profile.save()
+
 #初始化类别
 cat_python = ParentNode.objects.create(name=u'Python')
 cat_explore = ParentNode.objects.create(name=u'探索')

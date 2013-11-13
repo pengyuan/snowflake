@@ -53,7 +53,7 @@
 			<span class="order pull-right" id="thanks_{{item.id}}_count">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
 			<div class="reply-menu">
 				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|time_since}}</span>
-				<span class="hidden pull-left"><a href="#{{forloop.counter}}">{{forloop.counter}}楼</a></span>
+				<span class="pull-left"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>
 				{% if user.is_authenticated %}
 					<span class="hidden pull-left"><i class="icon-comment"></i> <a href="#reply" onclick="reply('{{item.id}}')">回复</a></span>
 	               	{% if user.id != item.author.id %}<span class="hidden pull-left"><i class="icon-heart"></i> <a href="javascript:;" onclick="thank('{{item.id}}','{{user.id}}')" id="thanks_{{item.id}}_check">{% if user in item.thanks.all %}取消赞同{% else %}赞同{% endif %}</a></span>{% endif %}
