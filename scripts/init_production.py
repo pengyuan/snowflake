@@ -27,7 +27,7 @@ except Exception, e:
     print e
     pass
 
-conn = MySQLdb.connect(host = 'localhost', user = 'pythonic', passwd = 'pythonic', db='pythonic')
+conn = MySQLdb.connect(host = 'localhost', user = DATABASES['default']['USER'], passwd = DATABASES['default']['PASSWORD'], db='pythonic')
 cursor = conn.cursor()
 try:
     cursor.execute("use pythonic")
