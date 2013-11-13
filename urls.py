@@ -16,12 +16,14 @@ urlpatterns = patterns('apps.site.views',
     (r'^feedback/?$','feedback'),
     (r'^feedback/success/?$','feedback_success'),
     (r'^help/?$','help_use'),
+    (r'^one/?$','one'),
+    (r'^people/?$','people'),
 )
 
 urlpatterns += patterns('',
     (r'^accounts/',include('apps.accounts.urls')),
     (r'^people/',include('apps.people.urls')),
-    (r'^pypi/',include('apps.pypi.urls')),
+    #(r'^pypi/',include('apps.pypi.urls')),
 )
 
 urlpatterns += patterns('apps.topic.views',

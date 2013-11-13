@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}
+关于Pythonic社区
+{% endblock %}
+
+{% block head %}
+<style>
+h2{
+	margin: 0px;
+	padding: 0px;
+	line-height:20px;
+	height: 20px;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<br/>
+<pre>
+<h1>Pythonic One 开源文档计划</h1>
+<b>开始</b>
+1.为什么是Python？
+2.选择Python2还是Python3？
+3.安装Python
+
+<b>写出好代码</b>
+1.入门
+2.高级特性
+3.代码风格与规范
+4.测试你的代码
+5.发布你的代码（选择开源协议）
+
+<b>应用场景</b>
+1.网络应用（异步与并发）
+	1.1 XML解析/Json
+		1.1.1 beautifulSoup
+		1.1.2 xmltodict
+	1.2 爬虫
+		1.2.1 Scrapy
+		1.2.2 xx
+	1.3 异步
+	1.4 并发
+	1.5 web服务器
+2.web开发
+	2.1 wsgi标准
+	2.2 模板引擎
+	2.3 web.py
+	2.4 tornado
+	2.5 flask
+	2.6 django
+	2.7 ORM
+	2.8 测试
+3.命令行应用
+	3.1 Clint
+	3.2 docopt
+4.GUI应用
+	4.1 wxPython
+	4.2 PyQt/PySide
+	4.3 PyGTK
+5.科学计算
+	5.1 NumPy
+	5.2 SciPy
+	5.3 matplotlib
+	5.4 图形处理
+6.系统管理
+	6.1 Fabric
+	6.2 持续集成
+	
+
+<b>专题</b>
+1.开发环境（IDE与虚拟环境）
+2.执行效率
+3.程序移植
+4.文档工具
+5.杰出的开源项目/书籍/文档
+
+<b>附录</b>
+1.Python软件基金会
+2.PEPs
+3.Python会议
+4.贡献者</pre><br/><br/><br/>
+{% endblock %}
+
+{% block side %}
+<div style="margin-top: 22px;"></div>
+<div class="box">
+<b>Pythonic One</b><br/>
+<small class="muted">Python Guide for EveryOne</small><br/><br/>
+这是一个开源文档计划，希冀能够成为一份中文版的Python最佳实践指南。<br/><br/>
+这是一个人人都可以参与的项目，致力于将最优价值的内容以最Pythonic的方式写下来，成为一个CookBook，让所有的Python使用者都可以获得最经典、简单、全面的资料。
+不管是工具链还是方法论，都有一个更好的认识。<br/><br/>
+每一个人都可以fork或pull一份作为案头必备，也可以在自己的实践中发现的新想法、经验等补充进来,push上去。<br/><br/>
+我为人人，人人为我。<br/>
+<br/>
+</div>
+{% endblock %}

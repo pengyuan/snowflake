@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from apps.accounts.models import UserProfile
 from apps.site.forms import FeedbackForm
 from apps.topic.models import Topic, Node, ParentNode
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
@@ -120,3 +122,20 @@ def feedback_success(request):
 
 def help_use(request):
     return render(request,'help.html')
+
+def one(request):
+    return render(request,'one.html')
+
+def people(request):
+    context = {}
+    peoples = User.objects.all().order_by('date_joined')
+    paginator = Paginator(peoples, 20)
+    page = request.GET.get('page')
+    try:
+        people_list = paginator.page(page)
+    except PageNotAnInteger:
+        people_list = paginator.page(1)
+    except EmptyPage:
+        people_list = paginator.page(paginator.num_pages)
+    context['people_list'] = people_list
+    return render(request,'people_list.html',context)

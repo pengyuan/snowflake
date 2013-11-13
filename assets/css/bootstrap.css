@@ -966,6 +966,18 @@ code {
 pre {
   display: block;
   margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 25px;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre;
+  white-space: pre-wrap;
+  border: none;
+  padding: 0px;
+}
+.reply-content pre {
+  display: block;
+  margin: 0 0 10px;
   font-size: 13px;
   line-height: 20px;
   word-break: break-all;
@@ -4037,7 +4049,7 @@ input[type="submit"].btn.btn-mini {
 .nav > li > a {
   position: relative;
   display: block;
-  padding: 5px 15px;
+  padding: 5px 10px;
 }
 
 .nav > li > a:hover,
