@@ -3,10 +3,11 @@
 from apps.topic.models import Node, ParentNode
 from django.contrib.sites.models import Site
 from django.core.management import call_command
+from settings import DATABASES
 import MySQLdb
 import datetime
 
-conn = MySQLdb.connect(host = 'localhost', user = 'pythonic', passwd = 'pythonic')
+conn = MySQLdb.connect(host = 'localhost', user = DATABASES['default']['USER'], passwd = DATABASES['default']['PASSWORD'])
 cursor = conn.cursor()
 
 try:
@@ -24,7 +25,7 @@ try:
     call_command('syncdb', interactive=True)
 except Exception, e:
     print e
-    pass    
+    pass
 
 conn = MySQLdb.connect(host = 'localhost', user = 'pythonic', passwd = 'pythonic', db='pythonic')
 cursor = conn.cursor()

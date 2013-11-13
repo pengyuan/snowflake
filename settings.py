@@ -2,8 +2,6 @@
 # -*- coding: UTF-8 -*-
 # Django settings for pythonic project.
 import os
-import site
-import sys
 
 #ROOT = os.path.dirname(os.path.abspath(__file__))
 # path = lambda *a: os.path.join(ROOT, *a)
@@ -87,7 +85,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(ROOT_PATH,'static')
+STATIC_ROOT = os.path.join(ROOT_PATH,'static').replace('\\', '/')
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
@@ -190,6 +188,20 @@ WMD_ADMIN_SHOW_PREVIEW = True
 
 #WHOOSH_INDEX = 'c:/index'
 
+# from django import template  
+# template.add_to_builtins('topic.templatetags.template_tags')
+
+# EMAIL_HOST = ''
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
 # 最大可上传图片大小 MB
 AVATAR_UPLOAD_MAX_SIZE =  5
 # 头像目录 - 需要在项目的settings.py中设置
@@ -208,17 +220,3 @@ AVATAR_LARGE_RESIZE_SIZE = 100
 # 头像处理完毕后保存的格式和质量， 格式还可以是 jpep, gif
 AVATAR_SAVE_FORMAT = 'png'
 AVATAR_SAVE_QUALITY = 90
-
-# from django import template  
-# template.add_to_builtins('topic.templatetags.template_tags')
-
-# EMAIL_HOST = ''
-# EMAIL_PORT = 25
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ''
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-try:
-    from local_settings import *
-except ImportError:
-    pass
