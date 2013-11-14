@@ -241,7 +241,7 @@ def upload_avatar(request):
     ext = os.path.splitext(uploaded_file.name)[-1]
     new_name = hashlib.md5('{0}{1}'.format(get_random_string(), time.time())).hexdigest()
     new_name = '%s%s' % (new_name, ext.lower())
-    fpath = os.path.join(AVATAR_TEMP_DIR, new_name)
+    fpath = os.path.join(AVATAR_TEMP_DIR, new_name).replace('\\', '/')
     try:
         with open(fpath, 'wb') as f:
             for c in uploaded_file.chunks(10240):
