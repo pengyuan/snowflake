@@ -32,6 +32,10 @@
 	text-decoration: none;
 	cursor: pointer;
 }
+.border-dash{
+	border: 1px dashed #ccc;
+	background-color: #fafafa;
+}
 .num {
 	position: relative;
 	color: #fff;
@@ -57,8 +61,16 @@
 }
 #logo{
 	float: left;
-	margin: 5px 5px 0 -3px;
+	margin: 7px 5px 0 -3px;
 	background: url("../img/pythonic.png") no-repeat;
+		/*filter:Alpha(opacity=90);
+  	-moz-opacity:0.9;
+	opacity:0.9;*/
+}
+#logo:hover {
+	filter:Alpha(opacity=80);
+  	-moz-opacity:0.8;
+	opacity:0.8;
 }
 #logo a{
 	display: block;
@@ -240,14 +252,16 @@ a.count:visited {
 }
 .inner a {
 	margin:5px 5px 5px 0px;
-	padding: 2px 0px;
+	padding: 1px 0px;
 	border-radius: 4px;
 	display: inline-block;
 	background: #88bbdd;
+	border: 1px solid #739fbc;
 }
 .inner a:hover {
 	color: white;
-	background: #6699cc;
+	background: #3a79b8;
+	border: 1px solid #2f6294;
 	text-decoration: none;
 }
 

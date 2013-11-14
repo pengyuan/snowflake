@@ -33,7 +33,7 @@
 	</table>
 </div>
 {% else %}
-<div class="well text-center">还没有话题。</div>
+<div class="well text-center border-dash">还没有话题。</div>
 {% endif %}
 <div id="node-wrap" class="box">
     <span class="node-title">节点导航</span>
@@ -82,7 +82,7 @@
 	<h2>热门节点</h2>
 	<div class="inner">
 	{% for item in hot_nodes %}
-        <a href="/node/{{item.slug}}" title="{{item.name}}" class><span class="label">{{item.name}}</span></a>
+        <a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label">{{item.name}}</span></a>
     {% endfor %}
     </div>
 	<div class="clearfix"></div>

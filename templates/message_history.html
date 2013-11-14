@@ -31,7 +31,7 @@
 	{% endfor %}
 </ul>
 {% else %}
-<p class="text-center well">没有相关私信记录。</p>
+<p class="text-center well border-dash">没有相关私信记录。</p>
 {% endif %}
 <div class="box">
 	<form action="/message_reply" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);">{% csrf_token %}

@@ -36,7 +36,7 @@
 	</div>
 	{% endfor %}
 	{% else %}
-	<p class="text-center well">当前节点还没有话题。</p>
+	<p class="text-center well border-dash">当前节点还没有话题。</p>
 	{% endif %}
 </div>
 {% if user.is_authenticated %}
@@ -87,7 +87,7 @@
 	<h2>相关节点</h2>
 	<div class="inner">
 	{% for item in relative_nodes %}
-	<a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label label-info">{{item.name}}</span></a>
+	<a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label">{{item.name}}</span></a>
     {% endfor %}
 	</div>
 	<div class="clearfix"></div>
