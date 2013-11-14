@@ -48,7 +48,7 @@ nosetests.xml
 local_settings.py
 init_production.py
 fabfile.py
-media/temp/*.png
+media/temp/*
 media/avatar/*
 ! default-large.png
 ! default-normal.png
