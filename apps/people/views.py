@@ -120,19 +120,16 @@ def message_create(request):
 @login_required
 def message_history(request,talk_to):
     context = {}
-    print talk_to
     try:
         talk_to_profile = UserProfile.objects.get(slug=talk_to)
     except UserProfile.DoesNotExist:
         raise Http404
-    print talk_to_profile.slug
     if request.method =='GET':
         #Message.objects.filter(is_sender=False,talk_to=talk_to_profile.user,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
         msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to_profile.user,is_deleted=False).order_by('-time')[:5]
         #my_queryset.reverse()[:5]
         context['form'] = MessageReply()
         context['msg_list'] = msg_list
-        print msg_list
 #         try:
 #             talk_to = User.objects.get(pk=talk_to)
 #         except:
@@ -182,7 +179,7 @@ def message_reply(request):
             
             content = form.cleaned_data['content']
             try:
-                talk_to = User.objects.get(pk=talk_to)
+                talk_to = User.objects.get(pk=talk_to,is_active=True)
             except User.DoesNotExist:
                 messages.error(request,'该用户不存在或已注销')
                 pass
@@ -195,7 +192,7 @@ def message_reply(request):
             Message.objects.filter(is_sender=False,talk_to=talk_to,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
             msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to,is_deleted=False).order_by('time')[:20]
             try:
-                talk_to = User.objects.get(pk=talk_to)
+                talk_to = User.objects.get(pk=talk_to,is_active=True)
             except:
                 talk_to = None
             return render(request,'message_history.html',locals())

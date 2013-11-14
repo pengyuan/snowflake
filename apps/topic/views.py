@@ -198,7 +198,7 @@ def ajax_thanks(request):
             except Reply.DoesNotExist:
                 raise Http404
             try:
-                user = User.objects.get(id=user_id)
+                user = User.objects.get(id=user_id,is_active=True)
             except User.DoesNotExist:
                 raise Http404  
             if not user in reply.thanks.all():

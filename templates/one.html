@@ -16,7 +16,11 @@ h2{
 {% endblock %}
 
 {% block main %}
-<br/>
+<ol class="breadcrumb">
+	<li><a href="/">首页</a></li>
+	<li>/</li>
+	<li class="active"><a href="/node/{{node.slug}}" class="muted">Pythonic One</a></li>
+</ol>
 <pre>
 <h1>Pythonic One 开源文档计划</h1>
 <b>开始</b>

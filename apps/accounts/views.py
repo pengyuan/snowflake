@@ -96,12 +96,10 @@ def login(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER','/'))
     if request.method == 'GET':
         referer  = request.META.get('HTTP_REFERER','/')
-        print referer
         if 'accounts' in str(referer) or 'notice' in str(referer) or 'message' in str(referer) or 'admin' in str(referer):
             request.session['referer'] = '/'
         else :
             request.session['referer'] = referer
-        print request.session['referer']
         form = LoginForm()
         return render(request,'login.html',locals())
     form = LoginForm(request.POST)

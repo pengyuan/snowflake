@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from apps.accounts.models import UserProfile
 from apps.site.forms import FeedbackForm
 from apps.topic.models import Topic, Node, ParentNode
 from django.contrib.auth.models import User
@@ -128,7 +127,7 @@ def one(request):
 
 def people(request):
     context = {}
-    peoples = User.objects.all().order_by('date_joined')
+    peoples = User.objects.filter(is_active=True).order_by('date_joined')
     paginator = Paginator(peoples, 30)
     page = request.GET.get('page')
     try:

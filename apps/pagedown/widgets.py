@@ -13,7 +13,6 @@ except ImportError: #python3
 from django.utils.safestring import mark_safe
 
 STATIC_URL = settings.STATIC_URL.rstrip('/')
-print STATIC_URL
 
 class PagedownWidget(forms.Textarea):
     class Media:

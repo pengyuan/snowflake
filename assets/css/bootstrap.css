@@ -1812,10 +1812,11 @@ input.search-query {
   -webkit-border-radius: 15px;
      -moz-border-radius: 15px;
           border-radius: 15px;
-          
-  background: #aaa;
+  color: #aaa;
+  background: white;
 }
 input.search-query:focus {
+	color: #333;
   background: white;
 }
 /* Allow for input prepend/append in search forms */
@@ -4269,7 +4270,7 @@ input[type="submit"].btn.btn-mini {
   z-index: 1000;
   min-height: 50px;
   margin-bottom: 20px;
-  border: 1px solid transparent;
+	box-shadow: inset 0 -1px 0 #cacaca;
 }
 
 .navbar:before,
@@ -4743,7 +4744,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar-inverse {
-  background-color: #444444;
+  background-color: #e0e0e0;
   border-color: #080808;
 }
 
@@ -4762,13 +4763,14 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar-inverse .navbar-nav > li > a {
-  color: #999999;
+	font-weight: bold;
+  color: #777;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus {
-  color: #ffffff;
-  background-color: transparent;
+  color: #fff;
+  background-color: #acacac;
 }
 
 .navbar-inverse .navbar-nav > .active > a,
