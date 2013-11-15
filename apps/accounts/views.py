@@ -269,7 +269,7 @@ def upload_avatar(request):
 def crop_avatar(request):
     """剪裁头像"""
     photo_name = request.session['photo_name']
-    photo_orig = os.path.join(AVATAR_TEMP_DIR, photo_name)
+    photo_orig = os.path.join(AVATAR_TEMP_DIR, photo_name).replace('\\', '/')
     try:
         x1 = int(float(request.POST['x1']))
         y1 = int(float(request.POST['y1']))
