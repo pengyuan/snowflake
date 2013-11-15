@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 # Django settings for pythonic project.
+import logging
 import os
 
 #ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -161,7 +162,7 @@ INSTALLED_APPS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -183,6 +184,13 @@ LOGGING = {
     }
 }
 
+logging.basicConfig(
+    level = logging.DEBUG,
+    format = '%(asctime)s %(levelname)s  %(module)s.%(funcName)s Line:%(lineno)d  %(message)s',
+    filename = os.path.join(ROOT_PATH,'debug.log').replace('\\', '/'),
+)
+
+
 WMD_SHOW_PREVIEW = True
 WMD_ADMIN_SHOW_PREVIEW = True
 
@@ -202,6 +210,8 @@ try:
 except ImportError:
     pass
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5
+FILE_UPLOAD_TEMP_DIR = os.path.join(MEDIA_ROOT,'temp').replace('\\', '/')
 # 最大可上传图片大小 MB
 AVATAR_UPLOAD_MAX_SIZE =  5
 # 头像目录 - 需要在项目的settings.py中设置

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+import logging
 from PIL import Image
 from apps.accounts.forms import RegisterForm, LoginForm, ProfileForm
 from apps.accounts.function import send_email
@@ -307,9 +308,21 @@ def crop_avatar(request):
         res_path2 = os.path.join(AVATAR_DIR, res_name2).replace('\\', '/')
         res.save(res_path, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
         res2.save(res_path2, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
+        print 'res:',res
+        print 'res2:',res2
+        print 'res_name:',res_name
+        print 'res_name2:',res_name2
+        print 'res_path:',res_path
+        print 'res_path2:',res_path2
     except:
+        logging.error('发生错误！')
+#         logging.debug('debug')  #被忽略  
+#         logging.info('info')    #被忽略  
+#         logging.warning('warn')  
+#         logging.error('error')       
+        logging.exception('haha')
         raise UploadAvatarError('发生错误，请稍后重试')
-    
+    raise UploadAvatarError('发生错误，请稍后重试')
     for files in os.walk(AVATAR_TEMP_DIR):
         for fn in files[2]:
             filePath = os.path.join(AVATAR_TEMP_DIR,fn).replace('\\', '/')
