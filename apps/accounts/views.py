@@ -303,8 +303,8 @@ def crop_avatar(request):
         res2 = avatar.resize((size_large, size_large), Image.ANTIALIAS)
         res_name = '%s-normal.%s' % (avatar_name, AVATAR_SAVE_FORMAT)
         res_name2 = '%s-large.%s' % (avatar_name, AVATAR_SAVE_FORMAT)
-        res_path = os.path.join(AVATAR_DIR, res_name)
-        res_path2 = os.path.join(AVATAR_DIR, res_name2)
+        res_path = os.path.join(AVATAR_DIR, res_name).replace('\\', '/')
+        res_path2 = os.path.join(AVATAR_DIR, res_name2).replace('\\', '/')
         res.save(res_path, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
         res2.save(res_path2, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
     except:
@@ -312,7 +312,7 @@ def crop_avatar(request):
     
     for files in os.walk(AVATAR_TEMP_DIR):
         for fn in files[2]:
-            filePath = os.path.join(AVATAR_TEMP_DIR,fn)
+            filePath = os.path.join(AVATAR_TEMP_DIR,fn).replace('\\', '/')
             if os.path.isfile( filePath ):
                 try:
                     os.unlink(photo_orig)
