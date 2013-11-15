@@ -40,7 +40,7 @@
 </div>
 {% if user.is_authenticated %}
 <div class="box">
-	<form id="your-profile" action="/node/{{node.slug}}/create" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
+	<form action="/node/{{node.slug}}/create" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
 		{% for field in form %}
 		<div class="control-group">
 	    	<label class="control-label">{{ field.label_tag }}</label>
