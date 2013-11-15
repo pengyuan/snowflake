@@ -11,7 +11,6 @@
 	<li><a href="/">首页</a></li>
 	<li>/</li>
 	<li class="active"><a href="/node/{{node.slug}}" class="muted">{{node.name}}</a></li>
-	<!-- <a class="btn btn-info pull-right" href="/topic/new/" style="height: 20px;">新话题</a> -->
 </ol>
 <div id="topic-wrap" class="box">
 	{% if topics %}
@@ -20,12 +19,12 @@
 	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
 	        <tbody>
 	       	<tr>
-	            <td width="48" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+	            <td width="40" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
 	            <td width="12"></td>
 	            
 	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
-	            <div class="sep5"></div>
-	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a></span>
+	            <div class="sep3"></div>
+	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{ item.last_reply.get_profile.slug }}" class="people">{{ item.last_reply.get_profile.name }}</a></span>
 	            </td>
 	            <td width="50" align="right" valign="middle">
 	                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>

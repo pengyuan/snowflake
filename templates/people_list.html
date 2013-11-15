@@ -14,7 +14,7 @@ Pythonic社区居民
 {% if people_list %}
 <ul style="list-style:none;">
 	{% for people in people_list %}
-	<li style="float:left;margin-right:40px;margin-bottom: 20px;width:156px;height:48px;border:1px solid #eee; padding:0px 4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;">
+	<li style="float:left;margin-right:20px;margin-bottom: 20px;width:124px;height:48px;border:1px solid #eee; padding:0px 4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;">
 		<a style="float:left;padding-top:3px;" href="/people/{{people.get_profile.slug}}"><img src="/media/avatar/{{ people.get_profile.avatar }}" height="40" width="40" border="0" alt="{{ people.get_profile.name}}"></a>			
 		<div style="float:left;padding-left:4px;">
 			<h3 style="margin-top:0px;padding-top:0;font-weight:bold;font-size: 13px;"><a href="/people/{{people.get_profile.slug}}">{{ people.get_profile.name}}</a></h3>

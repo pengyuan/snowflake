@@ -674,7 +674,7 @@ cite {
 }
 
 .muted {
-  color: #999999;
+  color: #bbb;
 }
 
 a.muted:hover,
@@ -4748,11 +4748,11 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar-inverse {
-  	background-color: #0666c5;
-	background-image: -moz-linear-gradient(top,#086ed5,#055db5);
+  	background-color: #669;
+	background-image: -moz-linear-gradient(top,#669,#669);
 	background-image: -ms-linear-gradient(top,#086ed5,#055db5);
-	background-image: -webkit-gradient(linear,0 0,0 100%,from(#086ed5),to(#055db5));
-	background-image: -webkit-linear-gradient(top,#086ed5,#055db5);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#669),to(#669));
+	background-image: -webkit-linear-gradient(top,#669,#669);
 	background-image: -o-linear-gradient(top,#086ed5,#055db5);
 	background-image: linear-gradient(top,#086ed5,#055db5);
 	background-repeat: repeat-x;
