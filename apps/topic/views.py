@@ -13,8 +13,13 @@ import datetime
 
 def topic(request,topic_id):
     context = {}
-    topic = Topic.objects.get(id=topic_id)
-    reply_list = Reply.objects.filter(topic=topic_id)
+    try:
+        topic = Topic.objects.get(id=topic_id)
+    except Topic.DoesNotExist:
+        raise Http404 
+    topic.num_views += 1
+    topic.save()
+    reply_list = Reply.objects.filter(topic=topic)
     paginator = Paginator(reply_list, 50)
     page = request.GET.get('page')
     try:
@@ -37,8 +42,13 @@ def topic(request,topic_id):
 
 def topic_star(request,topic_id):
     context = {}
-    topic = Topic.objects.get(id=topic_id)
-    reply_list = Reply.objects.filter(topic=topic_id,thanks__isnull=False)
+    try:
+        topic = Topic.objects.get(id=topic_id)
+    except Topic.DoesNotExist:
+        raise Http404 
+    topic.num_views += 1
+    topic.save()
+    reply_list = Reply.objects.filter(topic=topic,thanks__isnull=False)
     reply_list = sorted(reply_list, key=lambda x: x.thanks.all().count(), reverse=True)
     paginator = Paginator(reply_list, 50)
     page = request.GET.get('page')
@@ -155,6 +165,7 @@ def topic_create(request, node_slug):
             topic.author = request.user
             topic.num_views = 0
             topic.num_replies = 0
+            topic.last_reply = request.user
             topic.updated_on = datetime.datetime.now()
             topic.save()
             node.num_topics += 1

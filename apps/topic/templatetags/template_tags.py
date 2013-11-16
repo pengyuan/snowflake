@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from apps.people.models import Notice, Message
-from apps.topic.templatetags import markdown2
 from datetime import datetime, timedelta
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
 register = template.Library()   
-
+import markdown2
 #just a demo
 @register.filter('hello')   
 def hello(value,msg="Hello"):   
