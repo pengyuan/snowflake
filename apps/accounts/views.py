@@ -322,7 +322,6 @@ def crop_avatar(request):
 #         logging.error('error')       
         logging.exception('haha')
         raise UploadAvatarError('发生错误，请稍后重试')
-    raise UploadAvatarError('发生错误，请稍后重试')
     for files in os.walk(AVATAR_TEMP_DIR):
         for fn in files[2]:
             filePath = os.path.join(AVATAR_TEMP_DIR,fn).replace('\\', '/')
