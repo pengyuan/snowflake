@@ -187,7 +187,7 @@ LOGGING = {
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s  %(module)s.%(funcName)s Line:%(lineno)d  %(message)s',
-    #filename = os.path.join(ROOT_PATH,'debug.log').replace('\\', '/'),
+    filename = os.path.join(ROOT_PATH,'debug.log').replace('\\', '/'),
 )
 
 
