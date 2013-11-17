@@ -57,6 +57,7 @@ class Topic(models.Model):
     last_reply = models.ForeignKey(User,related_name='+',null=True)
     created_on = models.DateTimeField(auto_now_add=True)      #第一次创建时加入当前时间
     updated_on = models.DateTimeField(blank=True, null=True)   #最后一次回复
+    likes = models.ManyToManyField(User)
     
     def __unicode__(self):
         return self.title

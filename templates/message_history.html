@@ -7,23 +7,23 @@
 {% block main %}
 <button class="btn btn-link"><a href="/message">&lt;返回私信列表</a></button>
 <h4>我与{{talk_to.get_profile.name}}的私信</h4>
+{% if msg_list and talk_to %}
 <span id="ajax_message" class="more">+ 更多</span>
 <form><input type="hidden" id="num_message" value="{{msg_list|length}}"><input type="hidden" id="to_message" value="{{talk_to.id}}"></form>
-{% if msg_list and talk_to %}
 <ul class="msg_list">
 	{% for item in msg_list reversed %}
 		{% if item.is_sender %}
 		<div class="bubble">
 			<a href="/people/{{user.get_profile.slug}}"><img class="pull-right" src="/media/avatar/{{user.get_profile.avatar}}"></a>
 			<div class="bubble-box right pull-right">
-		    	<p class="wrap">{{item.content}}</p>
+		    	<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|time_since}}</font></p>
 			</div>
 		</div>
 		{% else %}
 		<div class="bubble">
 			<a href="/people/{{item.talk_to.get_profile.slug}}"><img class="pull-left" src="/media/avatar/{{item.talk_to.get_profile.avatar}}"></a>
 			<div class="bubble-box left pull-left">
-	    		<p class="wrap">{{item.content}}</p>
+	    		<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|time_since}}</font></p>
 			</div>
 		</div>
 		{% endif %}
@@ -98,12 +98,7 @@ $("#ajax_message").click(function(){
 	    dataType:'json',
 	    success:function(result){
 	    	var msg_list = result.msgs;   //得到数组，每个数组元素是一个JSON Object
-	    	if(msg_list.length>0){
-	    		check = true;
-	    	}
-	    	else{
-	    		check = false;
-	    	}
+	    	var check = result.check;
 	        var num_message = result.end;
 	        $("#num_message").val(num_message);
 	        var arr = $.map(msg_list,function(val,key) {
@@ -111,7 +106,7 @@ $("#ajax_message").click(function(){
 					var str = '<div class="bubble">'+
 	    				'<a href="/people/'+ val['belong_to'] +'"><img class="pull-right" src="/media/avatar/'+ val['belong_to_avatar'] +'"/></a>'+
 	    				'<div class="bubble-box right pull-right">'+
-	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
+	    		    		'<p class="wrap">'+ val['content'] +'&nbsp;&nbsp;<font class="muted">'+val['time']+'</font></p>'+
 	    				'</div>'+
 	    			'</div>';					
 				}
@@ -119,7 +114,7 @@ $("#ajax_message").click(function(){
 					var str = '<div class="bubble">'+
 	    				'<a href="/people/'+ val['talk_to'] +'"><img class="pull-left" src="/media/avatar/'+ val['talk_to_avatar'] +'"/></a>'+
 	    				'<div class="bubble-box left pull-left">'+
-	    		    		'<p class="wrap">'+ val['content'] +'</p>'+
+	    		    		'<p class="wrap">'+ val['content'] +'&nbsp;&nbsp;<font class="muted">'+val['time']+'</font></p>'+
 	    				'</div>'+
 	    			'</div>';					
 				}
@@ -136,7 +131,7 @@ $("#ajax_message").click(function(){
 	        }
 	        else{
 	        	$("#ajax_message").removeAttr("class");
-	        	$("#ajax_message").html('<center style="color:#777;text-shadow: 0 1px 0 #fff;margin: 20px 0;">没有更多私信</center>');
+	        	$("#ajax_message").html('<center style="color:#777;text-shadow: 0 1px 0 #fff;margin: 20px 0;">- 没有更多私信 -</center>');
 	        	$("#ajax_message").unbind("click");
 	        }
 	    }

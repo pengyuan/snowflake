@@ -228,3 +228,38 @@ def ajax_thanks(request):
         return HttpResponse(serialized, mimetype="application/json")
     else:
         return HttpResponseServerError(serialized, mimetype="application/json")
+    
+@login_required
+def ajax_likes(request):
+    success = False
+    to_return = {'msg':u'No POST data sent.' }
+    if request.method == "GET":
+        get = request.GET.copy()
+        if get.has_key('topic_id') and get.has_key('user_id'):
+            topic_id = get['topic_id'].strip()
+            user_id = get['user_id'].strip()
+            try:
+                topic = Topic.objects.get(id=topic_id)
+            except Reply.DoesNotExist:
+                raise Http404
+            try:
+                user = User.objects.get(id=user_id,is_active=True)
+            except User.DoesNotExist:
+                raise Http404  
+            if not user in topic.likes.all():
+                topic.likes.add(user)
+                to_return['check'] = True
+            else:
+                topic.likes.remove(user)
+                to_return['check'] = False
+            to_return['result'] = topic.likes.all().count()
+            to_return['likes_id'] = topic_id  
+            success = True
+        else:
+            to_return['msg'] = u"Require keywords"
+    print to_return
+    serialized = simplejson.dumps(to_return)
+    if success == True:
+        return HttpResponse(serialized, mimetype="application/json")
+    else:
+        return HttpResponseServerError(serialized, mimetype="application/json")

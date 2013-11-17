@@ -11,10 +11,60 @@ from django.http.response import HttpResponse, HttpResponseServerError, \
     HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.utils import simplejson
+from django.utils.timesince import timesince
 import datetime
 import re
 
 def home(request, user_slug):
+    context = {}
+    if request.method == 'POST':
+        return render(request,'index.html',locals())
+    try:
+        user_profile = UserProfile.objects.get(slug=user_slug)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    topic_list = Topic.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
+    if request.user.is_authenticated(): 
+        num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
+        context['num_private_message'] = num_private_message
+    context['people'] = user_profile.user
+    context['topic_list'] = topic_list
+    return render(request,'people.html',context)
+
+def reply(request, user_slug):
+    context = {}
+    if request.method == 'POST':
+        return render(request,'index.html',locals())
+    try:
+        user_profile = UserProfile.objects.get(slug=user_slug)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    reply_list = Reply.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
+    if request.user.is_authenticated(): 
+        num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
+        context['num_private_message'] = num_private_message
+    context['people'] = user_profile.user
+    context['reply_list'] = reply_list
+    return render(request,'people_reply.html',context)
+
+def thank(request, user_slug):
+    context = {}
+    if request.method == 'POST':
+        return render(request,'index.html',locals())
+    try:
+        user_profile = UserProfile.objects.get(slug=user_slug)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    thank_list = Reply.objects.filter(author=user_profile.user,thanks__isnull=False)
+    thank_list = sorted(thank_list, key=lambda x: x.thanks.all().count(), reverse=True)
+    if request.user.is_authenticated(): 
+        num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
+        context['num_private_message'] = num_private_message
+    context['people'] = user_profile.user
+    context['thank_list'] = thank_list
+    return render(request,'people_thank.html',context)
+
+def like(request, user_slug):
     context = {}
     if request.method == 'POST':
         return render(request,'index.html',locals())
@@ -30,7 +80,7 @@ def home(request, user_slug):
     context['people'] = user_profile.user
     context['topic_list'] = topic_list
     context['reply_list'] = reply_list
-    return render(request,'people.html',context)
+    return render(request,'people_like.html',context)
 
 @login_required
 def notice(request):
@@ -125,7 +175,7 @@ def message_history(request,talk_to):
     except UserProfile.DoesNotExist:
         raise Http404
     if request.method =='GET':
-        #Message.objects.filter(is_sender=False,talk_to=talk_to_profile.user,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
+        Message.objects.filter(is_sender=False,talk_to=talk_to_profile.user,belong_to=request.user,is_readed=False,is_deleted=False).update(is_readed=True) 
         msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to_profile.user,is_deleted=False).order_by('-time')[:5]
         #my_queryset.reverse()[:5]
         context['form'] = MessageReply()
@@ -145,9 +195,13 @@ def ajax_message(request):
         num = request.GET['num_message']
         end = int(num) + 10
         talk_to = request.GET['to_message']
-        msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to,is_deleted=False).order_by('-time')[num:end]
+        msg_list = Message.objects.filter(belong_to=request.user,talk_to=talk_to,is_deleted=False).order_by('-time')[num:end+1]
+        if msg_list.count()==11:
+            to_return['check'] = True
+        else:
+            to_return['check'] = False
         msgs = []
-        for item in msg_list:
+        for item in msg_list[:10]:
             msg = {}
             msg['id'] = item.id
             msg['is_sender'] = item.is_sender
@@ -156,10 +210,11 @@ def ajax_message(request):
             msg['talk_to'] = item.talk_to.get_profile().slug
             msg['talk_to_avatar'] = item.talk_to.get_profile().avatar
             msg['content'] = item.content
-            msg['time'] = 'aaa'
+            msg['time'] = timesince(item.time).split(', ')[0]+'前'
             msgs.append(msg)
         to_return['msgs'] = msgs
         to_return['end'] = end
+        
         success = True
     #serialized = serializers.serialize("json",msg_list,ensure_ascii=False) #, fields=('foo','bar')
     serialized = simplejson.dumps(to_return)

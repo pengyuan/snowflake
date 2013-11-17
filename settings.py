@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 # Django settings for pythonic project.
-from django import template
 import logging
 import os
 
@@ -231,5 +230,3 @@ AVATAR_LARGE_RESIZE_SIZE = 100
 # 头像处理完毕后保存的格式和质量， 格式还可以是 jpep, gif
 AVATAR_SAVE_FORMAT = 'png'
 AVATAR_SAVE_QUALITY = 90
-
-template.add_to_builtins('apps.topic.templatetags.template_tags')

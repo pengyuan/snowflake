@@ -2940,7 +2940,7 @@ table th[class*="span"],
   clear: both;
   font-weight: normal;
   line-height: 1.428571429;
-  color: #777;
+  color: #555;
   white-space: nowrap;
 }
 
@@ -4022,6 +4022,7 @@ input[type="submit"].btn.btn-mini {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  min-height: 50px;
 }
 
 .nav:before,
@@ -4612,6 +4613,13 @@ input[type="submit"].btn.btn-mini {
   left: auto;
 }
 
+.navbar .nav > li {
+	float: left;
+}
+.navbar-inner {
+	min-height: 50px;
+}
+
 .navbar-btn {
   margin-top: 8px;
   margin-bottom: 8px;
@@ -4928,9 +4936,21 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#055fb8', endC
 }
 
 .breadcrumb > .active {
-  color: #999999;
+  color: #555;
+  padding: 0px 3px;
+  text-shadow: none;
+  -moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	text-decoration: none;
 }
-
+.breadcrumb > .active a {
+  color: #555;
+  text-shadow: none;
+}
+.breadcrumb > .active a:hover {
+  text-decoration: underline;
+}
 .pagination {
   margin: 20px 0;
 }

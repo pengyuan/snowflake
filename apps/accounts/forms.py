@@ -95,6 +95,8 @@ class ProfileForm(forms.ModelForm):
     avatar = forms.ImageField(label=u'头像',required=False)
     website = forms.CharField(label=u'网站/博客',max_length=30,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
     weibo = forms.CharField(label=u'微博',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
+    #douban = forms.CharField(label=u'豆瓣',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
+    #twitter = forms.CharField(label=u'Twitter',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
     github = forms.CharField(label=u'GitHub',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))    
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
     city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))

@@ -20,6 +20,11 @@
 	    	<span class="t-author"><a href="/people/{{topic.author.get_profile.slug}}" class="muted">{{topic.author.get_profile.name}}</a></span> 创建于 <span class="t-time">{{topic.created_on|time_since}}</span>{% if topic.num_views %} · <span class="t-view">{{topic.num_views}}次点击</span>{% endif %}
 	    </div>
 		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
+		{% if user.is_authenticated and user.id != topic.author.id %}
+		<span class="pull-right"><a href="javascript:;" onclick="like('{{topic.id}}','{{user.id}}')" id="likes_{{topic.id}}_check" class="a-like">{% if user in topic.likes.all %}<i class="icon-heart-red"></i>{% else %}<i class="icon-heart"></i>{% endif %} {% if topic.likes.all %}{{ topic.likes.all|length }}人喜欢{% else %}喜欢{% endif %}</a></span>
+		{% else %}
+		<span class="pull-right">{% if topic.likes.all %}<i class="icon-heart"></i> <font class="muted">{{ topic.likes.all|length }}人喜欢</font>{% endif %}</span>
+		{% endif %}
 	</div>
 </div>
 {% if topic.num_replies %}
@@ -51,7 +56,7 @@
 			<span class="order pull-right" id="thanks_{{item.id}}_count">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
 			<div class="reply-menu">
 				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|time_since}}</span>
-				<span class="pull-left"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>
+				<span class="hidden pull-left"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>
 				{% if user.is_authenticated %}
 					<span class="hidden pull-left"><i class="icon-comment"></i> <a href="#reply" onclick="reply('{{item.id}}')">回复</a></span>
 	               	{% if user.id != item.author.id %}<span class="hidden pull-left"><i class="icon-heart"></i> <a href="javascript:;" onclick="thank('{{item.id}}','{{user.id}}')" id="thanks_{{item.id}}_check">{% if user in item.thanks.all %}取消赞同{% else %}赞同{% endif %}</a></span>{% endif %}
@@ -174,6 +179,7 @@ function reply(id) {
 	$('#reply-close').bind('closed', function () {
 		$("#parent_id").val('');
 	});
+	$("#reply_form").focus();
 }
 function thank(reply_id,user_id) {
 	var query={};
@@ -199,6 +205,33 @@ function thank(reply_id,user_id) {
 			}
 			else{
 				$("#thanks_"+thanks_id+"_check").html('赞同');
+			}
+		}
+	});	
+}
+function like(topic_id,user_id) {
+	var query={};
+	query["topic_id"] = topic_id;
+	query["user_id"] = user_id;
+	$.ajax({
+		url: "/ajax_likes",
+		type: "GET",
+		data: query,
+		dataType: "json",
+		success: function(result){
+			var res = result['result'];
+			var likes_id = result['likes_id'];
+			var check = result['check'];
+			if(check==true){
+				$("#likes_"+likes_id+"_check").html('<i class="icon-heart-red"></i> '+res+'人喜欢');
+			}
+			else{
+				if(res>0){
+					$("#likes_"+likes_id+"_check").html('<i class="icon-heart"></i> '+res+'人喜欢');
+				}
+				else{
+					$("#likes_"+likes_id+"_check").html('<i class="icon-heart"></i> 喜欢');
+				}
 			}
 		}
 	});	

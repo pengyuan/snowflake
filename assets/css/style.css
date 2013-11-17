@@ -87,7 +87,19 @@
     height:9px;
     overflow:hidden;
 }
-
+.icon-heart-red{
+	width: 13px;
+	height: 12px;
+	background: url(../img/icon-heart-red.png) no-repeat;
+}
+a.a-like{
+	color: #777;
+	text-decoration: none;	
+}
+a.a-like:hover{
+	color: #225d99;
+	text-decoration: none;	
+}
 /*index.html CSS*/
 #topic-wrap{
 	display: block;
@@ -106,7 +118,7 @@
 .item_title {
 	font-size: 15px;
 	line-height: 130%;
-	font-weight:bold;
+	font-weight: normal;
 	text-shadow: 0px 1px 0px #fff;
 	word-wrap: break-word;
 	word-break: break-all;
@@ -291,7 +303,7 @@ a.count:visited {
 /*topic.html CSS*/
 .topic-body{
 	display:block;
-	margin-bottom: 30px;	
+	margin-bottom: 40px;	
 }
 .topic-body .t-meta{
 	color: #aaa;
@@ -338,7 +350,7 @@ a.count:visited {
 	display: block;
 	position: relative;
 	margin: 0;	
-	padding: 15px 0 0 0;
+	padding: 5px 0 0 0;
 }
 .user-avatar {
 	padding: 4px 10px 0 0;
@@ -401,8 +413,9 @@ a.count:visited {
 .reply-content {
 	display:block;
 	padding-top: 6px;
-	line-height: 25px;
+	line-height: 20px;
 	font-size: 14px;
+	color: #333;
 	text-overflow: ellipsis;
 	word-wrap: break-word;
 }
@@ -470,6 +483,34 @@ a.count:visited {
 }
 
 /*people.html CSS*/
+.navbar-profile{
+	display: block;
+	list-style: none;
+	margin-top: 20px;
+	height: 40px;
+	line-height: 40px;
+	background-color: #fafafa;
+	box-shadow: inset 0 -1px 0 #cacaca;
+}
+.navbar-profile li{
+	float: left;
+	height: 40px;
+	width: auto;
+	padding: 0px 50px;
+	line-height: 40px;
+	font-size: 14px;
+	color: #999;
+	text-align: center;
+	text-decoration: none;
+}
+.navbar-profile li a{
+	color: #777;
+}
+.navbar-profile li.active a{
+	font-weight: bold;
+	color: #777;
+}
+
 
 /*message.html CSS*/
 .notice_list {
@@ -550,6 +591,7 @@ a.count:visited {
 	margin-bottom: 5px;
 	padding-top: 0;
 	font-size: 14px;
+	font-weight: bold;
 	color: #777777;
 }
 .msg_main .msg_title span{

@@ -35,6 +35,7 @@ urlpatterns += patterns('apps.topic.views',
     (r'^topic/(\d+)/?$','topic'),
     (r'^topic/(\d+)/star/?$','topic_star'),
     (r'^ajax_thanks/?$','ajax_thanks'),
+    (r'^ajax_likes/?$','ajax_likes'),
 )
 urlpatterns += patterns('apps.people.views', 
     (r'^ajax_user_match/?$','ajax_user_match'),

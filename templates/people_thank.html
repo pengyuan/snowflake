@@ -55,29 +55,31 @@
 <div class="clearfix"></div>
 <div class="box">
 	<ul class="navbar-profile">
-		<li class="active"><a href="/people/{{people.get_profile.name}}">话题</a></li>
+		<li><a href="/people/{{people.get_profile.name}}">话题</a></li>
 		<li><a href="/people/{{people.get_profile.name}}/reply">回复</a></li>
-		<li><a href="/people/{{people.get_profile.name}}/thank">收到的感谢</a></li>
+		<li class="active"><a href="/people/{{people.get_profile.name}}/thank">收到的感谢</a></li>
 		<li><a href="/people/{{people.get_profile.name}}/like">喜欢的话题</a></li>
 	</ul>
 </div>
 <div class="box" style="display:block;margin-top:20px;">
-<h2>{{people.get_profile.name}}创建的话题</h2>
-{% if topic_list %}
+<h2>{{people.get_profile.name}}收到的感谢</h2>
+{% if thank_list %}
 	<ul style="list-style:none; font-size: 14px; margin:10px 0 0 5px;">
-	{% for item in topic_list %}
-		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;margin-bottom:10px;">
-			<a href="/topic/{{item.id}}">{{item.title}}</a>
-			<font class="muted" style="padding-left:20px;font-size:12px;">{% if item.num_replies %}{{ item.num_replies }}回复{% endif %}</font>
-			<span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+	{% for item in thank_list %}
+		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;margin-bottom:10px;"><a href="/topic/{{item.id}}">{{item.topic.title}}</a><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+			<div class="reply-content">
+				<font class="muted" style="padding-left:20px;font-size:12px;">{% if item.thanks %}{{ item.thanks.all|length }}感谢{% endif %}</font>
+				<span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+				{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>{% endif %}
+				{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
+           	</div>	
 		</li>
 	{% endfor %}
 	</ul>
 {% else %}
-	<p class="text-center well border-dash">没有创建过话题。</p>
+	<p class="text-center well border-dash">没有回复收到感谢/赞同。</p>
 {% endif %}
 </div>
-<br/><br/>
 {% endblock %}
 
 {% block side %}

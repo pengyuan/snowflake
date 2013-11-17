@@ -6,8 +6,8 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
-register = template.Library()   
 import markdown2
+register = template.Library()   
 #just a demo
 @register.filter('hello')   
 def hello(value,msg="Hello"):   

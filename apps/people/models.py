@@ -24,7 +24,7 @@ class Message(models.Model):
     talk_to = models.ForeignKey(User,related_name='+')
     belong_to = models.ForeignKey(User,related_name='+')
     content = models.CharField(max_length=200,blank=False)
-    time = models.DateTimeField()
+    time = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     is_readed = models.BooleanField(default=False)
 

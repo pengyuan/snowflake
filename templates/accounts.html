@@ -6,7 +6,7 @@
 
 {% block main %}
 <h2>{{user.get_profile.name}}的账号</h2>
-<h4>设置我的账号信息</h4>
+<h4>设置我的账号信息<span class="pull-right"><a href="/people/{{user.get_profile.name}}" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-home icon-white"></i> 查看主页</a></span></h4>
 <div class="box">
 	<form id="your-profile" action="/accounts/settings" method="POST" class="form-horizontal"> {% csrf_token %}
 		{% for field in form %}

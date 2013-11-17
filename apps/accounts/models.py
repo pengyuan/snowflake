@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from django import template
 from django.contrib.auth.models import User
 from django.db import models
 from settings import AVATAR_DIR
@@ -12,6 +13,8 @@ class UserProfile(models.Model):
     slug = models.CharField(max_length=20,null=False)
     website = models.CharField(max_length=30,blank=True)
     weibo = models.CharField(max_length=50,blank=True)
+    #douban = models.CharField(max_length=50,blank=True)
+    #twitter = models.CharField(max_length=50,blank=True)
     github = models.CharField(max_length=50,blank=True)
     photo = models.CharField(max_length=50,default='default-large.png')
     avatar = models.CharField(max_length=50,default='default-normal.png')
@@ -62,3 +65,5 @@ class UserProfile(models.Model):
 #     instance.delete_photo()
 # 
 # post_delete.connect(_delete_avatar_on_disk, sender=UserProfile)
+
+template.add_to_builtins('apps.topic.templatetags.template_tags')
