@@ -9,8 +9,8 @@
 	<li><a href="/notice">提醒 <span class="badge badge-info">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
 	<li class="active"><a href="/message">我的私信 <span class="badge badge-info">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
 </ul>
-<hr class="dash"/>
-<h2 style="margin-bottom:30px;">我的私信<a href="/message_create" class="small-btn btn btn-info pull-right">新私信</a></h2>
+<hr class="dash2"/>
+<h2 style="margin-bottom:30px;">我的私信<!-- <a href="/message_create" class="small-btn btn btn-info pull-right">新私信</a> --></h2>
 {% if msg_list %}
 <ul class="msg_list">
 	{% for item in msg_list %}
@@ -42,7 +42,7 @@
 	{% endfor %}
 </ul>
 {% else %}
-<div class="well text-center border-dash">您还没有收到私信。您可以先发送私信给别人。</div><br/><br/>
+<div class="well text-center border-dash">您还没有发送/收到私信。<br/><font class="muted">Tips：在个人主页，点击右上角私信。</font></div><br/><br/>
 {% endif %}
 <br/><br/><br/>  
 {% endblock %}

@@ -101,10 +101,43 @@ a.a-like:hover{
 	text-decoration: none;	
 }
 /*index.html CSS*/
+.btn-green {
+	margin-right:2px;
+  border: 1px solid #4bad5d;
+  color: #ffffff;
+  background-color: #76ca85;
+  background-image: -moz-linear-gradient(top, #76ca85, #76ca85);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#76ca85), to(#76ca85));
+  background-image: -webkit-linear-gradient(top, #76ca85, #76ca85);
+  background-image: -o-linear-gradient(top, #76ca85, #76ca85);
+  background-image: linear-gradient(to bottom, #76ca85, #76ca85);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff76ca85', endColorstr='#ff76ca85', GradientType=0);
+  *background-color: #76ca85;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-green:hover,
+.btn-green:active,
+.btn-green.active,
+.btn-green:focus {
+  border: 1px solid #2e863e;
+  color: #ffffff;
+  background-color: #33a244;
+  background-image: -moz-linear-gradient(top, #35aa47, #2f973f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#35aa47), to(#2f973f));
+  background-image: -webkit-linear-gradient(top, #35aa47, #2f973f);
+  background-image: -o-linear-gradient(top, #35aa47, #2f973f);
+  background-image: linear-gradient(to bottom, #35aa47, #2f973f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff35aa47', endColorstr='#ff2f973f', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-color: #2f973f;
+  background-color: #2f973f \9;
+}
 #topic-wrap{
 	display: block;
 	overflow: hidden;
-	padding: 10px 0 0 0;
+	padding: 0px 0 0 0;
 }
 .topic-item {
 	display: block;
@@ -136,6 +169,9 @@ img.avatar:hover {
 }
 .sep3 {
 	height: 3px;
+}
+.sep10 {
+	height: 10px;
 }
 .sep20 {
 	display: block;
@@ -199,10 +235,6 @@ a.count:visited {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
-}
-#node-wrap .node-title {
-	color: #aaa;
-	line-height: 40px;
 }
 #node-wrap ul {
 	list-style: none;
@@ -424,7 +456,7 @@ a.count:visited {
 	list-style-type: none;
 	height: 20px;
 	line-height: 20px;
-	padding: 8px 0 12px 50px;
+	padding: 8px 0 8px 50px;
 }
 .reply-menu span {
 	margin: 0px 15px 0 0;	

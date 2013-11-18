@@ -8,11 +8,8 @@
 <div class="topic-body">
 	<div class="box">
 	    <div>
-		    <ol class="breadcrumb">
-				<li><a href="/">首页</a></li>
-				<li>/</li>
-				<li class="active"><a href="/node/{{topic.node.slug}}" class="muted">{{topic.node.name}}</a></li>
-			</ol>
+		    <a href="/">首页</a> / <a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
+			<hr class="dash2"/>
 			<a href="/people/{{topic.author.get_profile.slug}}"  class="pull-right"><img src="/media/avatar/{{ topic.author.get_profile.avatar }}" alt="{{topic.author.get_profile.name}}" border="0" align="default"/></a>
 		</div>
 	    <h1>{{topic.title}}</h1>

@@ -4,6 +4,7 @@ from apps.site.forms import FeedbackForm
 from apps.topic.models import Topic, Node, ParentNode
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 import datetime
@@ -11,23 +12,13 @@ import datetime
 
 def index(request):
     context = {}
-#     context['topics'] = Topic.objects.all().order_by('-updated_on')[:10]
-#     context['nodes'] = Node.objects.all()[:10]
-
-    topic_list = Topic.objects.all().order_by('-updated_on')
-    paginator = Paginator(topic_list, 20) # Show 20 contacts per page
-
-    page = request.GET.get('page')
-    try:
-        topics = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        topics = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        topics = paginator.page(paginator.num_pages)
-    context['topics'] = topics
-    
+    topic_list = Topic.objects.all().order_by('-updated_on')[:41]
+    if topic_list.count() == 41:
+        more = True
+    else:
+        more = False
+    context['topics'] = topic_list[:40]
+    context['more'] = more
     all_nodes = []
     parent_nodes = ParentNode.objects.all()
     for item in parent_nodes:
@@ -44,6 +35,48 @@ def index(request):
     hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
     context['hot_nodes'] = hot_nodes
     return render(request,'index.html',context)
+
+def star(request):
+    context = {}
+    time_now = datetime.datetime.now()
+    from_date = time_now - datetime.timedelta(days=7)
+    hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now]).order_by('-num_replies')[:10]
+    context['hot_topics'] = hot_topics
+    hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
+    context['hot_nodes'] = hot_nodes
+    
+    from_date2 = time_now - datetime.timedelta(days=30)
+    topic_list = Topic.objects.filter(updated_on__range=[from_date2, time_now],likes__isnull=False).annotate(likes_count=Count('likes')).order_by('-likes_count')[:40]
+    #topic_list = sorted(topic_list, key=lambda x: x.likes.all().count(), reverse=True)
+    
+    context['topics'] = topic_list
+    
+    all_nodes = []
+    parent_nodes = ParentNode.objects.all()
+    for item in parent_nodes:
+        node = {}
+        children_nodes = Node.objects.filter(category=item.id)
+        node['parent'] = item.name
+        node['nodes'] = children_nodes
+        all_nodes.append(node)
+    context['all_nodes'] = all_nodes
+    
+    return render(request,'star.html',context)
+
+def recent(request):
+    context = {}
+    topic_list = Topic.objects.all().order_by('-updated_on')
+    paginator = Paginator(topic_list, 5)
+
+    page = request.GET.get('page')
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
+    context['topics'] = topics
+    return render(request,'recent.html',context)
 
 #def search(request):
 #     context = {}

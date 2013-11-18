@@ -18,6 +18,8 @@ urlpatterns = patterns('apps.site.views',
     (r'^help/?$','help_use'),
     (r'^one/?$','one'),
     (r'^people/?$','people'),
+    (r'^star/?$','star'),
+    (r'^recent/?$','recent'),
 )
 
 urlpatterns += patterns('',
@@ -33,7 +35,8 @@ urlpatterns += patterns('apps.topic.views',
     (r'^node/(\S+)/?$','node'),
     (r'^topic/(\d+)/create/?$','reply_create'),
     (r'^topic/(\d+)/?$','topic'),
-    (r'^topic/(\d+)/star/?$','topic_star'),
+    (r'^topic/new/?$','topic_new'),
+    (r'^topic/(\d+)/star/?$','reply_star'),
     (r'^ajax_thanks/?$','ajax_thanks'),
     (r'^ajax_likes/?$','ajax_likes'),
 )

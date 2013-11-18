@@ -9,7 +9,7 @@
 	<li><a href="/notice">提醒 <span class="badge badge-info">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
 	<li class="active"><a href="/message">我的私信 <span class="badge badge-info">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
 </ul>
-<hr class="dash"/>
+<hr class="dash2"/>
 <h2>发送私信</h2>
 <div class="box">
 	<form action="/message_create" method="post" class="form-horizontal">{% csrf_token %}

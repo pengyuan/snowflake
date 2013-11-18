@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+	
+{% block main %}
+{% if topics %}
+<div id="topic-wrap" class="box">
+	<a href="/">首页</a> / <span class="muted" style="font-size: 13px;color:#777;">所有话题</span>
+	<hr class="dash2"/>
+	{% for item in topics %}
+	<div class="topic-item">
+	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+	        <tbody>
+	       	<tr>
+	            <td width="40" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+	            <td width="12"></td>
+	            
+	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
+	            <div class="sep3"></div>
+	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{ item.last_reply.get_profile.slug }}" class="people">{{ item.last_reply.get_profile.name }}</a></span>
+	            </td>
+	            <td width="50" align="right" valign="middle">
+	                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>
+	            </td>
+	        </tr>
+	    	</tbody>
+	    </table>
+	</div>
+	{% endfor %}
+	{% if topics.paginator.num_pages > 1%}
+	<table width="100%" class="pager">
+		<tr>
+			<td width="20%" align="left">{% if reply_list.has_previous %}<li class="previous"><a href="?page={{ reply_list.previous_page_number }}">上一页</a></li>{% endif %}</td>
+			<td width="60%" align="center"><span class="muted">第{{ reply_list.number }}页，共{{ reply_list.paginator.num_pages }}页</span></td>
+			<td width="20%" align="right">{% if reply_list.has_next %}<li class="next"><a href="?page={{ reply_list.next_page_number }}">下一页</a></li>{% endif %}</td>
+		</tr>
+	</table>
+	{% endif %}
+</div>
+{% endif %}
+<br/><br/><br/>
+{% endblock %}	

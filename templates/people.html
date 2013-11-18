@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-<h1 style="padding-bottom:10px;">{{people.get_profile.name}}<span class="pull-right">{% if people.id == user.id %}<a href="/accounts/settings" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-cog icon-white"></i> 设置</a>{% else %}<a href="/message/{{people.get_profile.slug}}" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-envelope icon-white"></i> 私信{% if num_private_message %}{{ num_private_message }}{% endif %}</a>{% endif %}</span></h1>
+<h1 style="padding-bottom:10px;">{{people.get_profile.name}}<span class="pull-right">{% if people.id == user.id %}<a href="/accounts/settings" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-cog icon-white"></i> 设置</a>{% else %}<a href="/message/{{people.get_profile.slug}}" class="btn btn-success btn-xs" style="height: 20px;line-height:20px;"><i class="icon-envelope icon-white"></i> 私信{% if num_private_message %}{{ num_private_message }}{% endif %}</a>{% endif %}</span></h1>
 {% if people.get_profile.signature %}<span style="font-size:14px;color:#777;height:30px;line-height:30px;">({{people.get_profile.signature}})</span>{% endif %}
 <div class="row-fluid">
 	<div class="span2">
@@ -22,11 +22,17 @@
 					</td>
 				</tr>
 				{% endif %}
-				{% if people.get_profile.weibo or people.get_profile.douban or people.get_profile.github or people.get_profile.twitter %}
+				{% if people.get_profile.weibo %}
 				<tr style="height:25px;line-height:25px;">
 					<td>
-						{% if people.get_profile.weibo %}<a href="http://{{people.get_profile.weibo}}" target="blank"><img src="/static/img/weibo.png" width="16" height="16"/></a>{% endif %}
-						{% if people.get_profile.github %}<a href="http://{{people.get_profile.github}}" target="blank"><img src="/static/img/github.png" width="16" height="16"/></a>{% endif %}
+						<img src="/static/img/weibo.png" width="16" height="16"/> <a href="http://{{people.get_profile.weibo}}" target="blank">{{people.get_profile.weibo}}</a>
+					</td>
+				</tr>
+				{% endif %}
+				{% if people.get_profile.github %}
+				<tr style="height:25px;line-height:25px;">
+					<td>
+						<img src="/static/img/github.png" width="16" height="16"/> <a href="http://{{people.get_profile.github}}" target="blank">{{people.get_profile.github}}</a>
 					</td>
 				</tr>
 				{% endif %}
@@ -37,7 +43,7 @@
 								{% if people.get_profile.introduction %}
 									{{ people.get_profile.introduction }}
 								{% else %}
-									<p style="color:#555;font-size:14px;">还没有个人简介</p>
+									<p style="color:#ccc;font-size:13px;">还没有个人简介</p>
 								{% endif %}
 							</div>
 						</div>
@@ -53,16 +59,15 @@
 	</div>
 </div>
 <div class="clearfix"></div>
-<div class="box">
-	<ul class="navbar-profile">
-		<li class="active"><a href="/people/{{people.get_profile.name}}">话题</a></li>
-		<li><a href="/people/{{people.get_profile.name}}/reply">回复</a></li>
-		<li><a href="/people/{{people.get_profile.name}}/thank">收到的感谢</a></li>
-		<li><a href="/people/{{people.get_profile.name}}/like">喜欢的话题</a></li>
-	</ul>
-</div>
+<ul class="navbar-profile">
+	<li class="active"><a href="/people/{{people.get_profile.slug}}">话题</a></li>
+	<li><a href="/people/{{people.get_profile.slug}}/reply">回复</a></li>
+	<li><a href="/people/{{people.get_profile.slug}}/thank">收到的感谢</a></li>
+	<li><a href="/people/{{people.get_profile.slug}}/like">喜欢的话题</a></li>
+</ul>
 <div class="box" style="display:block;margin-top:20px;">
 <h2>{{people.get_profile.name}}创建的话题</h2>
+<div class="sep3"></div>
 {% if topic_list %}
 	<ul style="list-style:none; font-size: 14px; margin:10px 0 0 5px;">
 	{% for item in topic_list %}

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from apps.topic.forms import TopicForm, ReplyForm, ApplyForm, NodeEditForm
-from apps.topic.models import Topic, Node, Reply, Description
+from apps.topic.forms import TopicForm, ReplyForm, ApplyForm, NodeEditForm, \
+    TopicNewForm
+from apps.topic.models import Topic, Node, Reply, Description, ParentNode
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models.aggregates import Count
 from django.http import HttpResponseRedirect, Http404
 from django.http.response import HttpResponse, HttpResponseServerError
 from django.shortcuts import render
@@ -40,34 +42,35 @@ def topic(request,topic_id):
     context['form'] = ReplyForm()
     return render(request,'topic.html',context)
 
-def topic_star(request,topic_id):
+@login_required
+def topic_new(request):
     context = {}
-    try:
-        topic = Topic.objects.get(id=topic_id)
-    except Topic.DoesNotExist:
-        raise Http404 
-    topic.num_views += 1
-    topic.save()
-    reply_list = Reply.objects.filter(topic=topic,thanks__isnull=False)
-    reply_list = sorted(reply_list, key=lambda x: x.thanks.all().count(), reverse=True)
-    paginator = Paginator(reply_list, 50)
-    page = request.GET.get('page')
-    try:
-        replys = paginator.page(page)
-    except PageNotAnInteger:
-        replys = paginator.page(1)
-    except EmptyPage:
-        replys = paginator.page(paginator.num_pages)    
-    description = Description.objects.filter(node=topic.node,active=True)
-    if description:
-        description = description[0]
-    else:
-        description = None
-    context['description'] = description
-    context['topic'] = topic
-    context['node'] = topic.node
-    context['reply_list'] = replys
-    return render(request,'topic_star.html',context)
+    if request.method == 'GET':
+        form = TopicNewForm()
+        all_nodes = []
+        parent_nodes = ParentNode.objects.all()
+        for item in parent_nodes:
+            node = {}
+            children_nodes = Node.objects.filter(category=item.id)
+            node['parent'] = item.name
+            node['nodes'] = children_nodes
+            all_nodes.append(node)
+        context['all_nodes'] = all_nodes
+        context['form'] = form
+        return render(request,'topic_new.html',context)
+    form = TopicNewForm(request.POST)
+    if form.is_valid():
+        topic = form.save(commit=False)
+        try:
+            node = Node.objects.get(request.POST['node'])
+        except Node.DoesNotExist:
+            raise Http404 
+        topic.node = node
+        topic.author = request.user
+        topic.last_reply = request.user
+        topic.updated_on = datetime.datetime.now()
+        topic.save()
+    return HttpResponseRedirect('/')
 
 def node(request, node_slug):
     context = {}
@@ -194,6 +197,34 @@ def reply_create(request, topic_id):
     paginator = Paginator(reply_list, 50)
     page = paginator.num_pages
     return HttpResponseRedirect('/topic/'+topic_id+'?page='+str(page)+'#reply')
+
+def reply_star(request,topic_id):
+    context = {}
+    try:
+        topic = Topic.objects.get(id=topic_id)
+    except Topic.DoesNotExist:
+        raise Http404 
+    topic.num_views += 1
+    topic.save()
+    reply_list = Reply.objects.filter(topic=topic,thanks__isnull=False).annotate(thanks_count=Count('thanks')).order_by('-thanks_count')
+    paginator = Paginator(reply_list, 50)
+    page = request.GET.get('page')
+    try:
+        replys = paginator.page(page)
+    except PageNotAnInteger:
+        replys = paginator.page(1)
+    except EmptyPage:
+        replys = paginator.page(paginator.num_pages)    
+    description = Description.objects.filter(node=topic.node,active=True)
+    if description:
+        description = description[0]
+    else:
+        description = None
+    context['description'] = description
+    context['topic'] = topic
+    context['node'] = topic.node
+    context['reply_list'] = replys
+    return render(request,'reply_star.html',context)
 
 @login_required
 def ajax_thanks(request):

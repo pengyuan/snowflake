@@ -11,6 +11,13 @@ class TopicForm(forms.ModelForm):
         model = Topic
         fields = ('title','content')
         
+class TopicNewForm(forms.ModelForm):
+    title = forms.CharField(label=u'标题',widget=forms.TextInput(attrs={'class':'span12'}))
+    content = forms.CharField(label=u'内容',max_length=1000,widget=PagedownWidget(attrs={'id':'topic_form','class':'span12 resizable','style':'opacity: 1; height: 400px;','onkeyup':'words_deal("#topic_form",1000);'}))   
+    class Meta:
+        model = Topic
+        fields = ('title','content')
+  
 class ReplyForm(forms.ModelForm):
     content = forms.CharField(max_length=1000,widget=PagedownWidget(attrs={'id':'reply_form','class':'span12 resizable','style':'opacity: 1; height: 180px;','onkeyup':'words_deal("#reply_form",1000);'})) 
     class Meta:

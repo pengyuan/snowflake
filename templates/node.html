@@ -5,11 +5,8 @@
 {% endblock %}
 
 {% block main %}
-<ol class="breadcrumb">
-	<li><a href="/">首页</a></li>
-	<li>/</li>
-	<li class="active"><a href="/node/{{node.slug}}" class="muted">{{node.name}}</a></li>
-</ol>
+<a href="/">首页</a> / <a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
+<hr class="dash2"/>
 <div id="topic-wrap" class="box">
 	{% if topics %}
 	{% for item in topics %}
