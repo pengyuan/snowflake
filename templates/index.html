@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 	
 {% block main %}
+<div class="index-nav">
+	<a href="/" class="selected">最新话题</a>
+	<a href="/star">最受喜爱</a>
+</div>
+<!-- <span class="pull-right"><a href="/topic/new" class="btn btn-success btn-xs btn-green" style="height: 20px;line-height:20px;"><i class="icon-plus icon-white"></i> 新话题</a></span> -->
+<hr class="line"/>
 {% if topics %}
 <div id="topic-wrap" class="box">
-	<span class="muted" style="font-size: 13px;color:#777;">最近话题 / <a href="/star">最受喜爱</a></span>
-	<!-- <span class="pull-right"><a href="/topic/new" class="btn btn-success btn-xs btn-green" style="height: 20px;line-height:20px;"><i class="icon-plus icon-white"></i> 新话题</a></span> -->
-	<hr class="dash2"/>
 	{% for item in topics %}
 	<div class="topic-item">
 	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -56,7 +59,7 @@
 {% block side %}
 {% if hot_topics %}
 <div class="box">
-	<h4>热门话题</h4>
+	<h4>热门话题</h4><hr class="line thin"/>
 	{% for item in hot_topics %}
 	<div class="cell">
    		<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -79,7 +82,7 @@
 {% endif %}
 {% if hot_nodes %}
 <div class="box">
-	<h4>热门节点</h4>
+	<h4>热门节点</h4><hr class="line thin"/>
 	<div class="inner">
 	{% for item in hot_nodes %}
         <a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label">{{item.name}}</span></a>

@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
-<a href="/">首页</a> / <a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
-<hr class="dash2"/>
+<a href="/">首页</a><span class="split">&nbsp;›&nbsp;</span><a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
+<hr class="dash"/>
 <div id="topic-wrap" class="box">
 	{% if topics %}
 	{% for item in topics %}

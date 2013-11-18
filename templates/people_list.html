@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Pythonic社区居民
+Pythonic 居民
 {% endblock %}
 
 {% block main %}
-<ol class="breadcrumb">
-	<li><a href="/">首页</a></li>
-	<li>/</li>
-	<li class="active"><a href="/people" class="muted">居民</a></li>
-</ol>
+<a href="/">首页</a> / <span style="font-size: 13px;color:#777;">居民</span>
+<hr class="dash2"/>
 {% if people_list %}
 <ul style="list-style:none;">
 	{% for people in people_list %}

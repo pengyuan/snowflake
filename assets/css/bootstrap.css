@@ -230,14 +230,14 @@ body {
 }
 
 a {
-  color: #225d99;
+  color: #324a69;
   /*color: #006cc0;*/
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #225d99;
+  color: #324a69;
   text-decoration: underline;
 }
 
@@ -763,7 +763,7 @@ h3{
 }
 h4{
 	height:20px;
-	margin:0 0 10px 0px;
+	margin:0 0 8px 0px;
 	font:12px Arial,Helvetica,sans-serif;
 	color:#777;
 	line-height:1.62;
@@ -866,16 +866,19 @@ hr {
   border-bottom: 1px solid #ffffff;
 }
 hr.dash{
-  margin: 10px 0 0px 0;
+  margin: 8px 0 14px 0;
   border: 0;
   border-top: 1px dashed #eeeeee;
   border-bottom: 1px dashed #ffffff;	
 }
-hr.dash2{
-  margin: 10px 0 12px 0;
+hr.line{
+  margin: 8px 0 18px 0;
   border: 0;
-  border-top: 1px dashed #eeeeee;
+  border-top: 1px solid #eeeeee;
   border-bottom: 1px dashed #ffffff;	
+}
+hr.thin{
+  margin: 6px 0 5px 0;
 }
 abbr[title],
 abbr[data-original-title] {
