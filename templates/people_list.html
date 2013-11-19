@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Pythonic 居民
+居民 - Pythonic
 {% endblock %}
 
 {% block main %}
-<a href="/">首页</a> / <span style="font-size: 13px;color:#777;">居民</span>
-<hr class="dash2"/>
+<a href="/">首页</a><span class="split">&nbsp;›&nbsp;</span><span style="font-size: 13px;color:#777;">居民</span>
+<hr class="dash"/>
 {% if people_list %}
 <ul style="list-style:none;">
 	{% for people in people_list %}
 	<li style="float:left;margin-right:20px;margin-bottom: 20px;width:124px;height:48px;border:1px solid #eee; padding:0px 4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;">
 		<a style="float:left;padding-top:3px;" href="/people/{{people.get_profile.slug}}"><img src="/media/avatar/{{ people.get_profile.avatar }}" height="40" width="40" border="0" alt="{{ people.get_profile.name}}"></a>			
-		<div style="float:left;padding-left:4px;">
-			<h3 style="margin-top:0px;padding-top:0;font-weight:bold;font-size: 13px;"><a href="/people/{{people.get_profile.slug}}">{{ people.get_profile.name}}</a></h3>
-			<div style="font-size:90%;padding-left:5px;color:#aaa;text-overflow: ellipsis;">
-				<div>{{people.get_profile.signature}}</div>
+		<div style="display:block;padding-left:5px;overflow:hidden">
+			<h3 style="display:block;height:24px;margin-top:0px;padding-top:0;font-weight:bold;font-size: 12px;overflow:hidden;"><a href="/people/{{people.get_profile.slug}}">{{ people.get_profile.name}}</a></h3>
+			<div style="font-size:90%;height:20px;color:#aaa;overflow:hidden;text-overflow: ellipsis;">
+				<font title="{{people.get_profile.signature}}">{{people.get_profile.signature}}</font>
 			</div>
 		</div>
 	</li>

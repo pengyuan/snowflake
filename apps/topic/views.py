@@ -281,7 +281,6 @@ def ajax_likes(request):
                 topic.likes.add(user)
                 to_return['check'] = True
             else:
-                topic.likes.remove(user)
                 to_return['check'] = False
             to_return['result'] = topic.likes.all().count()
             to_return['likes_id'] = topic_id  

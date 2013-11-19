@@ -93,13 +93,17 @@
 	height: 12px;
 	background: url(../img/icon-heart-red.png) no-repeat;
 }
-a.a-like{
+span.a-like{
 	color: #777;
 	text-decoration: none;	
 }
-a.a-like:hover{
+span.a-like:hover{
 	color: #225d99;
+	cursor: pointer;
 	text-decoration: none;	
+}
+.light{
+	color: #777;
 }
 span.split{
 	padding:0 2px;
@@ -208,15 +212,27 @@ a.node{
 	line-height: 10px;
 	display: inline-block;	
 	color:white;
-	padding: 2px 3px;
+	padding: 1px 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 	text-decoration: none;
-	background:#bbb;
+	
+	border: 1px solid #b1b1b1;
+	background: #bbb;
+	background: -o-linear-gradient(rgba(187,187,187,0.8),#bbb);
+	background: -webkit-linear-gradient(rgba(187,187,187,0.8),#bbb);
+	background: -moz-linear-gradient(rgba(187,187,187,0.8),#bbb);
+	background: -ms-linear-gradient(rgba(187,187,187,0.8),#bbb);
 }
 a.node:hover {
-	background:#324a69;
+	border: 1px solid #324a69;
+	background: #324a69;
+	background: -o-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -webkit-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -moz-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -ms-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 a.count {
 	color: white;
@@ -225,7 +241,7 @@ a.count:link, a.count:active {
 	line-height: 12px;
 	font-weight: bold;
 	color: white;
-	background-color: #88bbdd;
+	background-color: #8fa5c2;
 	padding: 0px 10px;
 	-moz-border-radius: 12px;
 	-webkit-border-radius: 12px;
@@ -234,13 +250,14 @@ a.count:link, a.count:active {
 	margin-right: 5px;
 }
 a.count:hover {
-	background-color: #6699bb;
+	filter:alpha(opacity=90);
+	opacity:0.9;
 }
 a.count:visited {
 	line-height: 12px;
 	font-weight: bold;
 	color: white;
-	background-color: #99ccee;
+	background-color: #8fa5c2;
 	display: inline-block;
 	padding: 0px 10px;
 	-moz-border-radius: 12px;
@@ -314,14 +331,24 @@ a.count:visited {
 	padding: 1px 0px;
 	border-radius: 4px;
 	display: inline-block;
-	background: #88bbdd;
-	border: 1px solid #739fbc;
+	border: 1px solid #476691;
+	background: #5d88c0;
+	background: -o-linear-gradient(rgba(93,136,192,0.8),#5d88c0);
+	background: -webkit-linear-gradient(rgba(93,136,192,0.8),#5d88c0);
+	background: -moz-linear-gradient(rgba(93,136,192,0.8),#5d88c0);
+	background: -ms-linear-gradient(rgba(93,136,192,0.8),#5d88c0);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 .inner a:hover {
 	color: white;
-	background: #3a79b8;
-	border: 1px solid #2f6294;
-	text-decoration: none;
+	border: 1px solid #324a69;
+	text-decoration: none;	
+	background: #324a69;
+	background: -o-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -webkit-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -moz-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	background: -ms-linear-gradient(rgba(50,74,105,0.8),#324a69);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /*node.html CSS*/
@@ -426,9 +453,12 @@ a.count:visited {
 }
 .reply-meta-data .author {
 	font-size: 13px;
-	color: #999;
-	font-weight: bold;
+	color: #aaa;
+	font-weight: normal;
 	vertical-align:text-top;
+}
+.reply-meta-data .author a{
+	font-weight: bold;
 }
 .reply-meta-data .thank-list {
 	color: #aaa;
@@ -538,17 +568,20 @@ a.count:visited {
 	display: block;
 	list-style: none;
 	margin-top: 20px;
-	height: 40px;
-	line-height: 40px;
-	background-color: #fafafa;
-	box-shadow: inset 0 -1px 0 #cacaca;
+	height: 30px;
+	line-height: 30px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 .navbar-profile li{
 	float: left;
-	height: 40px;
+	height: 30px;
 	width: auto;
 	padding: 0px 50px;
-	line-height: 40px;
+	line-height: 30px;
 	font-size: 14px;
 	color: #999;
 	text-align: center;
@@ -556,6 +589,9 @@ a.count:visited {
 }
 .navbar-profile li a{
 	color: #777;
+}
+.navbar-profile li a:hover{
+	text-decoration: none;
 }
 .navbar-profile li.active a{
 	font-weight: bold;
@@ -565,7 +601,7 @@ a.count:visited {
 
 /*message.html CSS*/
 .notice_list {
-	padding:10px 0 0 0;
+	padding: 0;
 	list-style: none;
 }
 .notice_list li {
@@ -574,7 +610,7 @@ a.count:visited {
 	border-bottom: 1px dashed #eee;
 	margin: 8px 0px 10px 0px;
 	padding: 0px 5px;
-	color: #555;
+	color: #777;
 }
 .notice_list li.highlight {
 	font-weight: bold;

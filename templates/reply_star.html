@@ -42,7 +42,7 @@
 			</div>
 			<div class="reply-meta" id="{{item.id}}">
 				<div class="reply-meta-data">
-					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>&nbsp;&nbsp;{{item.author.get_profile.signature}}</span>
+					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>{% if item.author.get_profile.signature %}&nbsp;,{{item.author.get_profile.signature}}{% endif %}</span>
 					{% if item.thanks.all %}<span class="thank-list">{{item.thanks|thanks_list|safe}}</span>{% endif %}
 				</div>	
 				<div class="reply-content">

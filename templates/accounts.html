@@ -6,9 +6,17 @@
 
 {% block main %}
 <h2>{{user.get_profile.name}}的账号</h2>
-<h4>设置我的账号信息<span class="pull-right"><a href="/people/{{user.get_profile.name}}" class="btn btn-info btn-xs" style="height: 20px;line-height:20px;"><i class="icon-home icon-white"></i> 查看主页</a></span></h4>
+<hr class="dash">
+<h4>设置我的账号信息<span class="pull-right"><i class="icon-home"></i> <a href="/people/{{user.get_profile.slug}}" style="color:#aaa;">查看主页</a></span></h4>
+<div class="sep10"></div>
 <div class="box">
 	<form id="your-profile" action="/accounts/settings" method="POST" class="form-horizontal"> {% csrf_token %}
+		<div class="control-group">
+	    	<label class="control-label">登录邮箱</label>
+	    	<div class="controls">
+	    		<font style="height:28px;line-height:28px;font-size:15px;color: #777;vertical-align:center;">{{ user.username }} <a href="/accounts/password/change" style="font-size:13px;">修改密码</a></font> 
+	    	</div>
+	  	</div>		
 		{% for field in form %}
 			{% if field.name != 'province' %}
 				{% if field.name != 'city' %}
@@ -16,19 +24,27 @@
 			    	<label class="control-label">{{ field.label_tag }}</label>
 			    	<div class="controls">
 				    	{% if field.name == 'slug'%}
-				    		<font style="font-size:15px;color: #777;vertical-align:center;">pythonic.org/people/<b>{{ field.value }}</b></font>
+				    		<font style="height:28px;line-height:28px;font-size:15px;color: #777;vertical-align:center;">pythonic.org/people/<b>{{ field.value }}</b></font>
 				    		<input type="hidden" id="id_slug" name="slug" value="{{field.value}}"/>
 				    	{% else %}
 				    		{% if field.name != "avatar" %}
-				      			{{ field }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				    			{% if field.name == "weibo" %}
+				    				<font style="height:28px;line-height:28px;font-size:15px;color: #777;vertical-align:center;">weibo.com / {{ field }}</font><span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				    			{% else %}
+				    				{% if field.name == "github" %}
+				    					<font style="height:28px;line-height:28px;font-size:15px;color: #777;vertical-align:center;">github.com / {{ field }}</font><span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				    				{% else %}
+				      					{{ field }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+				      				{% endif %}
+				      			{% endif %}
 				      		{% else %}
 				      			<img src="/media/avatar/{{ user.get_profile.avatar }}" />
 				      			{% if messages %}
 			   						{% for message in messages %}
-			   							{% if message.tags == 'info' %}<span class="{{ message.tags }}">{{ message }}</span>{% endif %} <a href="/accounts/change_avatar">更改</a>
+			   							{% if message.tags == 'info' %}<span class="{{ message.tags }}">{{ message }}</span>{% endif %} <a href="/accounts/change_avatar" style="font-size:13px;">更改头像</a>
 			   						{% endfor %}
 			   					{% else %}
-			   						<a href="/accounts/change_avatar">更改</a>
+			   						<a href="/accounts/change_avatar" style="font-size:13px;">更改头像</a>
 								{% endif %}
 				      		{% endif %}
 				    	{% endif %}	

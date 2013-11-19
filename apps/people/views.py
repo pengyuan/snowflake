@@ -7,6 +7,7 @@ from apps.topic.models import Topic, Reply
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models.aggregates import Count
 from django.http.response import HttpResponse, HttpResponseServerError, \
     HttpResponseRedirect, Http404
 from django.shortcuts import render
@@ -23,7 +24,7 @@ def home(request, user_slug):
         user_profile = UserProfile.objects.get(slug=user_slug)
     except UserProfile.DoesNotExist:
         raise Http404
-    topic_list = Topic.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
+    topic_list = Topic.objects.filter(author=user_profile.user).annotate(likes_count=Count('likes')).order_by('-likes_count','-created_on')[:10]
     if request.user.is_authenticated(): 
         num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
         context['num_private_message'] = num_private_message
@@ -39,7 +40,7 @@ def reply(request, user_slug):
         user_profile = UserProfile.objects.get(slug=user_slug)
     except UserProfile.DoesNotExist:
         raise Http404
-    reply_list = Reply.objects.filter(author=user_profile.user).order_by('-created_on')[:5]
+    reply_list = Reply.objects.filter(author=user_profile.user).order_by('-created_on')[:10]
     if request.user.is_authenticated(): 
         num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
         context['num_private_message'] = num_private_message
@@ -55,8 +56,8 @@ def thank(request, user_slug):
         user_profile = UserProfile.objects.get(slug=user_slug)
     except UserProfile.DoesNotExist:
         raise Http404
-    thank_list = Reply.objects.filter(author=user_profile.user,thanks__isnull=False)
-    thank_list = sorted(thank_list, key=lambda x: x.thanks.all().count(), reverse=True)
+    thank_list = Reply.objects.filter(author=user_profile.user,thanks__isnull=False).annotate(thanks_count=Count('thanks')).order_by('-thanks_count')[:10]
+    #thank_list = sorted(thank_list, key=lambda x: x.thanks.all().count(), reverse=True)
     if request.user.is_authenticated(): 
         num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
         context['num_private_message'] = num_private_message
@@ -72,7 +73,7 @@ def like(request, user_slug):
         user_profile = UserProfile.objects.get(slug=user_slug)
     except UserProfile.DoesNotExist:
         raise Http404
-    like_list =  user_profile.user.topic_set.all().order_by('-updated_on')  
+    like_list =  user_profile.user.topic_set.all().order_by('-updated_on')[:10]
     if request.user.is_authenticated(): 
         num_private_message = Message.objects.filter(belong_to=request.user,talk_to=user_profile.user,is_deleted=False).count()
         context['num_private_message'] = num_private_message

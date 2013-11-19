@@ -25,4 +25,5 @@ urlpatterns += patterns('accounts.views',
     (r'^change_avatar/?$','change_avatar'),
     (r'^upload_avatar/?$','upload_avatar'),
     (r'^crop_avatar/?$','crop_avatar'),
+    (r'^password/change/?$', 'password_change'),
 )

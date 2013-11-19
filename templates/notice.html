@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block main %}
-<ul class="nav nav-tabs nav-tabs-google">
+<!-- <ul class="nav nav-tabs nav-tabs-google">
 	<li class="active"><a href="/notice">提醒 <span class="badge badge-info">{% if num_notice %}{{ num_notice }}{% endif %}</span></a></li>
 	<li><a href="/message">我的私信 <span class="badge badge-info">{% if num_message != 0 %}{{ num_message }}{% endif %}</span></a></li>
 </ul>
-<hr class="dash2"/>
-<h2>收到的回复{% if num_notice %}<a href="/notice_mark" class="small-btn btn btn-info pull-right">标记为已读</a>{% endif %}</h2>
+<hr class="dash2"/> -->
+<h2>收到的回复{% if num_notice %}<span class="btn pull-right" style="color:#555;"><i class="icon-ok"></i> <a href="/notice_mark">标记为已读</a></span>{% endif %}</h2>
+<hr class="dash"/>
 {% if notice_list %}
 <ul class="notice_list">
     {% for item in notice_list %} 

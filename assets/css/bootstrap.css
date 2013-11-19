@@ -754,12 +754,12 @@ h2{
 	line-height:150%;
 }
 h3{
-	height:26px;
-	margin-left:4px;
-	font:14px Arial,Helvetica,sans-serif;
-	color:#666;
-	margin-bottom:1px;
-	line-height:1.62;
+	display:block;
+	margin:2px 0 2px 0;
+	padding-top:0;
+	font-weight:bold;
+	font-size: 18px;
+	color:#000;
 }
 h4{
 	height:20px;
@@ -1958,7 +1958,7 @@ legend + .control-group {
 .form-horizontal .control-label {
   float: left;
   width: 60px;
-  padding-top: 5px;
+  padding-top:4px;
   text-align: right;
 }
 
@@ -3181,6 +3181,13 @@ button.close {
   text-decoration: none;
   pointer: cursor;
 }
+.btn a{
+	color: #666;
+}
+.btn a:hover{
+	color: #666;
+	text-decoration: none;
+}
 .btn.active,
 .btn:active {
   background-image: none;
@@ -3753,7 +3760,7 @@ button.close {
 .btn-link:hover {
   border-color: transparent;
   color: #1155cc;
-  text-decoration: underline;
+  text-decoration: none;
   background-color: transparent;
   background-image: none;
   -webkit-box-shadow: none;

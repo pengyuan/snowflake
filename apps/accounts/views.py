@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-import logging
 from PIL import Image
-from apps.accounts.forms import RegisterForm, LoginForm, ProfileForm
+from apps.accounts.forms import RegisterForm, LoginForm, ProfileForm, \
+    PasswordChangeForm
 from apps.accounts.function import send_email
 from apps.accounts.models import UserProfile
 from django.contrib import messages
@@ -21,6 +21,7 @@ from settings import AVATAR_UPLOAD_MAX_SIZE, AVATAR_TEMP_DIR, \
     AVATAR_SAVE_QUALITY, AVATAR_LARGE_RESIZE_SIZE, DOMAIN
 from urllib import urlretrieve
 import hashlib
+import logging
 import os
 import time
 import urllib2
@@ -343,3 +344,24 @@ def crop_avatar(request):
     return HttpResponse(
         "<script>window.parent.crop_avatar_success('%s')</script>"  % '成功'
     )
+    
+@login_required
+def password_change(request):
+    profile = request.user.get_profile()
+    if request.method == 'GET':
+        form = PasswordChangeForm()
+        return render(request,'password_change.html',locals())
+    form = PasswordChangeForm(request.POST)
+    if form.is_valid():
+        data = form.clean()
+        user = request.user
+        if user.password == data['oldpassword']:
+            user.password = data['newpassword']
+            user.save()
+            messages.success(request,"新密码设置成功！请重新登录")
+            return HttpResponse('/accounts/logout')
+        else:
+            messages.error(request,'旧密码输入错误')
+            return render(request,'password_change.html',{"form":form})
+    else:
+        return render(request,'password_change.html',{"form":form})    

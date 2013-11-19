@@ -13,8 +13,6 @@ class UserProfile(models.Model):
     slug = models.CharField(max_length=20,null=False)
     website = models.CharField(max_length=30,blank=True)
     weibo = models.CharField(max_length=50,blank=True)
-    #douban = models.CharField(max_length=50,blank=True)
-    #twitter = models.CharField(max_length=50,blank=True)
     github = models.CharField(max_length=50,blank=True)
     photo = models.CharField(max_length=50,default='default-large.png')
     avatar = models.CharField(max_length=50,default='default-normal.png')
@@ -23,7 +21,6 @@ class UserProfile(models.Model):
     signature = models.CharField(max_length=40,blank=True)
     introduction = models.CharField(max_length=200,blank=True)
     deleted = models.BooleanField(default=False)
-    #follow = models.ManyToManyField(self)
     
     def __unicode__(self):
         return self.name

@@ -22,9 +22,13 @@
 	    </div>
 		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
 		{% if user.is_authenticated and user.id != topic.author.id %}
-		<span class="pull-right"><a href="javascript:;" onclick="like('{{topic.id}}','{{user.id}}')" id="likes_{{topic.id}}_check" class="a-like">{% if user in topic.likes.all %}<i class="icon-heart-red"></i>{% else %}<i class="icon-heart"></i>{% endif %} {% if topic.likes.all %}{{ topic.likes.all|length }}人喜欢{% else %}喜欢{% endif %}</a></span>
+			{% if user in topic.likes.all %}
+				<span class="pull-right light"><i class="icon-heart-red"></i> {{ topic.likes.all|length }}人喜欢</span>
+			{% else %}
+				<span class="pull-right light"><span onclick="like('{{topic.id}}','{{user.id}}')" id="likes_{{topic.id}}_check" class="a-like"><i class="icon-heart"></i> {% if topic.likes.all %}{{ topic.likes.all|length }}人喜欢{% else %}喜欢{% endif %}</span></span>
+			{% endif %}
 		{% else %}
-		<span class="pull-right">{% if topic.likes.all %}<i class="icon-heart"></i> <font class="muted">{{ topic.likes.all|length }}人喜欢</font>{% endif %}</span>
+		<span class="pull-right light">{% if topic.likes.all %}<i class="icon-heart"></i> {{ topic.likes.all|length }}人喜欢{% endif %}</span>
 		{% endif %}
 	</div>
 </div>
@@ -46,7 +50,7 @@
 			</div>
 			<div class="reply-meta" id="{{item.id}}">
 				<div class="reply-meta-data">
-					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>&nbsp;&nbsp;{{item.author.get_profile.signature}}</span>
+					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>{% if item.author.get_profile.signature %}&nbsp;,{{item.author.get_profile.signature}}{% endif %}</span>
 					{% if item.thanks.all %}<span class="thank-list">{{item.thanks|thanks_list|safe}}</span>{% endif %}
 				</div>	
 				<div class="reply-content">
@@ -224,15 +228,9 @@ function like(topic_id,user_id) {
 			var likes_id = result['likes_id'];
 			var check = result['check'];
 			if(check==true){
+				$("#likes_"+likes_id+"_check").removeAttr('onclick');
+				$("#likes_"+likes_id+"_check").removeAttr('class');
 				$("#likes_"+likes_id+"_check").html('<i class="icon-heart-red"></i> '+res+'人喜欢');
-			}
-			else{
-				if(res>0){
-					$("#likes_"+likes_id+"_check").html('<i class="icon-heart"></i> '+res+'人喜欢');
-				}
-				else{
-					$("#likes_"+likes_id+"_check").html('<i class="icon-heart"></i> 喜欢');
-				}
 			}
 		}
 	});	

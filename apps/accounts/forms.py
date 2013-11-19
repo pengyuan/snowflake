@@ -93,15 +93,13 @@ class ProfileForm(forms.ModelForm):
     name = forms.CharField(label=u'名号',required=True,max_length=20,min_length=2,widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))  #完全重载
     slug = forms.CharField(label=u'网址',required=True,max_length=20,min_length=3,widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     avatar = forms.ImageField(label=u'头像',required=False)
-    website = forms.CharField(label=u'网站/博客',max_length=30,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
-    weibo = forms.CharField(label=u'微博',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
-    #douban = forms.CharField(label=u'豆瓣',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
-    #twitter = forms.CharField(label=u'Twitter',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
-    github = forms.CharField(label=u'GitHub',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))    
+    website = forms.CharField(label=u'网站/博客',max_length=30,required=False,widget=forms.TextInput(attrs={'class':'span6','autocomplete':'off'}))
+    weibo = forms.CharField(label=u'微博',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span4','autocomplete':'off'}))
+    github = forms.CharField(label=u'GitHub',max_length=50,required=False,widget=forms.TextInput(attrs={'class':'span4','autocomplete':'off'}))    
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
     city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))
-    signature = forms.CharField(label=u'签名',max_length=40,required=False,widget=forms.TextInput(attrs={'class':'span8','autocomplete':'off'}))
-    introduction = forms.CharField(label=u'个人简介',max_length=200,required=False,widget=forms.Textarea(attrs={'class':'span8','style':'height:100px;'}))
+    signature = forms.CharField(label=u'签名',max_length=40,required=False,widget=forms.TextInput(attrs={'class':'span10','autocomplete':'off'}))
+    introduction = forms.CharField(label=u'个人简介',max_length=200,required=False,widget=forms.Textarea(attrs={'class':'span10','style':'height:120px;'}))
     
     class Meta:
         model = UserProfile
@@ -137,3 +135,17 @@ class ProfileForm(forms.ModelForm):
                 raise forms.ValidationError(u"请填写常居地")  
         else:
             raise forms.ValidationError(u"请填写常居地")
+        
+class PasswordChangeForm(forms.Form):
+    oldpassword = forms.CharField(label=u'旧密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
+    newpassword = forms.CharField(label=u'新密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
+    repassword = forms.CharField(label=u'重复密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
+    
+    def clean_repassword(self):
+        cleaned_data = super(PasswordChangeForm, self).clean()
+        newpassword = cleaned_data.get("newpassword").strip()
+        repassword = cleaned_data.get("repassword").strip()
+        if newpassword == repassword:
+            return repassword
+        else:
+            raise forms.ValidationError(u"两次输入的新密码不一致")

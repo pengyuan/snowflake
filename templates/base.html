@@ -35,7 +35,7 @@
 						</form>
 					    <ul class="nav navbar-nav navbar-right">
 					    	{% if user.is_authenticated and user.is_active %}
-					    	<li><a href="/notice" title="消息">消息{% num_message user %}</a></li>
+					    	<li><a href="/notice" title="消息"><i class="icon-bell icon-white"></i>{% num_message user %}</a></li>
 							<li class="dropdown">
 	                      		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">{{user.get_profile.name}} <b class="caret"></b></a>
 	                      		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
