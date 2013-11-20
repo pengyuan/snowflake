@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from django.conf.urls import patterns
-
 urlpatterns = patterns("django.contrib.auth.views",
     (r'^password_change/?$', 'password_change'), 
     (r'^password_change/done/?$', 'password_change_done'), 
@@ -25,5 +24,5 @@ urlpatterns += patterns('accounts.views',
     (r'^change_avatar/?$','change_avatar'),
     (r'^upload_avatar/?$','upload_avatar'),
     (r'^crop_avatar/?$','crop_avatar'),
-    (r'^password/change/?$', 'password_change'),
+    (r'^change_password/?$', 'password_change'),
 )

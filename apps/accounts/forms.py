@@ -56,7 +56,7 @@ def get_cities(province):
             
 class RegisterForm(forms.Form):
     email = forms.EmailField(label=u'邮箱',required=True,max_length=30,help_text=mark_safe("邮箱将用于接收激活邮件，登录和找回密码"),widget=forms.TextInput(attrs={'class':'span5','autocomplete':'off'}))
-    password = forms.CharField(label=u'密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput(attrs={'class':'span5','autocomplete':'off'}))   
+    password = forms.CharField(label=u'密码',required=True,max_length=20,min_length=6,help_text=mark_safe("6-20位，由字母和数字组成，区分大小写"),widget=forms.PasswordInput(attrs={'class':'span5','autocomplete':'off'}))   
     name = forms.CharField(label='名号',required=True,max_length=20,min_length=2,help_text=mark_safe("推荐使用姓名或常用网络ID（可使用中文）"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     slug = forms.CharField(label='网址',required=True,max_length=20,min_length=3,help_text=mark_safe("由小写字母、数字和'_'组成，字母为首"),widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
@@ -90,7 +90,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(label=u'密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
     
 class ProfileForm(forms.ModelForm):
-    name = forms.CharField(label=u'名号',required=True,max_length=20,min_length=2,widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))  #完全重载
+    name = forms.CharField(label=u'名号',required=True,max_length=20,help_text=mark_safe("名号30天内只能修改一次"),min_length=2,widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))  #完全重载
     slug = forms.CharField(label=u'网址',required=True,max_length=20,min_length=3,widget=forms.TextInput(attrs={'class':'span3','autocomplete':'off'}))
     avatar = forms.ImageField(label=u'头像',required=False)
     website = forms.CharField(label=u'网站/博客',max_length=30,required=False,widget=forms.TextInput(attrs={'class':'span6','autocomplete':'off'}))
@@ -99,20 +99,26 @@ class ProfileForm(forms.ModelForm):
     province = forms.CharField(label='省份',required=True,widget=forms.Select(attrs={'class':'select span2','onChange':'select()'}))
     city = forms.CharField(label='城市',required=False,widget=forms.Select(attrs={'class':'select span2'}))
     signature = forms.CharField(label=u'签名',max_length=40,required=False,widget=forms.TextInput(attrs={'class':'span10','autocomplete':'off'}))
-    introduction = forms.CharField(label=u'个人简介',max_length=200,required=False,widget=forms.Textarea(attrs={'class':'span10','style':'height:120px;'}))
-    
-    class Meta:
-        model = UserProfile
-        fields = ('name','slug','avatar','website','weibo','github','province','city','signature','introduction')      
-       
-    #自定义规则早于表单自带规则    
-    def clean_slug(self):
-        slug = self.cleaned_data['slug'].strip()
-        regex=ur"^[a-z]\w+$" #由数字、26个英文字母或者下划线组成的字符串 ^\w+$
-        if re.match(regex, slug):
-            return slug
+    introduction = forms.CharField(label=u'个人简介',max_length=200,required=False,widget=forms.Textarea(attrs={'class':'span10','style':'height:120px;'}))   
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        profile = kwargs.pop('instance',None)
+        self.new_slug = profile.slug
+           
+    #自定义规则早于表单自带规则
+    def clean_name(self):
+        cleaned_data = super(ProfileForm, self).clean()
+        name = cleaned_data.get("name")
+        new_profile = UserProfile.objects.filter(name=name)
+        
+        if not new_profile:
+            return name
         else:
-            raise forms.ValidationError(u"由小写字母、数字和'_'组成，字母为首")
+            if new_profile[0].slug == self.new_slug:
+                return name
+            else:
+                raise forms.ValidationError(u"此名号已被占用")
         
     def clean_province(self):
         cleaned_data = super(ProfileForm, self).clean()
@@ -136,8 +142,12 @@ class ProfileForm(forms.ModelForm):
         else:
             raise forms.ValidationError(u"请填写常居地")
         
+    class Meta:
+        model = UserProfile
+        fields = ('name','slug','avatar','province','city','website','weibo','github','signature','introduction')   
+
 class PasswordChangeForm(forms.Form):
-    oldpassword = forms.CharField(label=u'旧密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
+    oldpassword = forms.CharField(label=u'当前密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
     newpassword = forms.CharField(label=u'新密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
     repassword = forms.CharField(label=u'重复密码',required=True,max_length=20,min_length=6,widget=forms.PasswordInput())
     

@@ -20,6 +20,7 @@ from settings import AVATAR_UPLOAD_MAX_SIZE, AVATAR_TEMP_DIR, \
     AVATAR_UPLOAD_URL_PREFIX, AVATAR_RESIZE_SIZE, AVATAR_SAVE_FORMAT, AVATAR_DIR, \
     AVATAR_SAVE_QUALITY, AVATAR_LARGE_RESIZE_SIZE, DOMAIN
 from urllib import urlretrieve
+import datetime
 import hashlib
 import logging
 import os
@@ -189,16 +190,36 @@ def _get_active_code(email):
 @login_required
 def accounts(request):
     profile = request.user.get_profile()
+    past_name = profile.name
+    now_date = datetime.datetime.now()
+    check_date = now_date - datetime.timedelta(days=30)
+    if profile.name_last_update:
+        if profile.name_last_update <= check_date:
+            update = True
+        else:
+            update = False
+    else:
+        update = True
     if request.method == 'GET':
         form = ProfileForm(instance=profile)
         return render(request,'accounts.html',locals())
     form = ProfileForm(request.POST,instance=profile)
     if form.is_valid():
-        form.save()
+        profile_new = form.save(commit=False)
+        if request.POST.has_key('name'):
+            if request.POST['name'] != past_name:
+                profile_new.name = request.POST['name'].strip()
+                profile_new.name_last_update = now_date
+                update = False
+        profile_new.save()
+        print 'a'
         messages.success(request,"个人资料更新成功")
-        return render(request,'accounts.html',{"form":form})
+        print 'update:',update
+        return render(request,'accounts.html',{"form":form,"update":update})
     else:
-        return render(request,'accounts.html',{"form":form})    
+        print 'b'
+        print 'update:',update
+        return render(request,'accounts.html',{"form":form,"update":update})    
 
 @login_required
 def change_avatar(request):
@@ -347,7 +368,6 @@ def crop_avatar(request):
     
 @login_required
 def password_change(request):
-    profile = request.user.get_profile()
     if request.method == 'GET':
         form = PasswordChangeForm()
         return render(request,'password_change.html',locals())
@@ -355,13 +375,13 @@ def password_change(request):
     if form.is_valid():
         data = form.clean()
         user = request.user
-        if user.password == data['oldpassword']:
+        if user.check_password(data['oldpassword']):
             user.password = data['newpassword']
             user.save()
             messages.success(request,"新密码设置成功！请重新登录")
-            return HttpResponse('/accounts/logout')
+            return HttpResponseRedirect('/accounts/logout')
         else:
-            messages.error(request,'旧密码输入错误')
+            messages.error(request,'当前密码输入错误')
             return render(request,'password_change.html',{"form":form})
     else:
         return render(request,'password_change.html',{"form":form})    

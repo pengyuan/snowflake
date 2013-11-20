@@ -20,6 +20,7 @@ class UserProfile(models.Model):
     city = models.CharField(max_length=10,blank=True,null=True)
     signature = models.CharField(max_length=40,blank=True)
     introduction = models.CharField(max_length=200,blank=True)
+    name_last_update = models.DateTimeField(blank=True, null=True)
     deleted = models.BooleanField(default=False)
     
     def __unicode__(self):
