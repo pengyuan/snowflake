@@ -1009,14 +1009,13 @@ pre.prettyprint {
 
 pre code {
   padding: 0;
+  margin: 0;
   color: inherit;
   white-space: pre;
   white-space: pre-wrap;
   background-color: transparent;
   border: 0;
   font-family: "Courier New", Courier, monospace;
-white-space: pre-wrap;
-word-wrap: break-word;
 }
 
 .pre-scrollable {
@@ -1131,7 +1130,7 @@ input[type="color"],
 .uneditable-input {
   background-color: #ffffff;
   border: 1px solid #aaaaaa;
-
+	white-space: pre;
 }
 
 textarea:focus,

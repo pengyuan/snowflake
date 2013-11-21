@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from apps.accounts.function import gfm
 from apps.people.models import Notice, Message
 from datetime import datetime, timedelta
 from django import template
@@ -38,7 +39,8 @@ def num_message(user):
 @register.filter(is_safe=True)
 @stringfilter
 def markdown2html(value):
-    return mark_safe(markdown2.markdown(value,safe_mode=True))
+    #return gfm.markdown(value)
+    return mark_safe(markdown2.markdown(gfm(value)))
 
 @register.filter
 def count_thanks(thanks):

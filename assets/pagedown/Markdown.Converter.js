@@ -107,6 +107,11 @@ else
         pluginHooks.addNoop("preConversion");  // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
         pluginHooks.addNoop("postConversion"); // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
 
+        // makes converter instance aviable in private methods
+        var converter = this;
+        this.autoNewLine = false;  // when true, RETURN becomes a literal newline           
+                                   // WARNING: this is a significant deviation from the markdown spec 
+
         //
         // Private state of the converter instance:
         //
@@ -186,7 +191,60 @@ else
             text = text.replace(/~T/g, "~");
 
             text = pluginHooks.postConversion(text);
+            
+         // ** GFM **  Auto-link URLs and emails
+            /*text = text.replace(/https?\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!]/g, function(wholeMatch,matchIndex){
+              var left = text.slice(0, matchIndex), right = text.slice(matchIndex)
+              if (left.match(/<[^>]+$/) && right.match(/^[^>]*>/)) {return wholeMatch}
+              return "<a href='" + wholeMatch + "'>" + wholeMatch + "</a>";
+            });
+            text = text.replace(/[a-z0-9_\-+=.]+@[a-z0-9\-]+(\.[a-z0-9-]+)+/ig, function(wholeMatch){return "<a href='mailto:" + wholeMatch + "'>" + wholeMatch + "</a>";});
 
+            // ** GFM ** Auto-link sha1 if GitHub.nameWithOwner is defined
+            text = text.replace(/[a-f0-9]{40}/ig, function(wholeMatch,matchIndex){
+              if (typeof(GitHub) == "undefined" || typeof(GitHub.nameWithOwner) == "undefined") {return wholeMatch;}
+              var left = text.slice(0, matchIndex), right = text.slice(matchIndex)
+              if (left.match(/@$/) || (left.match(/<[^>]+$/) && right.match(/^[^>]*>/))) {return wholeMatch;}
+              return "<a href='http://github.com/" + GitHub.nameWithOwner + "/commit/" + wholeMatch + "'>" + wholeMatch.substring(0,7) + "</a>";
+            });
+
+            // ** GFM ** Auto-link user@sha1 if GitHub.nameWithOwner is defined
+            text = text.replace(/([a-z0-9_\-+=.]+)@([a-f0-9]{40})/ig, function(wholeMatch,username,sha,matchIndex){
+              if (typeof(GitHub) == "undefined" || typeof(GitHub.nameWithOwner) == "undefined") {return wholeMatch;}
+              GitHub.repoName = GitHub.repoName || _GetRepoName()
+              var left = text.slice(0, matchIndex), right = text.slice(matchIndex)
+              if (left.match(/\/$/) || (left.match(/<[^>]+$/) && right.match(/^[^>]*>/))) {return wholeMatch;}
+              return "<a href='http://github.com/" + username + "/" + GitHub.repoName + "/commit/" + sha + "'>" + username + "@" + sha.substring(0,7) + "</a>";
+            });
+
+            // ** GFM ** Auto-link user/repo@sha1
+            text = text.replace(/([a-z0-9_\-+=.]+\/[a-z0-9_\-+=.]+)@([a-f0-9]{40})/ig, function(wholeMatch,repo,sha){
+              return "<a href='http://github.com/" + repo + "/commit/" + sha + "'>" + repo + "@" + sha.substring(0,7) + "</a>";
+            });
+
+            // ** GFM ** Auto-link #issue if GitHub.nameWithOwner is defined
+            text = text.replace(/#([0-9]+)/ig, function(wholeMatch,issue,matchIndex){
+              if (typeof(GitHub) == "undefined" || typeof(GitHub.nameWithOwner) == "undefined") {return wholeMatch;}
+              var left = text.slice(0, matchIndex), right = text.slice(matchIndex)
+              if (left == "" || left.match(/[a-z0-9_\-+=.]$/) || (left.match(/<[^>]+$/) && right.match(/^[^>]*>/))) {return wholeMatch;}
+              return "<a href='http://github.com/" + GitHub.nameWithOwner + "/issues/#issue/" + issue + "'>" + wholeMatch + "</a>";
+            });
+
+            // ** GFM ** Auto-link user#issue if GitHub.nameWithOwner is defined
+            text = text.replace(/([a-z0-9_\-+=.]+)#([0-9]+)/ig, function(wholeMatch,username,issue,matchIndex){
+              if (typeof(GitHub) == "undefined" || typeof(GitHub.nameWithOwner) == "undefined") {return wholeMatch;}
+              GitHub.repoName = GitHub.repoName || _GetRepoName()
+              var left = text.slice(0, matchIndex), right = text.slice(matchIndex)
+              if (left.match(/\/$/) || (left.match(/<[^>]+$/) && right.match(/^[^>]*>/))) {return wholeMatch;}
+              return "<a href='http://github.com/" + username + "/" + GitHub.repoName + "/issues/#issue/" + issue + "'>" + wholeMatch + "</a>";
+            });
+
+            // ** GFM ** Auto-link user/repo#issue
+            text = text.replace(/([a-z0-9_\-+=.]+\/[a-z0-9_\-+=.]+)#([0-9]+)/ig, function(wholeMatch,repo,issue){
+              return "<a href='http://github.com/" + repo + "/issues/#issue/" + issue + "'>" + wholeMatch + "</a>";
+            });	*/
+            	
+            
             g_html_blocks = g_titles = g_urls = null;
 
             return text;
@@ -432,7 +490,11 @@ else
             text = _DoItalicsAndBold(text);
 
             // Do hard breaks:
-            text = text.replace(/  +\n/g, " <br>\n");
+            if(converter.autoNewLine) {
+                text = text.replace(/\n/g, " <br>\n");
+            } else {
+                text = text.replace(/  +\n/g, " <br>\n");
+            }
 
             return text;
         }
@@ -1011,7 +1073,7 @@ else
                     c = c.replace(/[ \t]*$/g, ""); // trailing whitespace
                     c = _EncodeCode(c);
                     c = c.replace(/:\/\//g, "~P"); // to prevent auto-linking. Not necessary in code *blocks*, but in code spans. Will be converted back after the auto-linker runs.
-                    return m1 + "<code>" + c + "</code>";
+                    return m1 + "<pre><code>" + c + "</code></pre>";
                 }
             );
 
@@ -1136,6 +1198,7 @@ else
                 }
                 else if (/\S/.test(str)) {
                     str = _RunSpanGamut(str);
+                    str = str.replace(/\n/g,"<br />");  // ** GFM **
                     str = str.replace(/^([ \t]*)/g, "<p>");
                     str += "</p>"
                     grafsOut.push(str);

@@ -500,6 +500,15 @@ a.count:visited {
 	text-overflow: ellipsis;
 	word-wrap: break-word;
 }
+.reply-content p{
+	margin-bottom: 18px;
+	padding:0;
+	word-wrap: break-word;
+}
+.reply-content p:last-child{
+	margin-bottom: 2px;
+}
+
 .reply-menu {
 	display: block;
 	list-style-type: none;

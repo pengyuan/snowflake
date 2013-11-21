@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from django.core.mail import EmailMessage
+from hashlib import md5
+import re
 import threading
 import time
 
@@ -34,7 +36,79 @@ def send_email(subject='', body='', from_email=None, to=[]):
     email = EmailThread(subject, body, from_email, to)
     email.start()
     email.join()
-   
+
+ 
+def gfm(text):
+    # Extract pre blocks.
+    extractions = {}
+    def pre_extraction_callback(matchobj):
+        digest = md5(matchobj.group(0).encode('utf-8')).hexdigest()
+        extractions[digest] = matchobj.group(0)
+        return "{gfm-extraction-%s}" % digest
+    pattern = re.compile(r'<pre>.*?</pre>', re.MULTILINE | re.DOTALL)
+    text = re.sub(pattern, pre_extraction_callback, text)
+ 
+    # Prevent foo_bar_baz from ending up with an italic word in the middle.
+    def italic_callback(matchobj):
+        s = matchobj.group(0)
+        if list(s).count('_') >= 2:
+            return s.replace('_', '\_')
+        return s
+    pattern = re.compile(r'^(?! {4}|\t).*\w+(?<!_)_\w+_\w[\w_]*', re.MULTILINE | re.UNICODE)
+    text = re.sub(pattern, italic_callback, text)
+ 
+    # In very clear cases, let newlines become <br /> tags.
+    def newline_callback(matchobj):
+        if len(matchobj.group(1)) == 1:
+            return matchobj.group(0).rstrip() + '  \n'
+        else:
+            return matchobj.group(0)
+    pattern = re.compile(r'^[\w\<][^\n]*(\n+)', re.MULTILINE | re.UNICODE)
+    text = re.sub(pattern, newline_callback, text)
+ 
+    # Insert pre block extractions.
+    def pre_insert_callback(matchobj):
+        return '\n\n' + extractions[matchobj.group(1)]
+    text = re.sub(r'{gfm-extraction-([0-9a-f]{32})\}', pre_insert_callback, text)
+
+    # Configuration for urlize() function
+    LEADING_PUNCTUATION  = ['(', '<', '&lt;']
+    TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
+     
+    word_split_re = re.compile(r'(\s+)')
+    punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
+        ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
+        '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
+    simple_email_re = re.compile(r'^\S+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+$')    
+    def autolink(text, trim_url_limit=None, nofollow=False):
+        """
+        Converts any URLs in text into clickable links. Works on http://, https:// and
+        www. links. Links can have trailing punctuation (periods, commas, close-parens)
+        and leading punctuation (opening parens) and it'll still do the right thing.
+     
+        If trim_url_limit is not None, the URLs in link text will be limited to
+        trim_url_limit characters.
+     
+        If nofollow is True, the URLs in link text will get a rel="nofollow" attribute.
+        """
+        trim_url = lambda x, limit=trim_url_limit: limit is not None and (x[:limit] + (len(x) >=limit and '...' or ''))  or x
+        words = word_split_re.split(text)
+        nofollow_attr = nofollow and ' rel="nofollow"' or ''
+        for i, word in enumerate(words):
+            match = punctuation_re.match(word)
+            if match:
+                lead, middle, trail = match.groups()
+                #Let guys without 'http://' go
+                if middle.startswith('http://') or middle.startswith('https://'):
+                    middle = '<a href="%s"%s target="_blank">%s</a>' % (middle, nofollow_attr, trim_url(middle))
+                if '@' in middle and not middle.startswith('www.') and not ':' in middle \
+                    and simple_email_re.match(middle):
+                    middle = '<a href="mailto:%s">%s</a>' % (middle, middle)
+                if lead + middle + trail != word:
+                    words[i] = lead + middle + trail
+        return ''.join(words)
+    text = autolink(text)
+    return text
 # class QuerySetEncoder( simplejson.JSONEncoder ):
 #     """
 #     Encoding QuerySet into JSON format.

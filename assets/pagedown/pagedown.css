@@ -34,7 +34,26 @@
 	word-wrap: break-word;
 	word-break: break-all;
 }
+.wmd-preview p
+{ 
+	margin-bottom: 18px;
+	padding:0;
+	word-wrap: break-word;
+}
 
+.wmd-preview p
+{ 
+	margin-bottom: 18px;
+	padding:0;
+	word-wrap: break-word;
+}
+
+.wmd-preview p:last-child{
+	margin-bottom: 2px;
+}
+.wmd-preview p a{
+	margin-left: 0px;	
+}
 .wmd-button-row 
 {
 	position: relative; 
