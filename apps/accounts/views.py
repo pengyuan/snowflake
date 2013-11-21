@@ -212,13 +212,9 @@ def accounts(request):
                 profile_new.name_last_update = now_date
                 update = False
         profile_new.save()
-        print 'a'
         messages.success(request,"个人资料更新成功")
-        print 'update:',update
         return render(request,'accounts.html',{"form":form,"update":update})
     else:
-        print 'b'
-        print 'update:',update
         return render(request,'accounts.html',{"form":form,"update":update})    
 
 @login_required
@@ -330,12 +326,6 @@ def crop_avatar(request):
         res_path2 = os.path.join(AVATAR_DIR, res_name2).replace('\\', '/')
         res.save(res_path, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
         res2.save(res_path2, AVATAR_SAVE_FORMAT, quality=AVATAR_SAVE_QUALITY)
-        print 'res:',res
-        print 'res2:',res2
-        print 'res_name:',res_name
-        print 'res_name2:',res_name2
-        print 'res_path:',res_path
-        print 'res_path2:',res_path2
     except:
         logging.error('发生错误！')
 #         logging.debug('debug')  #被忽略  
