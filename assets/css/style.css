@@ -408,13 +408,21 @@ a.count:visited {
 	padding: 10px 2px 0px 0px;
 	color: #222;
 	font-size:14px;
-	margin-top:10px;
+	margin-top:5px;
 	line-height:25px;
 }
 .topic-body .t-content p{
-	font-size: 14px;
+	margin-bottom: 18px;
+	padding:0;
+	word-wrap: break-word;
 }
-
+.topic-body .t-content p:last-child{
+	margin-bottom: 2px;
+}
+.t-content ul{
+	padding-left: 16px;
+	padding-bottom: 18px;
+}
 .reply-list {
 	list-style-type: none;
 	margin: 0;
@@ -499,6 +507,10 @@ a.count:visited {
 	color: #333;
 	text-overflow: ellipsis;
 	word-wrap: break-word;
+}
+.reply-content ul {
+	padding-left: 16px;
+	padding-bottom: 18px;
 }
 .reply-content p{
 	margin-bottom: 18px;

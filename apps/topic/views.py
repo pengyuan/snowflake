@@ -40,6 +40,8 @@ def topic(request,topic_id):
     context['node'] = topic.node
     context['reply_list'] = replys
     context['form'] = ReplyForm()
+    print topic.content
+    print replys[0].content
     return render(request,'topic.html',context)
 
 @login_required
