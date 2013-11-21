@@ -116,7 +116,7 @@
 	<div class="well">
 		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
 		{% if description %}
-			<p style="font-size: 14px;">{{description}}</p>
+			<p style="font-size: 14px;">{% autoescape off %}{{description|markdown2html}}{% endautoescape %}</p>
 			{% if user.is_authenticated %}
 			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
 			{% endif %}
