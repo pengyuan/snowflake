@@ -27,7 +27,7 @@ def time_since(value):
     if difference <= datetime.timedelta(minutes=1):
         return '刚刚'
     print 'd'
-    return '%(time)s前' % {'time': timesince(value).split(', ')[0]}
+    return '%s前' % timesince(value).split(', ')[0]
 
 @register.filter
 def adjust_link(value):
