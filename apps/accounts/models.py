@@ -64,4 +64,4 @@ class UserProfile(models.Model):
 # 
 # post_delete.connect(_delete_avatar_on_disk, sender=UserProfile)
 
-template.add_to_builtins('apps.topic.templatetags.template_tags')
+#template.add_to_builtins('apps.topic.templatetags.template_tags')
