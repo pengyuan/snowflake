@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 # Django settings for pythonic project.
-from django import template
 import logging
 import os
 
@@ -198,8 +197,7 @@ WMD_ADMIN_SHOW_PREVIEW = True
 #WHOOSH_INDEX = 'c:/index'
 
 # from django import template  
-#template.add_to_builtins('topic.templatetags.template_tags')
-template.add_to_builtins('apps.topic.templatetags.template_tags')
+# template.add_to_builtins('topic.templatetags.template_tags')
 
 # EMAIL_HOST = ''
 # EMAIL_PORT = 25
