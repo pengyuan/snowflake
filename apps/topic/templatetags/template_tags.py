@@ -17,17 +17,13 @@ def hello(value,msg="Hello"):
 @register.filter
 def time_since(value):
     now = datetime.datetime.now()
-    print 'a'
     try:
         difference = now - value
     except:
-        print 'b'
         return value
-    print 'c'
     if difference <= datetime.timedelta(minutes=1):
         return '刚刚'
-    print 'd'
-    return '%s前' % timesince(value).split(', ')[0]
+    return '%s前' % timesince(value)
 
 @register.filter
 def adjust_link(value):
