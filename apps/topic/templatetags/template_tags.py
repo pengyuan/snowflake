@@ -7,7 +7,10 @@ from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
 import datetime
+import logging
 import markdown2
+
+
 register = template.Library()   
 #just a demo
 @register.filter('hello')   
@@ -16,6 +19,7 @@ def hello(value,msg="Hello"):
 
 @register.filter
 def time_since(value):
+    logging.error(value)
     now = datetime.datetime.now()
     try:
         difference = now - value
@@ -23,6 +27,7 @@ def time_since(value):
         return value
     if difference <= datetime.timedelta(minutes=1):
         return '刚刚'
+    logging.error(timesince(value)+'   '+timesince(value).split(', ')[0])
     return timesince(value).split(', ')[0]+'前'
 
 @register.filter
