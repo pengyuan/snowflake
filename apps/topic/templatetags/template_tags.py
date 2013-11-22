@@ -26,7 +26,7 @@ def time_since(value):
     print 'c'
     if difference <= datetime.timedelta(minutes=1):
         return '刚刚'
-    print 'd'
+    print timesince(value)
     return '%s前' % timesince(value).split(',')[0]
 
 @register.filter
