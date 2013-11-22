@@ -2,11 +2,11 @@
 # -*- coding: UTF-8 -*-
 from apps.accounts.function import gfm
 from apps.people.models import Notice, Message
-from datetime import datetime, timedelta
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
+import datetime
 import markdown2
 register = template.Library()   
 #just a demo
@@ -16,14 +16,17 @@ def hello(value,msg="Hello"):
 
 @register.filter
 def time_since(value):
-    now = datetime.now()
+    now = datetime.datetime.now()
+    print 'a'
     try:
         difference = now - value
     except:
+        print 'b'
         return value
-
-    if difference <= timedelta(minutes=1):
+    print 'c'
+    if difference <= datetime.timedelta(minutes=1):
         return '刚刚'
+    print 'd'
     return '%(time)s前' % {'time': timesince(value).split(', ')[0]}
 
 @register.filter
