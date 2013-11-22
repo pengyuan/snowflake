@@ -7,7 +7,7 @@
 {% block main %}
 <h3>{{people.get_profile.name}}{% if people.get_profile.signature %}<span style="color:#777;font-weight:normal;"> ，{{people.get_profile.signature}}</span>{% endif %}
 {% if people.get_profile.weibo %}
-	<a href="http://{{people.get_profile.weibo}}" target="blank" class="pull-right"><img src="/static/img/weibo.png" width="16" height="16"/></a>
+	<a href="http://{{people.get_profile.weibo}}" target="_blank" class="pull-right"><img src="/static/img/weibo.png" width="16" height="16"/></a>
 {% endif %}
 </h3>
 <div class="sep10"></div>
@@ -27,7 +27,7 @@
 				{% if people.get_profile.website %}
 				<tr style="height:24px;line-height:24px;font-size:13px;">
 					<td>
-						<i class="icon-pencil"></i> <a href="{{people.get_profile.website|adjust_link}}" target="blank">{{people.get_profile.website|adjust_link}}</a>
+						<i class="icon-pencil"></i> <a href="{{people.get_profile.website|adjust_link}}" target="_blank">{{people.get_profile.website|adjust_link}}</a>
 					</td>
 				</tr>
 				{% endif %}
