@@ -24,7 +24,6 @@ def time_since(value):
 
     if difference <= timedelta(minutes=1):
         return '刚刚'
-    print timesince(value)
     return '%(time)s前' % {'time': timesince(value)}
 
 @register.filter
