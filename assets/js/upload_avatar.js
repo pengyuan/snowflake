@@ -67,7 +67,7 @@ function updatePreview50(img, selection) {
 
 function updatePreview120(img, selection) {
     if (parseInt(selection.width, 10) > 0) {
-        var ratiox = 120 / selection.width;
+        var ratiox = 100 / selection.width;
         $("#uploadAvatarPreviewArea120 img").css({
             width: Math.round(ratiox * img.width) + 'px',
             marginLeft: '-' + Math.round(ratiox * selection.x1) + 'px',

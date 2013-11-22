@@ -25,7 +25,6 @@ urlpatterns = patterns('apps.site.views',
 urlpatterns += patterns('',
     (r'^accounts/',include('apps.accounts.urls')),
     (r'^people/',include('apps.people.urls')),
-    #(r'^pypi/',include('apps.pypi.urls')),
 )
 
 urlpatterns += patterns('apps.topic.views',
