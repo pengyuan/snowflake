@@ -26,6 +26,13 @@ def time_since(value):
         return '刚刚'
     return '%(time)s前' % {'time': timesince(value).split(', ')[0]}
 
+@register.filter
+def adjust_link(value):
+    if value.startswith('http://') or value.startswith('https://'):
+        return value
+    else:
+        return 'http://'+value
+
 @register.simple_tag
 def num_message(user):
     num_notice = Notice.objects.filter(recipient=user,is_readed=False).count()
