@@ -8,7 +8,6 @@ from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 import datetime
-#from main.models import WHOOSH_SCHEMA
 
 def index(request):
     context = {}
@@ -47,7 +46,6 @@ def star(request):
     
     from_date2 = time_now - datetime.timedelta(days=30)
     topic_list = Topic.objects.filter(updated_on__range=[from_date2, time_now],likes__isnull=False).annotate(likes_count=Count('likes')).order_by('-likes_count')[:40]
-    #topic_list = sorted(topic_list, key=lambda x: x.likes.all().count(), reverse=True)
     
     context['topics'] = topic_list
     
@@ -77,55 +75,6 @@ def recent(request):
         topics = paginator.page(paginator.num_pages)
     context['topics'] = topics
     return render(request,'recent.html',context)
-
-#def search(request):
-#     context = {}
-# #     p = Topic(title='first post', body='This is my first post')
-# #     p.save() # The new model is already added to the index
-#     if request.method =='GET':
-#         get = request.GET.copy()
-#         if get.has_key('q'):
-#             query = get['q']
-#             hits = Topic.objects.query(query)
-#             
-#             context['query'] = query
-#             context['hits'] = hits
-#     return render(request,'search.html',context)
-# 
-# """
-#     Simple search view, which accepts search queries via url, like google.
-#     Use something like ?q=this+is+the+serch+term
-# 
-#     """
-#    context = {}
-#     storage = FileStorage(settings.WHOOSH_INDEX)
-#     ix = index.Index(storage, schema=WHOOSH_SCHEMA)
-#     ix = create_in(settings.WHOOSH_INDEX, WHOOSH_SCHEMA)
-#     hits = []
-#     query = request.GET.get('q', None)
-#     if query is not None and query != u"":
-#         # Whoosh don't understands '+' or '-' but we can replace
-#         # them with 'AND' and 'NOT'.
-#         #query = query.replace('+', ' AND ').replace(' -', ' NOT ')
-#         context['query'] = query
-#         parser = QueryParser("content", schema=ix.schema)
-#         try:
-#             qry = parser.parse(query)
-#         except:
-#             # don't show the user weird errors only because we don't
-#             # understand the query.
-#             # parser.parse("") would return None
-#             qry = None
-#         if qry is not None:
-# #             searcher = ix.searcher()
-# #             hits = searcher.search(qry)
-#             with ix.searcher() as searcher:
-#                 hits = searcher.find('content', u'哈')
-#                  
-#                 #hits = searcher.search(qry)
-#                 context['hits'] = hits
-#             
-#     return render(request,'search.html',context)
 
 def about(request):
     return render(request,'about.html')
@@ -161,7 +110,7 @@ def one(request):
 def people(request):
     context = {}
     peoples = User.objects.filter(is_active=True).order_by('date_joined')
-    paginator = Paginator(peoples, 30)
+    paginator = Paginator(peoples, 100)
     page = request.GET.get('page')
     try:
         people_list = paginator.page(page)
