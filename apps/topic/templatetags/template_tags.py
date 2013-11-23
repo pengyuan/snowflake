@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from apps.accounts.function import gfm
 from apps.people.models import Notice, Message
+from apps.topic.gfm import gfm
 from datetime import datetime, timedelta
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
-import markdown2
 register = template.Library()   
 #just a demo
 @register.filter('hello')   
@@ -47,7 +46,8 @@ def num_message(user):
 @stringfilter
 def markdown2html(value):
     #return gfm.markdown(value)
-    return mark_safe(markdown2.markdown(gfm(value)))
+    return mark_safe(gfm(value))
+    #return mark_safe(markdown2.markdown(gfm(value)))
 
 @register.filter
 def count_thanks(thanks):

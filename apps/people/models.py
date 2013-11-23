@@ -4,7 +4,6 @@ from apps.topic.models import Topic, Reply
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
-       #html = [u'<div class="wmd-panel resizable-textarea"><div id="wmd-button-bar"></div><span><textarea class="span12 resizable processed" cols="40" id="id_content" name="content" rows="10"></textarea><div class="grippie" style="margin-right: 0px;"></div></span>']
 
 class Notice(models.Model):
     sender = models.ForeignKey(User,related_name='+') #not to create a backwards relation
@@ -12,7 +11,7 @@ class Notice(models.Model):
     is_topic = models.BooleanField()
     topic = models.ForeignKey(Topic,null=True)
     reply = models.ForeignKey(Reply,null=True)
-    content = models.CharField(max_length=100)
+    content = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
     is_readed = models.BooleanField(default=False)
 
@@ -38,6 +37,7 @@ def create_notice(sender, **kwargs):
             Notice.objects.create(sender=reply.author,recipient=reply.parent.author,is_topic=False,topic=reply.topic,reply=reply.parent,content=reply.content)
     else:
         if reply.author != reply.topic.author:      #可以回复自己的话题，但是不新建提醒
+            print reply.content
             Notice.objects.create(sender=reply.author,recipient=reply.topic.author,is_topic=True,topic=reply.topic,content=reply.content)
     
 post_save.connect(create_notice, sender=Reply)

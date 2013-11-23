@@ -2,6 +2,10 @@ django==1.5.4
 Pillow==2.1.0
 MySQL-python==1.2.4
 markdown2==2.1.0
+misaka==1.0.3
+pygments==1.6
+
+
 #django-simple-captcha
 #DjangoVerifyCode
 #django-celery-email==1.0.4
@@ -12,17 +16,4 @@ markdown2==2.1.0
 #django-simple-avatar
 #Fabric
 #virtualenv
-
 #pelican==3.3.0
-
-https://github.com/joeyespo/grip
-http://stackoverflow.com/questions/7694887/is-there-a-command-line-utility-for-rendering-github-flavored-markdown
-https://github.com/develersrl/gccwinbinaries
-http://stackoverflow.com/questions/17972347/error-command-gcc-failed-no-such-file-or-directory
-	http://misaka.61924.nl/manual/#toc_15
-https://github.com/dart-lang/py-gfm
-https://zignar.net/2012/06/17/install-python-on-windows/
-http://gfw.shit.la/htm_data/22/1311/984752.html
-https://github.com/freedomsponsors/www.freedomsponsors.org/blob/7f801b41cc3183ae87986ea2e3e4db2bc8245b61/djangoproject/core/templatetags/markdown.py
-http://blog.freedomsponsors.org/markdown_formatting/
-https://gist.github.com/gasman/856894
