@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
+#from django.utils.timesince import timesince
 from django.utils.timesince import timesince
 import markdown2
 register = template.Library()   
