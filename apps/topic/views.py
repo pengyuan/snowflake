@@ -181,7 +181,6 @@ def reply_create(request, topic_id):
         parent_id = request.POST['parent_id']
         form = ReplyForm(request.POST)
         if form.is_valid():
-            print 
             reply = form.save(commit=False)
             reply.author = request.user
             reply.topic = Topic.objects.get(id=topic_id)
