@@ -6,8 +6,7 @@ from datetime import datetime, timedelta
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-#from django.utils.timesince import timesince
-from django.template.defaultfilters import timesince
+from django.utils.timesince import timesince
 import markdown2
 register = template.Library()   
 #just a demo
@@ -15,7 +14,7 @@ register = template.Library()
 def hello(value,msg="Hello"):   
     return "%s,%s！" % (msg,value)   
 
-@register.filter(is_safe=True)
+@register.filter
 def time_since(value):
     now = datetime.now()
     try:
@@ -27,7 +26,7 @@ def time_since(value):
         return '刚刚'
     return '%(time)s前' % {'time': timesince(value)}
 
-@register.filter(is_safe=True)
+@register.filter
 def adjust_link(value):
     if value.startswith('http://') or value.startswith('https://'):
         return value
@@ -50,12 +49,12 @@ def markdown2html(value):
     #return gfm.markdown(value)
     return mark_safe(markdown2.markdown(gfm(value)))
 
-@register.filter(is_safe=True)
+@register.filter
 def count_thanks(thanks):
     for item in thanks.all():
         print item
 
-@register.filter(is_safe=True)
+@register.filter
 def thanks_list(thanks):
     thanks = thanks.all()[:3]
     html = ''
