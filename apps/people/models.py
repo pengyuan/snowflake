@@ -37,7 +37,6 @@ def create_notice(sender, **kwargs):
             Notice.objects.create(sender=reply.author,recipient=reply.parent.author,is_topic=False,topic=reply.topic,reply=reply.parent,content=reply.content)
     else:
         if reply.author != reply.topic.author:      #可以回复自己的话题，但是不新建提醒
-            print reply.content
             Notice.objects.create(sender=reply.author,recipient=reply.topic.author,is_topic=True,topic=reply.topic,content=reply.content)
     
 post_save.connect(create_notice, sender=Reply)
