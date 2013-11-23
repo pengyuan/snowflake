@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from django import template
 from django.contrib.auth.models import User
 from django.db import models
 from settings import AVATAR_DIR
@@ -64,4 +63,4 @@ class UserProfile(models.Model):
 # 
 # post_delete.connect(_delete_avatar_on_disk, sender=UserProfile)
 
-template.add_to_builtins('apps.topic.templatetags.template_tags')
+#template.add_to_builtins('apps.topic.templatetags.template_tags')
