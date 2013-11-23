@@ -15,7 +15,7 @@ register = template.Library()
 def hello(value,msg="Hello"):   
     return "%s,%s！" % (msg,value)   
 
-@register.filter
+@register.filter(is_safe=True)
 def time_since(value):
     now = datetime.now()
     try:
@@ -27,7 +27,7 @@ def time_since(value):
         return '刚刚'
     return '%(time)s前' % {'time': timesince(value)}
 
-@register.filter
+@register.filter(is_safe=True)
 def adjust_link(value):
     if value.startswith('http://') or value.startswith('https://'):
         return value
@@ -50,12 +50,12 @@ def markdown2html(value):
     #return gfm.markdown(value)
     return mark_safe(markdown2.markdown(gfm(value)))
 
-@register.filter
+@register.filter(is_safe=True)
 def count_thanks(thanks):
     for item in thanks.all():
         print item
 
-@register.filter
+@register.filter(is_safe=True)
 def thanks_list(thanks):
     thanks = thanks.all()[:3]
     html = ''
