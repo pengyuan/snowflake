@@ -7,7 +7,7 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 #from django.utils.timesince import timesince
-from django.utils.timesince import timesince
+from django.template.defaultfilters import timesince
 import markdown2
 register = template.Library()   
 #just a demo
