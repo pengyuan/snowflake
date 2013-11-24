@@ -2,12 +2,10 @@
 # -*- coding: UTF-8 -*-
 from apps.people.models import Notice, Message
 from apps.topic.gfm import gfm
-from datetime import datetime, timedelta
+from datetime import datetime
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-from django.utils.timesince import timesince
-from django.utils.translation import ungettext, ugettext
 register = template.Library()   
 #just a demo
 @register.filter('hello')   
@@ -20,42 +18,42 @@ def humanize_timesince(date):
 
     num_years = delta.days / 365
     if (num_years > 0):
-        return ungettext(u"%d year ago", u"%d years ago", num_years) % num_years
+        return date.strftime("%Y-%m-%d %H:%I:%S")
 
-    num_weeks = delta.days / 7
-    if (num_weeks > 0):
-        return ungettext(u"%d week ago", u"%d weeks ago", num_weeks) % num_weeks
+#     num_weeks = delta.days / 7
+#     if (num_weeks > 0):
+#         return ungettext(u"%d week ago", u"%d weeks ago", num_weeks) % num_weeks
 
     if (delta.days > 0):
-        return ungettext(u"%d day ago", u"%d days ago", delta.days) % delta.days
+        return u"%d天前" % delta.days
 
     num_hours = delta.seconds / 3600
     if (num_hours > 0):
-        return ungettext(u"%d hour ago", u"%d hours ago", num_hours) % num_hours
+        return u"%d小时前" % num_hours
 
     num_minutes = delta.seconds / 60
     if (num_minutes > 0):
-        return ungettext(u"%d minute ago", u"%d minutes ago", num_minutes) % num_minutes
+        return u"%d分钟前" % num_minutes
 
-    return ugettext(u"just a few seconds ago")
+    return u"刚刚"
 
-@register.filter
-@stringfilter
-def upto(value, delimiter=None):
-    return value.split(delimiter)[0]+'前'
-upto.is_safe = True
-
-@register.filter
-def time_since(value):
-    now = datetime.now()
-    try:
-        difference = now - value
-    except:
-        return value
-
-    if difference <= timedelta(minutes=1):
-        return '刚刚'
-    return '%(time)s前' % {'time': timesince(value)}
+# @register.filter
+# @stringfilter
+# def upto(value, delimiter=None):
+#     return value.split(delimiter)[0]+u'前'
+# upto.is_safe = True
+# 
+# @register.filter
+# def time_since(value):
+#     now = datetime.now()
+#     try:
+#         difference = now - value
+#     except:
+#         return value
+# 
+#     if difference <= timedelta(minutes=1):
+#         return '刚刚'
+#     return '%(time)s前' % {'time': timesince(value)}
 
 @register.filter
 def adjust_link(value):
