@@ -75,7 +75,7 @@
 		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;padding: 5px 0px;margin-bottom:2px;">
 			<a href="/topic/{{item.id}}">{{item.title}}</a>
 			<font class="muted" style="padding-left:20px;font-size:12px;">{% if item.num_replies %}{{ item.num_replies }}回复{% endif %}</font>
-			<span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+			<span class="muted pull-right" style="font-size:12px;">{{item.created_on|timesince_human}}</span>
 		</li>
 	{% endfor %}
 	</ul>

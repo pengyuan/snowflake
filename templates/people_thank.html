@@ -66,7 +66,7 @@
 {% if thank_list %}
 	<ul style="list-style:none; font-size: 14px; margin:10px 0 0 5px;">
 	{% for item in thank_list %}
-		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;padding: 5px 0px;margin-bottom:2px;"><a href="/topic/{{item.topic.id}}">{{item.topic.title}}</a> <font class="muted" style="padding-left:20px;font-size:12px;">{% if item.thanks %}{{ item.thanks.all|length }}感谢{% endif %}</font><span class="muted pull-right" style="font-size:12px;">{{item.created_on|time_since}}</span>
+		<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;padding: 5px 0px;margin-bottom:2px;"><a href="/topic/{{item.topic.id}}">{{item.topic.title}}</a> <font class="muted" style="padding-left:20px;font-size:12px;">{% if item.thanks %}{{ item.thanks.all|length }}感谢{% endif %}</font><span class="muted pull-right" style="font-size:12px;">{{item.created_on|timesince_human}}</span>
 			<div class="reply-content">
 				{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>{% endif %}
 				{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}

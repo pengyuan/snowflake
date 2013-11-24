@@ -16,14 +16,14 @@
 		<div class="bubble">
 			<a href="/people/{{user.get_profile.slug}}"><img class="pull-right" src="/media/avatar/{{user.get_profile.avatar}}"></a>
 			<div class="bubble-box right pull-right">
-		    	<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|time_since}}</font></p>
+		    	<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|timesince_human}}</font></p>
 			</div>
 		</div>
 		{% else %}
 		<div class="bubble">
 			<a href="/people/{{item.talk_to.get_profile.slug}}"><img class="pull-left" src="/media/avatar/{{item.talk_to.get_profile.avatar}}"></a>
 			<div class="bubble-box left pull-left">
-	    		<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|time_since}}</font></p>
+	    		<p class="wrap">{{item.content}}&nbsp;&nbsp;<font class="muted">{{item.time|timesince_human}}</font></p>
 			</div>
 		</div>
 		{% endif %}

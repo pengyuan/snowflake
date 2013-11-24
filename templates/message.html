@@ -32,7 +32,7 @@
 				</div>
 			</div>
 			<div class="msg_meta">
-				<span class="msg_time">{{item.message.time|time_since}}</span><br/>
+				<span class="msg_time">{{item.message.time|timesince_human}}</span><br/>
 			</div>
 			<div class="msg_num">
 				<span class="label label-danger">{% if item.number != 0%}{{item.number}}{% endif %}</span>

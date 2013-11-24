@@ -17,7 +17,7 @@
 		</div>
 	    <h1>{{topic.title}}</h1>
 	    <div class="t-meta">
-	    	<span class="t-author"><a href="/people/{{topic.author.get_profile.slug}}" class="muted">{{topic.author.get_profile.name}}</a></span> 创建于 <span class="t-time">{{topic.created_on|time_since}}</span>{% if topic.num_views %} · <span class="t-view">{{topic.num_views}}次点击</span>{% endif %}
+	    	<span class="t-author"><a href="/people/{{topic.author.get_profile.slug}}" class="muted">{{topic.author.get_profile.name}}</a></span> 创建于 <span class="t-time">{{topic.created_on|timesince_human}}</span>{% if topic.num_views %} · <span class="t-view">{{topic.num_views}}次点击</span>{% endif %}
 	    </div>
 		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
 		{% if user.is_authenticated and user.id != topic.author.id %}
@@ -52,7 +52,7 @@
 			</div>
 			<span class="order pull-right">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
 			<div class="reply-menu">
-				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|time_since}}</span>
+				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|timesince_human}}</span>
    			</div>					
 		</div>
 	</li>

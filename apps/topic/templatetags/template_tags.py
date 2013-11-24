@@ -78,11 +78,11 @@ def markdown2html(value):
     #return gfm.markdown(value)
     return mark_safe(gfm(value))
     #return mark_safe(markdown2.markdown(gfm(value)))
-
-@register.filter
-def count_thanks(thanks):
-    for item in thanks.all():
-        print item
+# 
+# @register.filter
+# def count_thanks(thanks):
+#     for item in thanks.all():
+#         print item
 
 @register.filter
 def thanks_list(thanks):
