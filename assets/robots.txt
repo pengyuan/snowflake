@@ -1,12 +1,7 @@
 User-agent: *
-Disallow: /ad*n/
-Disallow: /r*t/
-Disallow: /reset_passwd/
+Disallow: /admin/
+Disallow: /static/
 Disallow: /account/
-Disallow: /user/
-Disallow: /ajax_*/
-Disallow: /image/
-Disallow: /i*g/
-Disallow: /*.jpg$
-Disallow: /.css$
-Disallow: /.js$
+Allow: /topic/*
+Allow: /node/*
+Allow: /people/*
