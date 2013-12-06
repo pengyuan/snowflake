@@ -11,12 +11,12 @@ import datetime
 
 def index(request):
     context = {}
-    topic_list = Topic.objects.all().order_by('-updated_on')[:41]
-    if topic_list.count() == 41:
+    topic_list = Topic.objects.all().order_by('-updated_on')[:26]
+    if topic_list.count() == 26:
         more = True
     else:
         more = False
-    context['topics'] = topic_list[:40]
+    context['topics'] = topic_list[:25]
     context['more'] = more
     all_nodes = []
     parent_nodes = ParentNode.objects.all()
@@ -38,14 +38,13 @@ def index(request):
 def star(request):
     context = {}
     time_now = datetime.datetime.now()
-    from_date = time_now - datetime.timedelta(days=7)
+    from_date = time_now - datetime.timedelta(days=30)
     hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now]).order_by('-num_replies')[:10]
     context['hot_topics'] = hot_topics
     hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
     context['hot_nodes'] = hot_nodes
-    
-    from_date2 = time_now - datetime.timedelta(days=30)
-    topic_list = Topic.objects.filter(updated_on__range=[from_date2, time_now],likes__isnull=False).annotate(likes_count=Count('likes')).order_by('-likes_count')[:40]
+
+    topic_list = Topic.objects.filter(updated_on__range=[from_date, time_now],likes__isnull=False).annotate(likes_count=Count('likes')).order_by('-likes_count')[:25]
     
     context['topics'] = topic_list
     
