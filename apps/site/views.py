@@ -28,7 +28,7 @@ def index(request):
         all_nodes.append(node)
     context['all_nodes'] = all_nodes
     time_now = datetime.datetime.now()
-    from_date = time_now - datetime.timedelta(days=7)
+    from_date = time_now - datetime.timedelta(days=30)
     hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now]).order_by('-num_replies')[:10]
     context['hot_topics'] = hot_topics
     hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
@@ -119,4 +119,5 @@ def people(request):
     except EmptyPage:
         people_list = paginator.page(paginator.num_pages)
     context['people_list'] = people_list
+    context['manage_list'] = User.objects.filter(is_active=True,is_staff=True).order_by('date_joined')
     return render(request,'people_list.html',context)
