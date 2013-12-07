@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+from apps.accounts.models import UserProfile
 from apps.site.forms import FeedbackForm
 from apps.topic.models import Topic, Node, ParentNode
 from django.contrib.auth.models import User
@@ -63,7 +64,7 @@ def star(request):
 def recent(request):
     context = {}
     topic_list = Topic.objects.all().order_by('-updated_on')
-    paginator = Paginator(topic_list, 5)
+    paginator = Paginator(topic_list, 25)
 
     page = request.GET.get('page')
     try:
@@ -105,6 +106,12 @@ def help_use(request):
 
 def one(request):
     return render(request,'one.html')
+
+def site(request):
+    context = {}
+    userlist = UserProfile.objects.all().exclude(website__isnull=True).exclude(website__exact='').order_by('id')
+    context['userlist'] = userlist
+    return render(request,'site.html',context)
 
 def people(request):
     context = {}

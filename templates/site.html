@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Pythonic One - Pythonic
+{% endblock %}
+
+{% block head %}
+<style>
+h2{
+	margin: 0px;
+	padding: 0px;
+	line-height:20px;
+	height: 20px;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<a href="/">首页</a><span class="split">&nbsp;›&nbsp;</span><span style="font-size: 13px;color:#777;">酷站</span>
+<hr class="dash"/>
+<h2>商业网站</h2><div class="sep10"></div>
+<div class="row-fluid">
+	<div class="span2"><a href="http://www.douban.com" target="_blank">豆瓣</a></div>
+	<div class="span2"><a href="http://www.zhihu.com" target="_blank">知乎</a></div>
+	<div class="span2"><a href="http://www.guokr.com" target="_blank">果壳</a></div>
+	<div class="span2"><a href="http://www.codoon.com/" target="_blank">咕咚</a></div>
+	<div class="span2"><a href="http://hi.42qu.com/" target="_blank">42区</a></div>
+	<div class="span2"><a href="http://zh.reddit.com/" target="_blank">Reddit</a></div>
+</div>
+<div class="row-fluid">
+	<div class="span2"><a href="https://www.dropbox.com/" target="_blank">Dropbox</a></div>
+	<div class="span2"><a href="http://digg.com/" target="_blank">Digg</a></div>
+	<div class="span2"><a href="https://www.quora.com/" target="_blank">Quora</a></div>
+	<div class="span2"><a href="https://www.pinterest.com/" target="_blank">Pinterest</a></div>
+	<div class="span2"><a href="http://www.yelp.com/" target="_blank">Yelp</a></div>
+	<div class="span2"><a href="http://disqus.com/" target="_blank">Disqus</a></div>
+</div>
+<div class="row-fluid">
+	<div class="span2"><a href="https://path.com/" target="_blank">Path</a></div>
+	<div class="span2"><a href="http://www.haibao.com/" target="_blank">海报网</a></div>
+	<div class="span2"><a href="http://www.qiushibaike.com/" target="_blank">糗事百科</a></div>
+	<div class="span2"><a href="http://www.xiachufang.com/" target="_blank">下厨房</a></div>
+	<div class="span2"><a href="http://www.hupu.com/" target="_blank">虎扑</a></div>
+	<div class="span2"><a href="http://www.shanbay.com/" target="_blank">扇贝</a></div>
+</div>
+<div class="row-fluid">
+	<div class="span2"><a href="http://breadtrip.com/" target="_blank">面包旅行</a></div>
+	<div class="span2"><a href="http://www.kuaiwan.com/" target="_blank">快玩游戏</a></div>
+	<div class="span2"><a href="http://www.99fang.com/" target="_blank">九九房</a></div>
+	<div class="span2"><a href="http://www.haokanbu.com/" target="_blank">好看簿</a></div>
+	<div class="span2"><a href="https://teamcola.com/" target="_blank">teamcola</a></div>
+	<div class="span2"><a href="http://www.scanv.com/" target="_blank">scanv</a></div>
+</div>
+<div class="clearfix"></div><div class="sep20"></div><div class="sep20"></div>
+<h2>技术博客</h2><div class="sep10"></div>
+<div class="row-fluid">
+	{% for profile in userlist %}
+	<div class="span2"><a href="{{profile.website|adjust_link}}" target="_blank">{{profile.name}}</a></div>
+	{% endfor %}
+</div>
+<br/><br/><br/>
+{% endblock %}

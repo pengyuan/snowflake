@@ -16,10 +16,11 @@ urlpatterns = patterns('apps.site.views',
     (r'^feedback/?$','feedback'),
     (r'^feedback/success/?$','feedback_success'),
     (r'^help/?$','help_use'),
-    (r'^one/?$','one'),
+    (r'^doc/?$','one'),
     (r'^people/?$','people'),
     (r'^star/?$','star'),
     (r'^recent/?$','recent'),
+    (r'^site/?$','site'),
 )
 
 urlpatterns += patterns('',

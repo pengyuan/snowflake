@@ -25,14 +25,28 @@
 	    </table>
 	</div>
 	{% endfor %}
-	{% if topics.paginator.num_pages > 1%}
-	<table width="100%" class="pager">
-		<tr>
-			<td width="20%" align="left">{% if reply_list.has_previous %}<li class="previous"><a href="?page={{ reply_list.previous_page_number }}">上一页</a></li>{% endif %}</td>
-			<td width="60%" align="center"><span class="muted">第{{ reply_list.number }}页，共{{ reply_list.paginator.num_pages }}页</span></td>
-			<td width="20%" align="right">{% if reply_list.has_next %}<li class="next"><a href="?page={{ reply_list.next_page_number }}">下一页</a></li>{% endif %}</td>
-		</tr>
-	</table>
+	{% if topics.paginator.num_pages > 1 %}
+	<div class="pagination pagination-small">
+	  	<ul>
+		    {% if topics.has_previous %}
+		    <li><a href="?page={{ topics.previous_page_number }}">上一页</a></li>
+		    {% else %}
+		    <li class="disabled"><a>上一页</a></li>
+		    {% endif %}
+		    {% for item in topics.paginator.page_range %}
+				{% if item == topics.number %}
+				<li class="disabled"><a>{{ item }}</a></li>
+				{% else %}
+				<li><a href="?page={{ item }}">{{ item }}</a></li>
+				{% endif %}
+			{% endfor %}
+		    {% if topics.has_next %}
+		    <li><a href="?page={{ topics.next_page_number }}">下一页</a></li>
+		    {% else %}
+		    <li class="disabled"><a>下一页</a></li>
+		    {% endif %}
+	  	</ul>
+	</div>
 	{% endif %}
 </div>
 {% endif %}

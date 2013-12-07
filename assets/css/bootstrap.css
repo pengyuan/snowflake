@@ -748,6 +748,7 @@ h1.form_title {
 	color: #222;
 }
 h2{
+	display:block;
 	font:15px Arial,Helvetica,sans-serif;
 	color:#aaa;
 	margin:0 0 12px 0px;
