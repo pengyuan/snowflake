@@ -21,7 +21,7 @@ def topic(request,topic_id):
         raise Http404 
     topic.num_views += 1
     topic.save()
-    reply_list = Reply.objects.filter(topic=topic)
+    reply_list = Reply.objects.filter(topic=topic).order_by('created_on')
     paginator = Paginator(reply_list, 50)
     page = request.GET.get('page')
     try:
