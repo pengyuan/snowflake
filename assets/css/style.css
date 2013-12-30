@@ -168,7 +168,8 @@ span.split{
 }
 .topic-item {
 	display: block;
-	margin-bottom: 15px;
+	padding: 7px 0px;
+	border-bottom: 1px solid #eee;
 }
 .topic-item a.people{
 	color: #777777;
@@ -206,7 +207,7 @@ img.avatar:hover {
 }
 .small {
 	font-size: 11px;
-	color: #aaa;
+	color: #ccc;
 }
 a.node{
 	font-size:12px;
