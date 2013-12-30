@@ -170,6 +170,10 @@ span.split{
 	display: block;
 	padding: 7px 0px;
 	border-bottom: 1px solid #eee;
+	background-image: url("/static/img/bg_item.png");
+background-position: 0 bottom;
+background-repeat: repeat-x;
+	
 }
 .topic-item a.people{
 	color: #777777;
