@@ -1,6 +1,7 @@
 /*base.html CSS*/
 #main{
 	min-height: 500px;
+	background: white;
 }
 #side{
 	padding-top: 0px;
@@ -211,28 +212,18 @@ a.node{
 	font-size:12px;
 	line-height: 10px;
 	display: inline-block;	
-	color:white;
-	padding: 1px 2px;
+	color: #999;
+	padding: 2px 4px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 	text-decoration: none;
-	
-	border: 1px solid #b1b1b1;
-	background: #bbb;
-	background: -o-linear-gradient(rgba(187,187,187,0.8),#bbb);
-	background: -webkit-linear-gradient(rgba(187,187,187,0.8),#bbb);
-	background: -moz-linear-gradient(rgba(187,187,187,0.8),#bbb);
-	background: -ms-linear-gradient(rgba(187,187,187,0.8),#bbb);
+	background: #f5f5f5;
 }
 a.node:hover {
-	border: 1px solid #324a69;
-	background: #324a69;
-	background: -o-linear-gradient(rgba(50,74,105,0.8),#324a69);
-	background: -webkit-linear-gradient(rgba(50,74,105,0.8),#324a69);
-	background: -moz-linear-gradient(rgba(50,74,105,0.8),#324a69);
-	background: -ms-linear-gradient(rgba(50,74,105,0.8),#324a69);
-	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	padding: 2px 4px;
+	background: #aaa;
+	color: white;
 }
 a.count {
 	color: white;

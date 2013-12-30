@@ -9,13 +9,9 @@ from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 import datetime
-
-#Rewritten code from /r2/r2/lib/db/_sorts.pyx
-
 from math import log
 
 epoch = datetime.datetime(1970, 1, 1)
-
 def epoch_seconds(date):
     """Returns the number of seconds from the epoch to date."""
     td = date - epoch
@@ -58,14 +54,15 @@ def index(request):
         all_nodes.append(node)
     context['all_nodes'] = all_nodes
     time_now = datetime.datetime.now()
-    from_date = time_now - datetime.timedelta(days=30)
+    from_date = time_now - datetime.timedelta(days=160)
     
     hot_topics = Topic.objects.filter(created_on__range=[from_date, time_now])
     hot_topics = sorted(hot_topics, key=lambda x: hot(x), reverse=True)
     context['hot_topics'] = hot_topics[:10]
     
     
-    hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('-updated_on')[:10]
+    hot_nodes = Node.objects.filter(num_topics__gt=0,updated_on__gt=from_date).order_by('num_topics')[:10]
+    print 'hot_nodes: ',hot_nodes
     context['hot_nodes'] = hot_nodes
     return render(request,'index.html',context)
 
