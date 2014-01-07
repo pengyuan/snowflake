@@ -4,57 +4,67 @@
 	<meta name="google-site-verification" content="vxWnIJBfDBhtR0EYF4pgOVqdFyrbrprkELKX6F1-zX8" />
     <title>{% block title %}Pythonic{% endblock %}</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block description %}促进python及其pythonic哲学的传播{% endblock %}" />
     <meta name="keywords" content="{% block keywords %}pythonic,python,python社区,敏捷{% endblock %}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css"/>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/todc-bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
 	<link rel="shortcut icon" href="/favicon.ico"  type="image/x-icon" />
 	<script type="text/javascript" src="/static/js/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.textarearesizer.compressed.js"></script>
 	{% block head %}{% endblock %}
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-static-top">
-		<div class="navbar-inner">
-        	<div class="container">
-        		<div class="row-fluid">
-	          		<div id="logo" class="navbar-header"><a href="/">Pythonic</a></div>
-					    <ul class="nav navbar-nav">
-					      	<li style="width:30px;"><a href="/"><i class="icon-home icon-white"></i></a></li>
-					      	<li><a href="/doc/">文档</a></li>
-					      	<li><a href="/site/">酷站</a></li>
-							<li><a href="/people/">居民</a></li> 
-					    </ul>
-					    <form class="navbar-form navbar-search span4" action="http://www.googlestable.com/search" method="get" target="blank">
-							<div class="input-append form-group">
-								<input name="sitesearch" value="pythonic.org" type="hidden"> 
-								<input name="hl" value="zh-cn" type="hidden"> 
-								<input name="ie" value="utf-8" type="hidden"> 
-								<input name="q" type="text" class="search-query form-control span12" value="" placeholder="搜索话题、节点、居民" autocomplete="off" speech="speech" x-webkit-speech="x-webkit-speech" spellcheck="false">
-							</div>
-						</form>
-					    <ul class="nav navbar-nav navbar-right">
-					    	{% if user.is_authenticated and user.is_active %}
-					    	<li><a href="/notice" title="消息"><i class="icon-bell icon-white"></i>{% num_message user %}</a></li>
-							<li class="dropdown">
-	                      		<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">{{user.get_profile.name}} <b class="caret"></b></a>
-	                      		<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/people/{{user.get_profile.slug}}">我的主页</a></li>
-	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/accounts/settings">我的账号</a></li>
-	                        		<li role="presentation" class="divider"></li>
-	                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="/accounts/logout">登出</a></li>
-	                      		</ul>
-	                    	</li>
-					    	{% else %}
-					    	<li><a href="/accounts/login">登录</a></li>
-					    	<li><a href="/accounts/register">注册</a></li>
-					      	{% endif %} 
-					    </ul>
-			    </div>
-          	</div>
-        </div>
-	</div>
+	<nav class="navbar navbar-toolbar navbar-default" role="navigation">
+		<div class="container">
+  			<!-- Brand and toggle get grouped for better mobile display -->
+  			<div class="navbar-header">
+    			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".bs-example-toolbar-collapse-1">
+	      			<span class="sr-only">导航</span>
+	      			<span class="icon-bar"></span>
+	      			<span class="icon-bar"></span>
+	      			<span class="icon-bar"></span>
+    			</button>
+    			<a href="/" class="navbar-brand">Pythonic</a>
+  			</div>
+
+  			<!-- Collect the nav links, forms, and other content for toggling -->
+  			<div class="collapse navbar-collapse bs-example-toolbar-collapse-1">
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="/">社区</a></li>
+     				<li><a href="/doc/">文档</a></li>
+     				<li><a href="/site/">类库</a></li>
+     				<li><a href="/site/">代码</a></li>
+					<li><a href="/people/">居民</a></li> 
+    			</ul>
+    			<form class="navbar-form navbar-left" role="search">
+      				<div class="form-group">
+        				<input type="text" class="form-control" placeholder="搜索">
+      				</div>
+      				<button type="submit" class="btn btn-default">搜索</button>
+    			</form>
+    			<ul class="nav navbar-nav navbar-right">
+    				{% if user.is_authenticated and user.is_active %}
+      				<li><a href="/notice">消息<i class="icon-bell icon-white"></i>{% num_message user %}</a></li>
+      				<li class="dropdown">
+        				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.get_profile.name}} <b class="caret"></b></a>
+				        <ul class="dropdown-menu">
+				          	<li><a href="/people/{{user.get_profile.slug}}">我的主页</a></li>
+				          	<li><a href="/accounts/settings">我的设置</a></li>
+				          	<li class="divider"></li>
+				          	<li><a href="/accounts/logout">登出</a></li>
+				        </ul>
+      				</li>
+			    	{% else %}
+			    	<li><a href="/accounts/login">登录</a></li>
+			    	<li><a href="/accounts/register">注册</a></li>
+			      	{% endif %} 
+    			</ul>
+  			</div><!-- /.navbar-collapse -->
+  		</div>
+	</nav>
 	{% block signup %}
 	{% endblock %}
     <div class="container">
@@ -69,17 +79,18 @@
 			</div>
 		</div>
 	</div>
-	<div class="container">
-		<footer class="footer">
-			<p class="links">
-				<span class="pull-right">大道至简</span>
-				<a class="a-head" href="/about">关于</a><b>·</b><a href="/zen">The Zen of Python</a><b>·</b><a href="/feedback">建议反馈</a><b>·</b><a href="https://github.com/pengyuan/pythonic" target="blank">GitHub</a>
-			</p>
-			<p class="copyright">
-			<font class="muted">&copy; 2013 Pythonic.org, all rights reserved</font><br/><a href="http://www.miitbeian.gov.cn" target="blank"><img src="/static/img/biaoshi.gif">湘ICP备13006280号</a>
-			</p>
-		</footer>
-	</div>
+	
+	<nav class="navbar navbar-toolbar navbar-default" style="margin-bottom:0;" role="navigation">
+		<div class="container">
+			<ul class="nav navbar-nav navbar-left">
+	          <li><a href="/about">关于</a></li>
+	          <li><a href="/zen">蟒之禅</a></li>
+	          <li><a href="https://github.com/pengyuan/pythonic">开源代码</a></li>
+	          <li><a href="/feedback">建议&反馈</a></li>
+			</ul>
+			<p class="navbar-text pull-right text-muted">&copy; 2013 Pythonic</p>
+		</div>
+	</nav>
 	{% block js %}{% endblock %}
 </body>
 </html>

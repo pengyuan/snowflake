@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
 	
 {% block main %}
-<div class="index-nav">
-	<a href="/" class="selected">最新话题</a>
-	<a href="/star">最受喜爱</a>
-</div>
-<!-- <span class="pull-right"><a href="/topic/new" class="btn btn-success btn-xs btn-green" style="height: 20px;line-height:20px;"><i class="icon-plus icon-white"></i> 新话题</a></span> -->
-<hr class="line"/>
+<ul class="nav nav-tabs nav-tabs-google">
+	<li class="active"><a href="/">最新</a></li>
+  	<li><a href="/star">喜爱</a></li>
+</ul>
 {% if topics %}
 <div id="topic-wrap" class="box">
 	{% for item in topics %}
