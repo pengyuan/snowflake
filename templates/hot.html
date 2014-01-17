@@ -4,29 +4,23 @@
 {% block main %}
 <div class="panel panel-default">
   	<div class="panel-heading">
-  	<div class="btn-group">
-	  	<a href="/" class="btn btn-sm btn-success">最新</a>
-	  	<a href="/hot" class="btn btn-sm btn-success" disabled="disabled">热门</a>
-	</div>
-	<div class="btn-group pull-right">
-		<button type="button" class="btn btn-sm btn-success">今日</button>
-		<button type="button" class="btn btn-sm btn-success">本周</button>
-		<button type="button" class="btn btn-sm btn-success">本月</button>
-		<button type="button" class="btn btn-sm btn-success">今年</button>
-	</div>
+	  	<div class="btn-group">
+		  	<a href="/" class="btn btn-sm btn-success">最新</a>
+		  	<a href="/hot" class="btn btn-sm btn-success" disabled="disabled">热门</a>
+		</div>
 	</div>
   	<div class="panel-body">
-	{% if topics %}
-		{% for item in topics %}
+	{% if hot_topics %}
+		{% for item in hot_topics %}
 		<div class="cell item">
 			<table cellpadding="0" cellspacing="0" border="0" width="100%">
 		        <tbody>
 		       	<tr>
-		            <td width="40" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="img-rounded img-responsive" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+		            <td width="40" valign="top" align="center"><a href="/user/{{item.author.name}}"><img src="{% gravatar_url item.author.username 40 %}" class="img-rounded img-responsive" border="0" alt="{{ item.author.name}}"></a></td>
 		            <td width="12"></td>
 		            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
 		            <div class="sep5"></div>
-		            <span class="small text-muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <strong><a href="/people/{{item.author.get_profile.slug}}">{{ item.author.get_profile.name}}</a></strong> &nbsp;•&nbsp; {% timesince_human item.time %} &nbsp;•&nbsp; 最后回复来自 <strong><a href="/people/{{ item.last_reply.get_profile.slug }}">{{ item.last_reply.get_profile.name }}</a></strong></span>
+		            <span class="small text-muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <strong><a href="/user/{{item.author.name}}">{{ item.author.name}}</a></strong> &nbsp;•&nbsp; {% timesince_human item.updated_on %} &nbsp;•&nbsp; 最后回复来自 <strong><a href="/user/{{ item.last_reply.name }}">{{ item.last_reply.name }}</a></strong></span>
 		            </td>
 		            <td width="50" align="right" valign="middle">
 		                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>

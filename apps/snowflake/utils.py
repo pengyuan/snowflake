@@ -7,9 +7,8 @@ from pygments.lexers import get_lexer_by_name
 import datetime
 import misaka
 from math import log
-#Process github-flavored markdown
 
-
+# Process github-flavored markdown
 class HighlighterRenderer(HtmlRenderer, SmartyPants):
     def block_code(self, text, lang):
         s = ''
@@ -35,11 +34,14 @@ md = misaka.Markdown(renderer,
 def gfm(text, extensions=None):
     return md.render(text)
 
+
 epoch = datetime.datetime(1970, 1, 1)
+
 def epoch_seconds(date):
     """Returns the number of seconds from the epoch to date."""
     td = date - epoch
     return td.days * 86400 + td.seconds + (float(td.microseconds) / 1000000)
+
 
 def hot_function(reply):
     s = reply.num_replies + reply.num_views/100
