@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+设置 - Snowflake
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  	<div class="panel-heading">
+		<ol class="breadcrumb">
+	  		<li><a href="/">首页</a></li>
+	  		<li class="active"><span class="text-muted">设置</span></li>
+	  		
+		</ol>
+		<span class="pull-right"><i class="fa fa-home"></i> <a href="/user/{{user.name}}" class="text-muted">主页</a></span>
+  	</div>
+  	<div class="panel-body">
+		<form action="/accounts/settings" method="POST" class="form-horizontal">{% csrf_token %}
+			<div class="form-group">
+				<label class="col-sm-2 control-label"></label>
+				<div class="col-sm-5">
+					{% if messages %}
+					<div class="alert alert-info" style="margin-bottom: 0px;">
+						{% for message in messages %}{{ message }}{% endfor %}
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% for field in form %}
+				{% if field.name == 'username' %}
+					<div class="form-group">
+						<label for="{{field.id}}" class="col-sm-2 control-label">{{ field.label_tag }}</label>
+						<div class="col-sm-6">
+							<p class="form-control-static">{{field.value}}</p><label><a href="/accounts/password_change">修改密码</a></label>
+							<input type="hidden" id="id_username" name="username" value="{{field.value}}"/>
+						</div>
+						{% if field.errors %}
+						<label>
+							<ul class="list-inline">
+								{% for item in field.errors %}	
+	  							<li><p class="form-control-static text-danger">{{item}}</p></li>
+	  							{% endfor %}
+							</ul>
+						</label>
+						{% endif %}
+				  	</div>
+			  	{% else %}
+					<div class="form-group">
+						<label for="{{field.id}}" class="col-sm-2 control-label">{{ field.label_tag }}</label>
+						<div class="col-sm-6">
+							{{ field }}
+							{% if field.help_text %}<span class="help-block">{{field.help_text}}</span>{% endif %}
+						</div>
+						{% if field.errors %}
+						<label>
+							<ul class="list-inline">
+								{% for item in field.errors %}	
+	  							<li><p class="form-control-static text-danger">{{item}}</p></li>
+	  							{% endfor %}
+							</ul>
+						</label>
+						{% endif %}
+				  	</div>
+			  	{% endif %}
+		  	{% endfor %}
+		  	<div class="form-group">
+		    	<div class="col-sm-offset-2 col-sm-10">
+		      		<button type="submit" class="btn btn-success">保存设置</button>
+		    	</div>
+		  	</div>
+		</form>
+  	</div>
+</div>
+{% endblock %}

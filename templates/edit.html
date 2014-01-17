@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+节点编辑 - Snowflake
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  	<div class="panel-heading">
+		<ol class="breadcrumb">	
+	  		<li><a href="/">首页</a></li>
+			<li class="active"><a href="/node/{{node.slug}}">{{node.name}}</a></li>
+		</ol>
+  	</div>
+  	<div class="panel-body">
+		<form action="/node/{{node.slug}}/edit" method="post" class="form-horizontal">{% csrf_token %}
+		  	<div class="form-group">
+		    	<div class="col-sm-12">
+		      		<p class="text-gray">为节点<strong> {{node.name}} </strong>添加描述</p>
+		    	</div>
+		  	</div>
+			{% for field in form %}
+			<div class="form-group">
+		    	<div class="col-sm-12">
+		      		{{ field }}
+		    	</div>
+				{% if field.errors %}
+				<label>
+					<ul class="list-inline">
+						{% for item in field.errors %}	
+							<li><p class="form-control-static text-danger">{{item}}</p></li>
+						{% endfor %}
+					</ul>
+				</label>
+				{% endif %}
+		  	</div>
+		   	{% endfor %}
+		  	<div class="form-group">
+		    	<div class="col-sm-12">
+		      		<button type="submit" class="btn btn-success pull-right">添加</button>
+		    	</div>
+		  	</div>
+		</form>
+		{% if description %}
+			<p class="text-gray">选择已有描述</p>
+			<div class="row">
+				<ul class="col-xs-12 list-unstyled">
+				{% for item in description %}
+					<li class="cell">
+						<form action="/node/{{node.slug}}/choose/" method="post"> {% csrf_token %}
+							<p><strong>{{node.name}}</strong></p>
+							<p style="font-size: 14px;">{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}</p>
+							<p class="text-muted">由 <a href="/user/{{item.author.name}}" class="text-gray">{{item.author.name}}</a> 添加于{{item.time|date:"Y年m月d日 H时i分"}}
+							{% if item.active %}
+								<button class="btn btn-xs btn-default pull-right" disabled="disabled">正在采用</button>
+							{% else %}
+									<input type="submit" value="选择" class="btn btn-xs btn-success pull-right">
+									<input type="hidden" name="description_id" value="{{item.id}}"/>
+							{% endif %}
+							</p>
+						</form>
+					</li>
+				{% endfor %}
+				</ul>
+			</div>
+		{% endif %}  		
+  	</div>
+</div>
+{% endblock %}	

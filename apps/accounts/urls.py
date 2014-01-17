@@ -16,13 +16,9 @@ urlpatterns = patterns("django.contrib.auth.views",
 )            
            
 urlpatterns += patterns('accounts.views',
-    (r'^settings/?$','accounts'),
+    (r'^settings/?$','settings'),
     (r'^login/?$','login'),
     (r'^logout/?$','logout'),                
     (r'^register/?$','register'),
     (r'^active/(\w{1,10})/(.*)/?$','active'),
-    (r'^change_avatar/?$','change_avatar'),
-    (r'^upload_avatar/?$','upload_avatar'),
-    (r'^crop_avatar/?$','crop_avatar'),
-    (r'^change_password/?$', 'password_change'),
 )

@@ -1,93 +1,47 @@
 {% extends 'base.html' %}
 
 {% block title %}
-欢迎加入Pythonic
+注册 - Snowflake
 {% endblock %}
+
 {% block main %}
-	<div class="box register-form">
-		<h1 class="form_title">欢迎加入Pythonic</h1><br/><br/>
-		<form action="/accounts/register" method="post" class="form-horizontal">{% csrf_token %}
-			{% for field in form %}
-				{% if field.name != 'province' %}
-					{% if field.name != 'city' %}
-						<div class="control-group">
-						    	<label class="control-label">{{ field.label_tag }}</label>
-						    	<div class="controls">
-						    	{% if field.name == 'slug'%}
-						    		<font style="font-size:15px;color: #777;vertical-align:center;">pythonic.org/people/</font> {{ field }}
-						    	{% else %}
-						      		{{ field }}
-						    	{% endif %}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
-						    	</div>
-					    	<div class="controls">
-					    	{{field.help_text|safe}}
-					    	</div>
-					  	</div>
-  					{% else %}
-					<div class="control-group">
-				    	<label class="control-label">常居地</label>
-				    	<div class="controls">
-				    		{{ form.province }} &nbsp;{{ form.city }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
-				    		<input id="province" type="hidden" value="{{form.province.value}}"/>
-				    		<input id="city" type="hidden" value="{{form.city.value}}"/>
-				    	</div>
-					</div>					      	
-					{% endif %}
-				{% endif %}	
-	     	{% endfor %}
-	     	<div class="control-group">
-		    	<label class="control-label"></label>
-		    	<div class="controls">
-					<textarea class="span10" style="height:150px;color:#777;">
-Pythonic社区指导原则
---written for Humans
-
-社区提倡：
-1.分享、互助和友好的氛围。
-2.宽容和理性地对待不同的看法、喜好和意见。
-3.启发式提问，更好地思考与表达自己。
-
-社区不欢迎：
-1.无信息量的内容，如“顶”，“沙发”，“留名”。
-2.程序Exception等可以很容易Google得到解答的话题。
-
-社区禁止：
-1.涉及他人隐私、淫秽色情、暴力、违反国家法律法规的内容。
-2.群发广告、恶意刷屏、使用程序操作等滥用行为。
-3.对网站的运营安全有潜在威胁的内容或行为。</textarea>
-            	</div>
-            </div>
-			<div class="control-group">
-		    	<label class="control-label"></label>
-		    	<div class="controls">
-					<label class="checkbox">
-					  <input type="checkbox" {% if zen %}checked="true"{% endif %} name="zen">我已阅读《Pythonic社区指导原则》
-					</label>
-		    	</div>
-		  	</div>
-			<div class="control-group">
-		    	<label class="control-label"></label>
-		    	<div class="controls">
-				{% if messages %}
-    				{% for message in messages %}
-    				<span class="{{ message.tags }}">{{ message }}</span>
-    				{% endfor %}
-				{% endif %}
-		    	</div>
-		  	</div> 	
-		    <div class="control-group">
-		    	<div class="controls">
-		      		<input type="submit" value="注册" class="btn btn-success">
-		    	</div>
-		  	</div>
-		</form>
+<h3>注册新用户</h3><br/>
+<p>已有账户，请直接<a href="/accounts/login">登录</a></p>
+<form action="/accounts/register" method="post" class="form-horizontal" role="form">{% csrf_token %}
+	<div class="form-group">
+		<label class="col-sm-2 control-label"></label>
+		<div class="col-sm-5">
+			{% if messages %}
+			<div class="alert alert-danger" style="margin-bottom: 0px;">
+				{% for message in messages %}{{ message }}{% endfor %}
+			</div>
+			{% endif %}
+		</div>
 	</div>
-{% endblock %}
-
-
-{% block side %}
-<div style="margin-top: 100px;"></div>
-<p style="font-size: 14px;">已经有一个账号了？<a href="/accounts/login" class="btn btn-info" style="height:16px;line-height: 16px;font-size: 12px;">马上登录</a></p>
+	{% for field in form %}
+	<div class="form-group">
+		<label for="{{field.id}}" class="col-sm-2 control-label">{{ field.label_tag }}</label>
+		<div class="col-sm-5">
+			{{ field }}
+			{% if field.help_text %}<span class="help-block">{{field.help_text}}</span>{% endif %}
+		</div>
+		{% if field.errors %}
+		<label>
+			<ul class="list-inline">
+				{% for item in field.errors %}	
+						<li><p class="form-control-static text-danger">{{item}}</p></li>
+						{% endfor %}
+			</ul>
+		</label>
+		{% endif %}
+  	</div>
+  	{% endfor %}
+  	<div class="form-group">
+    	<div class="col-sm-offset-2 col-sm-10">
+      		<button type="submit" class="btn btn-success">注册</button>
+    	</div>
+  	</div>
+</form>
 {% endblock %}
 
 {% block js %}

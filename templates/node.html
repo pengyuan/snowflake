@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load template_tags %}
 
 {% block title %}
-{{node.name}} - Pythonic
+{{node.name}} - Snowflake
 {% endblock %}
 
 {% block head %}
@@ -9,119 +10,102 @@
 {% endblock %}
 
 {% block main %}
-<a href="/">首页</a><span class="split">&nbsp;›&nbsp;</span><a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
-<hr class="dash"/>
-<div id="topic-wrap" class="box">
-	{% if topics %}
-	{% for item in topics %}
-	<div class="topic-item">
-	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-	        <tbody>
-	       	<tr>
-	            <td width="40" valign="top" align="center"><a href="/people/{{item.author.get_profile.slug}}"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
-	            <td width="12"></td>
-	            
-	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
-	            <div class="sep3"></div>
-	            <span class="small muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <a href="/people/{{item.author.get_profile.slug}}" class="people">{{ item.author.get_profile.name}}</a> &nbsp;•&nbsp; {{ item.updated_on|timesince_human }} &nbsp;•&nbsp; 最后回复来自 <a href="/people/{{ item.last_reply.get_profile.slug }}" class="people">{{ item.last_reply.get_profile.name }}</a></span>
-	            </td>
-	            <td width="50" align="right" valign="middle">
-	                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>
-	            </td>
-	        </tr>
-	    	</tbody>
-	    </table>
+<div class="panel panel-default">
+  	<div class="panel-heading">
+		<ol class="breadcrumb">
+	  		<li><a href="/">首页</a></li>
+	  		<li class="active"><a href="/node/{{node.slug}}">{{node.name}}</a></li>
+		</ol>
+		<a href="/node/{{node.slug}}/new" class="btn btn-sm btn-success pull-right">新话题</a>
 	</div>
-	{% endfor %}
+  	<div class="panel-body">
+	{% if topics %}
+		{% for item in topics %}
+		<div class="cell item">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		        <tbody>
+		       	<tr>
+		            <td width="40" valign="top" align="center"><a href="/user/{{item.author.name}}"><img src="{% gravatar_url item.author.username 40 %}" class="img-rounded img-responsive" border="0" alt="{{ item.author.name}}"></a></td>
+		            <td width="12"></td>
+		            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}">{{ item.title }}</a></span>
+		            <div class="sep5"></div>
+		            <span class="small text-muted"><a class="node" href="/node/{{ item.node.slug }}">{{ item.node }}</a> &nbsp;•&nbsp; <strong><a href="/user/{{item.author.name}}">{{ item.author.name}}</a></strong> &nbsp;•&nbsp; {% timesince_human item.updated_on %} &nbsp;•&nbsp; 最后回复来自 <strong><a href="/user/{{ item.last_reply.name }}">{{ item.last_reply.name }}</a></strong></span>
+		            </td>
+		            <td width="50" align="right" valign="middle">
+		                <a href="/topic/{{item.id}}" class="count">{{ item.num_replies }}</a>
+		            </td>
+		        </tr>
+		    	</tbody>
+		    </table>
+	    </div>
+		{% endfor %}
+		<table width="100%" class="pager text-muted">
+			<tr>
+				<td width="20%" align="left">{% if topics.has_previous %}<li class="previous"><a href="?page={{ topics.previous_page_number }}">上一页</a></li>{% endif %}</td>
+				<td width="60%" align="center"><span class="muted">第{{ topics.number }}页，共{{ topics.paginator.num_pages }}页</span></td>
+				<td width="20%" align="right">{% if topics.has_next %}<li class="next"><a href="?page={{ topics.next_page_number }}">下一页</a></li>{% endif %}</td>
+			</tr>
+		</table>
 	{% else %}
-	<p class="text-center well border-dash">当前节点还没有话题。</p>
+		<div class="item text-center text-muted" style="padding:15px 0;">当前节点没有话题</div>
 	{% endif %}
+	</div>
 </div>
-{% if user.is_authenticated %}
-<div class="box">
-	<form action="/node/{{node.slug}}/create" method="post" class="form-vertical" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
-		{% for field in form %}
-		<div class="control-group">
-	    	<label class="control-label">{{ field.label_tag }}</label>
-	    	<div class="controls">
-	      		{{ field }}
-	    	</div>
-	    	<label>{{ field.errors }}</label>
-	  	</div>
-     	{% endfor %}
-		</table> 
-	    <div class="control-group">
-	    	<div class="controls" style="margin-left: 0;float:right;">
-	      		<input type="submit" value="创建" class="btn btn-success">
-	    	</div>
-	  	</div>
-	</form>
+
+<div class="panel panel-default">
+  	<div class="panel-body">
+  		<div style="padding:15px 0px;font-size:15px;">
+		{% if user.is_authenticated %}
+			<form action="/node/{{node.slug}}/new" method="post" class="form-horizontal" role="form"> {% csrf_token %}
+				{% for field in form %}
+				<div class=form-group>
+			    	<div class="col-xs-12">
+			      		{{ field }}
+			    	</div>
+			  	</div>
+		     	{% endfor %}
+				</table> 
+			    <div class="form-group">
+			    	<div class="col-xs-12" style="float:right;">
+			      		<input type="submit" value="创建新话题" class="btn btn-sm btn-success">
+			    	</div>
+			  	</div>
+			</form>
+		{% else %}
+		您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来发表新话题。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。
+		{% endif %}
+		</div>
+  	</div>
 </div>
-{% else %}
-<div class="required">您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来发表新话题。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。</div>
-{% endif %} 
 {% endblock %}	
 
 {% block side %}
-<div class="box">
-	<div class="well">
-		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+<div class="panel panel-default">
+  	<div class="panel-heading"><strong>{{node.name}}</strong></div>
+  	<div class="panel-body">
 		{% if description %}
 			<p style="font-size: 14px;">{% autoescape off %}{{description|markdown2html}}{% endautoescape %}</p>
 			{% if user.is_authenticated %}
-			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
+			<p><i class="fa fa-pencil-square-o text-muted"></i> <a href="/node/{{node.slug}}/edit" class="text-muted">更改描述</a></p>
 			{% endif %}
 		{% else %}
 			{% if user.is_authenticated %}
-			<p><center><i class="icon-plus"></i> <a href="/node/{{node.slug}}/edit">添加描述</a></center></p>
+			<p class="text-center text-muted"><i class="fa fa-pencil-square-o"></i> <a href="/node/{{node.slug}}/edit" class="text-muted">添加描述</a></p>
 			{% else %}
-			<p>尚没有节点描述。</p>
+			<p class="text-center text-muted">暂无节点描述</p>
 			{% endif %}
 		{% endif %}
-		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
+		{% if node.num_topics %}<p class="text-muted" style="margin-top: 20px;">{{node.num_topics}}个话题</p>{% endif %}
+  	</div>
+</div>
+<div class="panel panel-default">
+  	<div class="panel-heading">相关节点</div>
+  	<div class="panel-body">
+  		<div class="cell">
+			{% for item in relative_nodes %}
+		        <a href="/node/{{item.slug}}" class="label label-default" style="display:inline-block;margin:4px 10px 4px 0;">{{item.name}}</a>
+		    {% endfor %}
+		</div>  	
 	</div>
 </div>
-<div class="box">
-	<h2>相关节点</h2>
-	<div class="inner">
-	{% for item in relative_nodes %}
-	<a href="/node/{{item.slug}}" title="{{item.name}}"><span class="label">{{item.name}}</span></a>
-    {% endfor %}
-	</div>
-	<div class="clearfix"></div>
-</div>
-{% endblock %}
-
-{% block js %}
-<script type="text/javascript">
-function beforeSubmit(form){
-	if(form.title.value==''){
-		form.title.focus();
-		return false;
-	}
-	else if(form.content.value==''){
-		form.content.focus();
-		return false;		
-	}
-	else{
-		return true;
-	}
-}
-$('textarea.resizable:not(.processed)').TextAreaResizer();
-</script>
-<script type="text/javascript">
-function words_deal(content_id,max_count) {
-	var curLength=$(content_id).val().length;
-	if(curLength>max_count-4) {
-		var num=$(content_id).val().substr(0,max_count-3);
-		$(content_id).val(num);
-		$(content_id+'_wmd_preview').html('');
-		if($(".count_char").length==0)
-		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
-	}
-	else{
-		$(".count_char").remove();
-	}
-}
-</script>
 {% endblock %}

@@ -1,54 +1,53 @@
 {% extends 'base.html' %}
 
 {% block title %}
-登录Pythonic
+登录 - Snowflake
 {% endblock %}
+
 {% block main %}
-	<div class="box register-form">
-		<h1 class="form_title">登录Pythonic</h1><br/>
-		<form action="/accounts/login" method="post" class="form-horizontal">{% csrf_token %}
-			<div class="control-group">
-		    	<label class="control-label"></label>
-		    	<div class="controls">
-				{% if messages %}
-    				{% for message in messages %}
-    				<span class="{{ message.tags }}">{{ message }}</span>
-    				{% endfor %}
-				{% endif %}
-		    	</div>
-		  	</div>
-			{% for field in form %}
-			<div class="control-group">
-		    	<label class="control-label">{{ field.label_tag }}</label>
-		    	<div class="controls">
-      				{% if field.name != "password" %}
-     					{{ field }}
-     				{% else %}
-     					{{ field }}<a href="/accounts/password_reset" style="font-size:12px;">忘记密码?</a>
-     				{% endif %}
-		      		<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
-		    	</div>
-		  	</div>
-		  	{% endfor %}
-		  	<div class="control-group">
-		    	<label class="control-label"></label>
-		    	<div class="controls">
-					<label class="checkbox" style="float:left;">
-					  <input type="checkbox" name="auto">下次自动登录
-					</label>
-		    	</div>
-		  	</div>  	
-		    <div class="control-group">
-		    	<div class="controls">
-		      		<input type="submit" value="登录" class="btn btn-success">
-		    	</div>
-		  	</div>
-		</form>
+<h3>登录</h3><br/>
+<p>使用本站帐号登录 ( <a href="/accounts/register">注册</a> 或 <a href="/accounts/password_reset">找回密码</a> )</p>
+<form action="/accounts/login" method="post" class="form-horizontal" role="form">{% csrf_token %}
+	<div class="form-group">
+		<label class="col-sm-2 control-label"></label>
+		<div class="col-sm-5">
+			{% if messages %}
+			<div class="alert alert-danger" style="margin-bottom: 0px;">
+				{% for message in messages %}{{ message }}{% endfor %}
+			</div>
+			{% endif %}
+		</div>
 	</div>
-{% endblock %}
-
-
-{% block side %}
-<div style="margin-top: 110px;"></div>
-<p style="font-size: 14px;">还没有账号？<a href="/accounts/register" class="btn btn-info" style="height:16px;line-height: 16px;font-size: 12px;">立即注册</a></p>
+	{% for field in form %}
+	<div class="form-group">
+		<label for="{{field.id}}" class="col-sm-2 control-label">{{ field.label_tag }}</label>
+		<div class="col-sm-5">
+			{{ field }}
+		</div>
+		{% if field.errors %}
+		<label>
+			<ul class="list-inline">
+				{% for item in field.errors %}	
+						<li><p class="form-control-static text-danger">{{item}}</p></li>
+						{% endfor %}
+			</ul>
+		</label>
+		{% endif %}
+  	</div>
+  	{% endfor %}
+	<div class="form-group">
+    	<div class="col-sm-offset-2 col-sm-10">
+	      	<div class="checkbox">
+	        	<label>
+	          		<input type="checkbox" name="auto"> 下次自动登录
+	        	</label>
+	      	</div>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<div class="col-sm-offset-2 col-sm-10">
+      		<button type="submit" class="btn btn-success">登录</button>
+    	</div>
+  	</div>
+</form>
 {% endblock %}

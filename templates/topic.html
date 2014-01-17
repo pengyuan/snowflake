@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load template_tags %}
 
 {% block title %}
-{{topic.title}} - Pythonic
+{{topic.title}} - Snowflake
 {% endblock %}
 
 {% block head %}
@@ -9,274 +10,153 @@
 {% endblock %}
 
 {% block main %}
-<div class="topic-body">
-	<div class="box">
-	    <div>
-		    <a href="/">首页</a><span class="split">&nbsp;›&nbsp;</span><a href="/node/{{node.slug}}" class="muted" style="font-size: 13px;color:#777;">{{node.name}}</a>
-			<hr class="dash"/>
-			<a href="/people/{{topic.author.get_profile.slug}}"  class="pull-right"><img src="/media/avatar/{{ topic.author.get_profile.avatar }}" alt="{{topic.author.get_profile.name}}" border="0" align="default"/></a>
-		</div>
-	    <h1>{{topic.title}}</h1>
-	    <div class="t-meta">
-	    	<span class="t-author"><a href="/people/{{topic.author.get_profile.slug}}" class="muted">{{topic.author.get_profile.name}}</a></span> 创建于 <span class="t-time">{{topic.created_on|timesince_human}}</span>{% if topic.num_views %} · <span class="t-view">{{topic.num_views}}次点击</span>{% endif %}
-	    </div>
-		<div class="t-content">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
-		{% if user.is_authenticated and user.id != topic.author.id %}
-			{% if user in topic.likes.all %}
-				<span class="pull-right light"><i class="icon-heart-red"></i> {{ topic.likes.all|length }}人喜欢</span>
-			{% else %}
-				<span class="pull-right light"><span onclick="like('{{topic.id}}','{{user.id}}')" id="likes_{{topic.id}}_check" class="a-like"><i class="icon-heart"></i> {% if topic.likes.all %}{{ topic.likes.all|length }}人喜欢{% else %}喜欢{% endif %}</span></span>
-			{% endif %}
-		{% else %}
-		<span class="pull-right light">{% if topic.likes.all %}<i class="icon-heart"></i> {{ topic.likes.all|length }}人喜欢{% endif %}</span>
-		{% endif %}
-	</div>
+<div class="panel panel-default">
+  	<div class="panel-body">
+  		<ol class="breadcrumb">
+	  		<li><a href="/">首页</a></li>
+	  		<li class="active"><a href="/node/{{node.slug}}" class="text-gray">{{node.name}}</a></li>
+		</ol> 
+		<h3 style="margin-top:10px;margin-bottom:0;">{{topic.title}}<a href="/user/{{topic.author.name}}"  class="pull-right"><img src="{% gravatar_url topic.author.username 48 %}" alt="{{topic.author.name}}"/></a></h3>
+    	<div class="cell text-muted">by&nbsp;<a href="/user/{{topic.author.name}}" class="gray">{{topic.author.name}}</a>&nbsp;&nbsp;<strong>·</strong>&nbsp;&nbsp;{% timesince_human topic.created_on %}{% if topic.num_views %}&nbsp;&nbsp;<strong>·</strong>&nbsp;&nbsp;{{topic.num_views}} 次点击{% endif %}</div>
+		<div style="margin-top:15px;font-size:14px;line-height: 180%;overflow: hidden;word-break: break-word;">{% autoescape off %}{{topic.content|markdown2html}}{% endautoescape %}</div>
+  	</div>
 </div>
+<div class="panel panel-default">
 {% if topic.num_replies %}
-<font class="muted">全部回复</font> / <a href="/topic/{{topic.id}}/star">最多赞同</a>
-<h4 class="pull-right muted">{{topic.num_replies}}个回复</h4>
-<hr class="dash"/>
+  	<div class="panel-heading">{{topic.num_replies}}个回复</div>
+  	<div class="panel-body">
+		{% for item in replys %}  	
+			<div class="cell">
+			    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+			        <tbody><tr>
+			            <td width="48" valign="top" align="center"><img alt="{{item.author.name}}" src="{% gravatar_url item.author.username 48 %}" class="avatar" border="0" align="default"></td>
+			            <td width="10" valign="top"></td>
+			            <td width="auto" valign="top" align="left">
+			            	<div class="pull-right"><div class="right-menu" id="thank_{{item.id}}_check">{% if not user in item.thank_set.all %}<a style="cursor:pointer;" onclick="thank('{{item.id}}')" class="thank"><i class="fa fa-heart"></i></a>{% else %}<a><i class="fa fa-heart text-muted"></i></a>{% endif %}</div> &nbsp; <a href="#;" onclick="reply('{{item.id}}')"><i class="fa fa-reply"></i></a> &nbsp;&nbsp; <span class="no">{{forloop.counter}}</span></div>
+			                <div class="sep3"></div>
+			                <a href="/user/{{item.author.name}}"><strong>{{item.author.name}}</strong></a>&nbsp; &nbsp;<span class="text-muted small">{% timesince_human item.created_on %}</span>&nbsp; &nbsp;<span id="thank_{{item.id}}_count" class="text-muted">{% if item.thank_set.all %}<i class="fa fa-heart text-muted"></i> {{item.thank_set.all|length}}{% endif %}</span> 
+			                <div class="sep5"></div>
+			                <div class="reply_content">{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}</div>
+			            </td>
+			        </tr>
+			    </tbody></table>
+			</div>  	
+		{% endfor %}
+		{% if replys.paginator.num_pages > 1%}
+		<center>
+			<ul class="pagination pagination-sm">
+				{% if replys.has_previous %}
+			  		<li><a href="/topic/{{topic.id}}?page={{replys.previous_page_number}}">&laquo;</a></li>
+			  	{% else %}
+			  		<li class="disabled"><a>&laquo;</a></li>
+			  	{% endif %}
+			  	{% for item in replys.paginator.page_range %}
+			  		{% if item == replys.number %}
+			  			<li class="active"><a href="#">{{item}}</a></li>
+			  		{% else %}
+			  			<li><a href="/topic/{{topic.id}}?page={{item}}">{{item}}</a></li>
+			  		{% endif %}
+			  	{% endfor %}
+				{% if replys.has_next %}
+			  		<li><a href="/topic/{{topic.id}}?page={{replys.next_page_number}}">&raquo;</a></li>
+			  	{% else %}
+			  		<li class="disabled"><a>&raquo;</a></li>
+			  	{% endif %}
+			</ul>
+		</center>
+		{% endif %}  	
+  	</div>
 {% else %}
-<p class="text-center well border-dash">当前话题还没有回复。</p>
+  	<div class="panel-body">
+  		<div class="item text-center text-muted" style="padding:10px 0;font-size:14px;">没有回复</div>
+  	</div>
 {% endif %}
-<ul id="reply-list" class="reply-list">
-	{% for item in reply_list %}
-	<li class="reply">
-		<div class="reply-body">
-			<div class="pull-left user-avatar">
-				<a href="/people/{{item.author.get_profile.slug}}">
-					<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{item.author.get_profile.avatar}}" width="36" height="36"/>
-				</a>
-			</div>
-			<div class="reply-meta" id="{{item.id}}">
-				<div class="reply-meta-data">
-					<span class="author"><a href="/people/{{item.author.get_profile.slug}}">{{item.author.get_profile.name}}</a>{% if item.author.get_profile.signature %}&nbsp;,{{item.author.get_profile.signature}}{% endif %}</span>
-					{% if item.thanks.all %}<span class="thank-list">{{item.thanks|thanks_list|safe}}</span>{% endif %}
-				</div>	
-				<div class="reply-content">
-					{% if item.has_parent %}<p><a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a></p>{% endif %}
-					{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
-            	</div>		
-			</div>
-			<span class="order pull-right" id="thanks_{{item.id}}_count">{% if item.thanks.all %}<i class="icon-heart"></i>{{ item.thanks.all|length }}{% endif %}</span>
-			<div class="reply-menu">
-				<span title="{{item.created_on}}" class="time pull-left">{{item.created_on|timesince_human}}</span>
-				<span class="hidden pull-left"><a href="#{{forloop.counter}}">#{{forloop.counter}}</a></span>
-				{% if user.is_authenticated %}
-					<span class="hidden pull-left"><i class="icon-comment"></i> <a href="#reply" onclick="reply('{{item.id}}')">回复</a></span>
-	               	{% if user.id != item.author.id %}<span class="hidden pull-left"><i class="icon-heart"></i> <a href="javascript:;" onclick="thank('{{item.id}}','{{user.id}}')" id="thanks_{{item.id}}_check">{% if user in item.thanks.all %}取消赞同{% else %}赞同{% endif %}</a></span>{% endif %}
-	            {% endif %}
-	            
-   			</div>			
-		</div>
-	</li>
-	{% endfor %}
-</ul>
-{% if reply_list.paginator.num_pages > 1%}
-<table width="100%" class="pager">
-	<tr>
-		<td width="20%" align="left">{% if reply_list.has_previous %}<li class="previous"><a href="?page={{ reply_list.previous_page_number }}">上一页</a></li>{% endif %}</td>
-		<td width="60%" align="center"><span class="muted">第{{ reply_list.number }}页，共{{ reply_list.paginator.num_pages }}页</span></td>
-		<td width="20%" align="right">{% if reply_list.has_next %}<li class="next"><a href="?page={{ reply_list.next_page_number }}">下一页</a></li>{% endif %}</td>
-	</tr>
-</table>
-{% endif %}
-{% if user.is_authenticated %}
-<div class="box" style="margin-top:30px;">
-	<span id="reply" class="muted">
-		<!-- <a href="/people/{{item.author.get_profile.slug}}">
-			<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{user.get_profile.avatar}}" width="36" height="36"/>
-		</a> -->回复
-	</span>
-	<div id="reply-fill"></div>
-	<form id="your-profile" action="/topic/{{topic.id}}/create" method="post" class="form-horizontal" onSubmit="return beforeSubmit(this);"> {% csrf_token %}
-		{% for field in form %}
-		<div class="control-group">
-	    	<div class="controls" style="margin-left: 0;">
-				{{ field }}
-	    	</div>
-	    	<label>{{ field.errors }}</label>
-	  	</div>
-     	{% endfor %}
-	    <div class="control-group">
-	    	<div class="controls" style="margin-left: 0;float:right;">
-	      		<input type="submit" value="回复" class="btn btn-success">
-	    	</div>
-	  	</div>
-	  	<input type="hidden" value="" name="parent_id" id="parent_id">
-	</form>
 </div>
-{% else %}	
-<div class="required">您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来回复。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。</div>
-{% endif %}
+
+<div class="panel panel-default">
+  	<div class="panel-body">
+  		<div style="padding:15px 0px;font-size:15px;">
+		{% if user.is_authenticated %}
+			<a name="reply"></a>
+			<form action="/topic/{{topic.id}}/reply" method="post" class="form-vertical">{% csrf_token %}
+				{% for field in form %}
+				<div class="form-group">
+					<label class="control-label text-muted small">添加一条新回复</label>
+					<label class="control-label text-muted small pull-right"><i class="fa fa-long-arrow-up"></i> <a href="#" class="text-muted">回到顶部</a></label>
+			    	<div>
+			      		{{ field }}
+			    	</div>
+			  	</div>
+		     	{% endfor %}
+				</table> 
+			    <div class="form-group">
+			    	<label class="col-sm-12 control-label"></label>
+			    	<div>
+			      		<input type="submit" value="回复" class="btn btn-sm btn-success pull-right">
+			    	</div>
+			  	</div>
+			  	<input type="hidden" value="" name="parent_id" id="parent_id">
+			</form>
+		{% else %}
+		您需要 <a style="height: 20px;line-height:20px;" href="/accounts/login">登录</a> 来发表新话题。没有账号，马上 <a style="height: 20px;line-height:20px;" href="/accounts/register">注册</a> 一个。
+		{% endif %}
+		</div>
+  	</div>
+</div>
 {% endblock %}
 
 {% block side %}
-<div class="box">
-	<div class="well">
-		<h2 style="color:#777;"><b>{{node.name}}</b></h2>
+<div class="panel panel-default">
+  	<div class="panel-heading"><strong>{{node.name}}</strong></div>
+  	<div class="panel-body">
 		{% if description %}
 			<p style="font-size: 14px;">{% autoescape off %}{{description|markdown2html}}{% endautoescape %}</p>
 			{% if user.is_authenticated %}
-			<p><a href="/node/{{node.slug}}/edit" style="color: #cccccc;">更改描述</a></p>
+			<p><i class="fa fa-pencil-square-o text-muted"></i> <a href="/node/{{node.slug}}/edit" class="text-muted">更改描述</a></p>
 			{% endif %}
 		{% else %}
 			{% if user.is_authenticated %}
-			<p><center><i class="icon-plus"></i> <a href="/node/{{node.slug}}/edit">添加描述</a></center></p>
+			<p class="text-center text-muted"><i class="fa fa-pencil-square-o"></i> <a href="/node/{{node.slug}}/edit" class="text-muted">添加描述</a></p>
 			{% else %}
-			<p>尚没有节点描述。</p>
+			<p class="text-center text-muted">暂无节点描述</p>
 			{% endif %}
 		{% endif %}
-		<p class="muted" style="margin-top: 20px;color: #bbb;">共有<b>{{node.num_topics}}</b>个话题。</p>
-	</div>
+		{% if node.num_topics %}<p class="text-muted" style="margin-top: 20px;">{{node.num_topics}}个话题</p>{% endif %}
+  	</div>
 </div>
 {% endblock %}
 
 {% block js %}
-<!-- <script> 
-(function(){ 
-	
-	var o = $(".reference");
-	for(i=0;i<o.length;i++){
-		var s = o[i].innerHTML;
-		//alert(s);
-		var p = document.createElement("span"); 
-		var n = document.createElement("a"); 
-		
-		p.innerHTML = s.substring(0,10); 
-		
-		n.innerHTML = s.length > 10 ? "展开" : ""; 
-		n.href = "###"; 
-		alert(p.innerHTML);
-
-		alert('aaaa');
-		o[i].innerHTML = ""; 
-		o[i].appendChild(p); 
-		o[i].appendChild(n); 
-		//alert('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');	 
-		o[i].onclick = function(){ 
-			if (n.innerHTML == "展开"){ 
-				n.innerHTML = "收起"; 
-				p.innerHTML = s; 
-			}else{ 
-			n.innerHTML = "展开"; 
-			p.innerHTML = s.substring(0,10); 
-		}
-	}
-}
-
-})();
-</script> -->
 <script type="text/javascript">
-function beforeSubmit(form){
-	if(form.content.value==''){
-		form.content.focus();
-		return false;		
-	}
-	else{
-		return true;
-	}
-}
-function reply(id) {
-	content = $("#"+id).html();
+function reply(reply_id) {
+	content = $("#"+reply_id).html();
 	$("#reply-fill").html("<div id='reply-close' class='alert bg-color-white'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"</div>");
-	$("#parent_id").val(id);
+	$("#parent_id").val(reply_id);
 	$('#reply-close').bind('closed', function () {
 		$("#parent_id").val('');
 	});
-	$("#reply_form").focus();
 }
-function thank(reply_id,user_id) {
+function thank(reply_id) {
+	
 	var query={};
 	query["reply_id"] = reply_id;
-	query["user_id"] = user_id;
 	$.ajax({
-		url: "/ajax_thanks",
+		url: "/ajax_thank",
 		type: "GET",
 		data: query,
 		dataType: "json",
-		success: function(result){
-			var res = result['result'];
-			var thanks_id = result['thanks_id'];
-			var check = result['check'];
-			if(res>0){
-				$("#thanks_"+thanks_id+"_count").html('<i class="icon-heart"></i>'+res);
-			}
-			else{
-				$("#thanks_"+thanks_id+"_count").html('');
-			}
+		success: function(response){
+			var count = response.count;
+			var check = response.check;
 			if(check==true){
-				$("#thanks_"+thanks_id+"_check").html('取消赞同');
+				$("#thank_"+reply_id+"_check").html('<a><i class="fa fa-heart text-muted"></i></a>');
 			}
-			else{
-				$("#thanks_"+thanks_id+"_check").html('赞同');
+			
+			if(count>0){
+				$("#thank_"+reply_id+"_count").html('<i class="fa fa-heart text-muted"></i> '+count);
 			}
 		}
 	});	
 }
-function like(topic_id,user_id) {
-	var query={};
-	query["topic_id"] = topic_id;
-	query["user_id"] = user_id;
-	$.ajax({
-		url: "/ajax_likes",
-		type: "GET",
-		data: query,
-		dataType: "json",
-		success: function(result){
-			var res = result['result'];
-			var likes_id = result['likes_id'];
-			var check = result['check'];
-			if(check==true){
-				$("#likes_"+likes_id+"_check").removeAttr('onclick');
-				$("#likes_"+likes_id+"_check").removeAttr('class');
-				$("#likes_"+likes_id+"_check").html('<i class="icon-heart-red"></i> '+res+'人喜欢');
-			}
-		}
-	});	
-}
-$(document).ready(function() {
-	$('textarea.resizable:not(.processed)').TextAreaResizer();
-});
-</script>
-<script type="text/javascript">
-function words_deal(content_id,max_count) {
-	var curLength=$(content_id).val().length;
-	if(curLength>max_count-4) {
-		var num=$(content_id).val().substr(0,max_count-3);
-		$(content_id).val(num);
-		$(content_id+'_wmd_preview').html('');
-		if($(".count_char").length==0)
-		$(content_id).before("<div class='alert alert-block count_char'><button type='button' class='close' data-dismiss='alert'>&times;</button>最多只能输入"+max_count+"个字符</div>");
-	}
-	else{
-		$(".count_char").remove();
-	}
-}
-
-//Set default options except highlight which has no default
-marked.setOptions({
-  gfm: true,
-  highlight: function (code, lang, callback) {
-    pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
-      if (err) return callback(err);
-      callback(null, result.toString());
-    });
-  },
-  tables: true,
-  breaks: false,
-  pedantic: false,
-  sanitize: true,
-  smartLists: true,
-  smartypants: false,
-  langPrefix: 'lang-'
-});
-
-// Using async version of marked
-marked('I am using __markdown__.', function (err, content) {
-  if (err) throw err;
-  //console.log(content);
-  alert(content);
-});
 </script>
 {% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+新话题 - Snowflake
+{% endblock %}
+
+{% block head %}
+<style>
+.form-group textarea{
+	height: 400px;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  	<div class="panel-heading">
+		<ol class="breadcrumb">
+	  		<li><a href="/">首页</a></li>
+	  		<li class="active"><a href="/node/{{node.slug}}">{{node.name}}</a></li>
+	  		
+		</ol>
+	</div>
+  	<div class="panel-body">
+  		<div style="padding:15px 0px;font-size:15px;">
+			<form action="/node/{{node.slug}}/new" method="post" class="form-vertical" role="form"> {% csrf_token %}
+				{% for field in form %}
+				<div class="form-group">
+			    	<div class="col-xs-12">
+			      		{{ field }}
+			    	</div>
+			    	<label>{{ field.errors }}</label>
+			  	</div>
+		     	{% endfor %}
+				</table> 
+			    <div class="form-group">
+			    	<div class="col-xs-12" style="float:right;">
+			      		<input type="submit" value="创建新话题" class="btn btn-sm btn-success">
+			    	</div>
+			  	</div>
+			</form>
+		</div>
+  	</div>
+</div>
+{% endblock %}

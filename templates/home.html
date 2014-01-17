@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block title %}
+{{people.name}} - Snowflake
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" media="screen" href="/static/css/github.min.css"/>
+<script type="text/javascript" src="/static/js/jquery.github.min.js"></script>
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+  	<div class="panel-heading">
+  		<div class="row">
+  			<div class="col-md-2">
+				<img src="{% gravatar_url people.username 100 %}" alt="{{people.name}}的头像" class="img-rounded img-responsive" style="margin-top:10px">
+  			</div>
+  			<div class="col-md-10">
+	  			<div class="cell">
+	  				<strong>{{people.name}}</strong>  				
+	  				{% if people.id == user.id %}
+	  					<span class="pull-right"><i class="fa fa-cog"></i> <a href="/accounts/settings" class="text-muted">修改个人资料</a></span>
+	  				{% endif %}
+	  			</div>
+  				<i class="fa fa-map-marker"></i> {{people.city}}
+  				{% if people.website %}
+				<tr>
+					<td>
+						<i class="icon-pencil"></i> <a href="{{people.website|adjust_link}}" target="_blank">{{people.website|adjust_link}}</a>
+					</td>
+				</tr>
+				{% endif %}
+  			</div>
+  		</div>
+  	</div>
+  	<div class="panel-heading">
+		{% if people.signature %}<span style="color:#777;font-weight:normal;"> ，{{people.signature}}</span>{% endif %}
+  	</div>
+  	<div class="panel-body">
+  		收到<strong>3</strong>个喜欢，<strong>3</strong>个感谢
+		<p class="pull-right text-gray">第<strong>{{people.id}}</strong>位居民 · 加入于{{people.date_joined|date:'Y年m月d日 H:i'}}</p>
+  	</div>
+</div>
+<div class="panel panel-default">
+  	<div class="panel-heading">{{people.name}}创建的话题</div>
+  	<div class="panel-body">
+		{% if topics %}
+			<ul class="list-unstyled">
+			{% for item in topics %}
+				<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;padding: 5px 0px;margin-bottom:2px;">
+					<a href="/topic/{{item.id}}">{{item.title}}</a>
+					<font class="text-muted" style="padding-left:20px;font-size:12px;">{% if item.num_replies %}{{ item.num_replies }}回复{% endif %}</font>
+					<span class="text-muted pull-right">{% timesince_human item.created_on %}</span>
+				</li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<div class="item text-center text-muted" style="padding:15px 0;">没有创建话题</div>
+		{% endif %}
+  	</div>
+</div>
+<div class="panel panel-default">
+  	<div class="panel-heading">{{people.name}}的回复</div>
+  	<div class="panel-body">
+		{% if replys %}
+		<ul class="list-unstyled">
+			{% for item in replys %}
+				<li style="display:block;word-wrap: break-word;word-break: break-all;border-bottom: 1px dashed #eee;padding: 5px 0px;margin-bottom:2px;"><a href="/topic/{{item.topic.id}}">{{item.topic.title}}</a><span class="text-muted pull-right">{% timesince_human item.created_on %}</span>
+					<div class="reply-content" style="font-size:13px;">
+						{% if item.has_parent %}<a href="/people/{{item.parent.author.get_profile.slug}}">@{{item.parent.author.get_profile.name}}</a>{% endif %}
+						{% autoescape off %}{{item.content|markdown2html}}{% endautoescape %}
+		           	</div>	
+				</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<div class="item text-center text-muted" style="padding:15px 0;">没有回复</div>
+		{% endif %}
+  	</div>
+</div>
+{% endblock %}
